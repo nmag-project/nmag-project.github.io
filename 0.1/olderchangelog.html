@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>nmag - Older changelog entries</title>
+    <link rel="stylesheet" href="../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">nmag 0.1
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="manual/html/manual.html">manual (html)</a></li>
+<li><a href="manual/manual.pdf">manual (pdf)</a></li>
+<li><a href="install/index.html">installation</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../index.html">Nmag home</a></li>
+<li>|</li>
+<li><a href="index.html">nmag 0.1</a></li>
+<li>|</li>
+<li>nmag 0.1</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document">
+<div class="section" id="release-0-1-beta-5962-20-november-2008">
+<h1>Release 0.1 beta (5962) 20 November 2008</h1>
+<ul class="simple">
+<li>Bugfixes/Improvements<ul>
+<li>New feature: Can read finite element meshes produced with Gmsh using
+the new <tt class="docutils literal"><span class="pre">--gmsh</span></tt> switch for the <tt class="docutils literal">nmeshimport</tt> tool. (5924)</li>
+<li>Added more regression tests</li>
+<li>Fixed bug that stopped simulations where two magnetic materials
+(each defined as a different region in the mesh) touch each other
+(5886)</li>
+<li>Fixed bug that didn't allow to have different (potentially
+unrelated) simulation objects in the same nmag-program (5956)</li>
+<li>Fixed bug that (sometimes) stopped the --restart mechanism
+to continue interrupted hysteresis loop calculations (5907)</li>
+<li>Fixed bug that prevented <tt class="docutils literal">sim.get_subfield_positions</tt> and
+<tt class="docutils literal">sim.get_subfield_sites()</tt> from working. (5933)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5878-13-october-2008">
+<h1>Release 0.1 beta (5878) 13 October 2008</h1>
+<ul>
+<li><p class="first">Bugfixes/Improvements</p>
+<ul class="simple">
+<li>bugfix: reinitialisation used to reset the stage_time and stage_step
+counters. This is now fixed and is done explicitly in the hysteresis method.
+This functionality is needed to study systems where the applied field
+changes in time (5848).</li>
+<li>bugfix: allow from source compilation on (K)Ubuntu 8.04. The bug is
+with the Petsc library 2.3.2. We have upgraded the Petsc library to
+2.3.3 in the compile from source installation, which resolves the
+problem (5851).</li>
+<li>bugfix: reading Gambit meshes works without warnings (5852).</li>
+<li>bugfix: A missing <tt class="docutils literal">.petsc</tt> file in the user's home directory
+resulted in an error message when nsim was started. This did create
+the missing file, so all is fine the next time nsim is
+called. Revision (5853) fixes this.</li>
+<li>Improvement: Split hysteresis example in tutorial into two
+examples. The first can be used to play around with thecommand andto
+quickly complete a simulation. The second allows to compare the
+resulting hysteresis loop with an analytical prediction (5876).</li>
+<li>minor improvements in makefile for installation from source (5859).</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>None.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5834-2-september-2008">
+<h1>Release 0.1 beta (5834) 2 September 2008</h1>
+<ul>
+<li><p class="first">Bugfixes/Improvements/New Features</p>
+<ul class="simple">
+<li>bugfix: disabled diagnostic debug code that caused segfault for
+large meshes (approximately over 130,000 volume elements)</li>
+<li>bugfix: including documentation for
+Simulation.get_subfield_average() in manual</li>
+<li>nmeshipmort has slightly improved error reporting when attempting to
+import an unknown mesh format</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>None.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5787-8-august-2008">
+<h1>Release 0.1 beta (5787) 8 August 2008</h1>
+<ul class="simple">
+<li>Bugfixes/Improvements/New Features<ul>
+<li>We have a new distribution mode using VMWare's vmplayer. This is
+particularly attractive to MS Windows users. This is at a very
+early stage and and we invite feedback from early adaptors (see
+installation Method D).</li>
+<li>Updated the Knoppix CD to the most recent version (installation Method C).
+Also included Netgen, a mesh generator, in the CD image.</li>
+<li>ncol can now process OOMMF's odt files (use --odt switch)</li>
+<li>Bugfix: the previous debian package could only execute on CPUs with sse2 extension.</li>
+<li>Bugfix: fixed embarrassing bug that appeared with the last release
+(printing of applied field brakes when first component is zero).</li>
+</ul>
+</li>
+<li>Interface change<ul>
+<li>removed support for thermal fluctuations. There appeared to be no
+up-take of this feature, and maintaining this (while developing the
+code further, parallelising it and making faster and leaner) was
+unnecessarily binding resources.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5734-1-august-2008">
+<h1>Release 0.1 beta (5734) 1 August 2008</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements/New Features</p>
+<ul class="simple">
+<li>Reduced memory requirements by approximately 20% (due to better
+compression of sparse matrices)</li>
+<li>Updated code working with hdf5 files to be compatible with pytables
+version 1 and 2 (no immediate effect on user if using compile from
+source, but allows to link to existing pytables2). By default we
+are still using pytables1 (but expect to switch at some point in the
+future, which should be transparent to users).</li>
+<li>Change from numpy 1.0.1 to 1.1.0. in compile from source distribution.</li>
+<li>More detailed progress reporting in nmagpp (useful if data files
+become large, i.e. a GB and more).</li>
+<li>More detailed progress report in setup phase.</li>
+<li>More detailed progress reporting in hysterises/relax commands.</li>
+<li>Made compile from source work for Mac OS X 10.5 (Leopard)</li>
+<li>Introduced unit and regression tests.</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>(None)</p>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5531-2-june-2008">
+<h1>Release 0.1 beta (5531) 2 June 2008</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements/New Features</p>
+<ul class="simple">
+<li>The current release, distribution mode, svn release number and
+location of the nmag-python libraries are provided (to stdout and
+logfile) when a simulation object is created.</li>
+<li>Re-designed and implemented calculation of the Jacobi matrix: The
+new approach<ul>
+<li>slightly more computation time is spent during the main simulation
+whenever the Jacobian needs to be re-computed</li>
+<li>the setup phase takes (notably) less time.</li>
+<li>simulations with the new approach need about 30% less memory</li>
+</ul>
+</li>
+<li>Matrix setup is now parallised.</li>
+<li>Documented the use of MPI in the manual to carry out parallel runs.</li>
+<li>Bugfix: Code now working with MPICH2.</li>
+<li>Bugfix: The compilation from source works (again) for Mac OS X.</li>
+<li>Switched to pvode (the parallel solver for time integration) by default.
+Updated timestepper tolerances section accordingly.</li>
+<li>Feature enhancement: can save spatially resolved fields using the
+save_data command in any order (previsouly, it was possible to stick
+to the same set of saved fields for every saved timestep).</li>
+<li>Update of manual in several places (including recommendation how to
+cite nmag in FAQ).</li>
+<li>A number of (smaller) bugfixes.</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<ul>
+<li><p class="first">The use of <tt class="docutils literal">row</tt> for the analysis of nmag's <tt class="docutils literal">_dat.h5</tt> data files
+has been superseeded with the use of <tt class="docutils literal">id</tt>s (see explanation in
+manual).</p>
+<p>This has the following side effect: the nmagpp command labels vtk
+file using the mask NAME-00XX.vtk where XX is an increasing
+number. This used to be the 'row' number for saved fields. Because
+it is now possible to save any fields in any order, the value of XX
+is now replaced with the unique id of a saved configuration. This
+also allows easier identification of a saved configuration with an
+entry in the ndt file (via the id).</p>
+</li>
+<li><p class="first">nmagpp used to have a switch <tt class="docutils literal"><span class="pre">--field</span></tt> which allowed to choose
+<em>one</em> field that should be dumped (<tt class="docutils literal"><span class="pre">--dump</span></tt>) or converted to vtk
+files (<tt class="docutils literal"><span class="pre">--vtk</span></tt>). The functionality has now been extended so that
+<em>a list of fields</em> can be given, such as <tt class="docutils literal">nmagpp <span class="pre">--fields</span>
+m,phi,H_demag <span class="pre">--vtk</span> myvtkfiles.vtk
+mysimulation_dat.h5</tt>. Consequently, the switch has been renamed
+from <tt class="docutils literal"><span class="pre">--field</span></tt> to <tt class="docutils literal"><span class="pre">--fields</span></tt>.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5282-5-february-2008">
+<h1>Release 0.1 beta (5282) 5 February 2008</h1>
+<ul class="simple">
+<li>Interface changes<ul>
+<li>Have changed version of petsc in tarball distribution. Used to be
+2.3.1 and is now 2.3.2. (to be consistent with debian
+packages). Users who have older tarballs, need to obtain a new
+tarball to update (updating the nsim-core is not sufficient).</li>
+</ul>
+</li>
+<li>Bug fixes/Improvements<ul>
+<li>The change in the petsc version increases the setup phase
+significantly (for installations from source).</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5274-3-february-2008">
+<h1>Release 0.1 beta (5274) 3 February 2008</h1>
+<ul class="simple">
+<li>As 0.1 beta (5259) but with working debian package.</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-5259-30-january-2008">
+<h1>Release 0.1 beta (5259) 30 January 2008</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements</p>
+<ul class="simple">
+<li>ticket 126: Calculation of exchange energy, demag energy, Zeeman
+energy and total energy had wrong sign; now working correctly.</li>
+<li>increased speed of setup phase slightly.</li>
+<li>decreased memory usage for runs with anisotropy.</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<ul class="simple">
+<li>Have changed version of mpich in tarball distribution. Used to be
+mpich2.0 but is mpich1.0 from now on (to be consistent with debian
+packages). Users who have older tarballs and want to use MPI
+execution, need to obtain a new tarball to update (updating the
+nsim-core is not sufficient).</li>
+</ul>
+</li>
+<li><p class="first">New features</p>
+<p>None</p>
+</li>
+</ul>
+<p>Note: there is no debian package for this release.</p>
+</div>
+<div class="section" id="release-0-1-beta-4947-20-december-2007">
+<h1>Release 0.1 beta (4947) 20 December 2007</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements</p>
+<ul class="simple">
+<li>resolved ticket 101: Setting
+anisotropy=nmag.uniaxial_anisotropy(K1=0) in MagMaterial produces
+an error message;</li>
+<li>resolved ticket 103: When starting from a zero torque configuration the simulation
+proceeds up to the maximum time (which is 1 s) and here it stops:
+now an appropriate error message is displayed.</li>
+<li>resolved ticket 97: Unrecognised architecture causes compilation failure in the
+bem3d module: now the architecture flag will be empty if the architecture
+detection fails.</li>
+<li>reduced setup speed by approximately a factor 2</li>
+<li>added new section on sundials tolerances in manual (guided tour)</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>None.</p>
+</li>
+<li><p class="first">New features</p>
+<ul class="simple">
+<li>Writing sundials performance data in log file (_cvode.log)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h1>Release 0.1 beta (5274) 3 February 2008</h1>
+<ul class="simple">
+<li>As 0.1 beta (5259) but with working debian package.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h1>Release 0.1 beta (5259) 30 January 2008</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements</p>
+<ul class="simple">
+<li>ticket 126: Calculation of exchange energy, demag energy, Zeeman
+energy and total energy had wrong sign; now working correctly.</li>
+<li>increased speed of setup phase slightly.</li>
+<li>decreased memory usage for runs with anisotropy.</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<ul class="simple">
+<li>Have changed version of mpich in tarball distribution. Used to be
+mpich2.0 but is mpich1.0 from now on (to be consistent with debian
+packages). Users who have older tarballs and want to use MPI
+execution, need to obtain a new tarball to update (updating the
+nsim-core is not sufficient).</li>
+</ul>
+</li>
+<li><p class="first">New features</p>
+<p>None</p>
+</li>
+</ul>
+<p>Note: there is no debian package for this release.</p>
+</div>
+<div class="section" id="id3">
+<h1>Release 0.1 beta (4947) 20 December 2007</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements</p>
+<ul class="simple">
+<li>resolved ticket 101: Setting
+anisotropy=nmag.uniaxial_anisotropy(K1=0) in MagMaterial produces
+an error message;</li>
+<li>resolved ticket 103: When starting from a zero torque configuration the simulation
+proceeds up to the maximum time (which is 1 s) and here it stops:
+now an appropriate error message is displayed.</li>
+<li>resolved ticket 97: Unrecognised architecture causes compilation failure in the
+bem3d module: now the architecture flag will be empty if the architecture
+detection fails.</li>
+<li>reduced setup speed by approximately a factor 2</li>
+<li>added new section on sundials tolerances in manual (guided tour)</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>None.</p>
+</li>
+<li><p class="first">New features</p>
+<ul class="simple">
+<li>Writing sundials performance data in log file (_cvode.log)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-4785-27-november-2007">
+<h1>Release 0.1 beta (4785) 27 November 2007</h1>
+<ul>
+<li><p class="first">Bug fixes/Improvements</p>
+<ul class="simple">
+<li>improved renderening of bitmaps (figures and equations) in html
+documentation</li>
+<li>install from tar ball was broken (pkgs in wrong directory)</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<p>None.</p>
+</li>
+<li><p class="first">New features</p>
+<ul class="simple">
+<li>added mini tutorial on micromagnetic simulations to manual</li>
+<li>new tool nmeshsort</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="release-0-1-beta-4625-02-november-2007">
+<h1>Release 0.1 beta (4625) 02 November 2007</h1>
+<p>First release.</p>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Mon Dec 30 00:48:41 2019</strong>.</small> 
+|  Created with <a href="../rest2web.html">rest2web</a>, and <a href="../computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>

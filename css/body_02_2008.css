@@ -1,0 +1,148 @@
+/* p.headertitle {
+color:#999999;
+font-size:1.2em;
+}
+
+a.image-reference:visited {
+   color: #999999;
+} */
+
+
+
+
+p, td, th, li {
+	font-family: Gill, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 14pt;
+	color: #000033;
+}
+
+
+body {
+        background-color: #FFFFFF;
+        /* background-image: url('images/backg.gif'); */
+        background-repeat: repeat-x
+}
+
+body {
+	font-size: 62.5%;
+	margin: 0em auto;
+	padding: 0em;
+  	font-family: Verdana,Tahoma, Arial,sans-serif;
+}
+
+
+.maincontent {
+	vertical-align: top;
+	margin-right: 10px;   /* what does this do?*/
+	margin-top: 0px;
+        a:link{ color: rgb(255,0,0);}
+}
+
+
+.secondnav {
+	border: 1px solid #000066;
+	padding: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bolder;
+	color: #000066;
+	background-color: #EDEAFB;
+	vertical-align: top;
+    
+}
+
+
+h1 { 
+       font-family: Verdana, Arial, Helvetica, sans-serif;
+       color: rgb(0,74,116);
+       font-size: 20px;
+       font-weight: bold;
+       line-height: 22pt;
+ }
+
+h2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold; 
+        color: rgb(0,74,116);
+}
+
+h3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+        color: rgb(0,74,116);
+}
+
+h4 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+    /*
+	color: #666699;
+       */
+        	color  #000066;
+            color: rgb(0,74,116);
+}
+
+
+.navtitle {
+	font-family: Verdana,Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+        background-color: #7777AA;
+        text-align: center;
+}
+
+/*
+   a.nav:link { color: rgb(0,255,0);}
+a.nav:visited {color:#FFFFFF;}
+a.nav:hover { color:#FFFFFF; }
+   */
+
+
+
+
+
+
+
+
+.footer { 
+       font-family: Verdana,Arial, Helvetica, sans-serif; 
+       font-size: 9px;
+       font-weight: bolder;
+       color: #FFFFFF;
+       color: #444444;
+    #       background-color: #000058;
+}
+
+
+
+/* inspired from Juergen's webpage */
+
+/*
+blockquote { 
+    color: #000033;
+    background-color: rgb(230,231,232);
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding:5px;
+}
+*/
+
+
+<style type="text/css">
+A:active {text-decoration: none;}
+A:link {text-decoration: underline; color: rgb(1,67,89);}
+A:hover {text-decoration: none; color: black;}
+A:visited {text-decoration: underline; color: rgb(10,150,169);}
+</style>
+
+
+a.std:link {text-decoration: underline; color: rgb(1,67,89);}
+a.std:visited {text-decoration: underline; color: rgb(10,150,169);}
+a.std:hover {color: rgb(0,0,0);}

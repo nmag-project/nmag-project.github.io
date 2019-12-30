@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>nmag installation instructions using VMware Player</title>
+    <link rel="stylesheet" href="../../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">Install (0.2)
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="install_b.html">tarball (core)</a></li>
+<li><a href="vmware.html">Virtual Machine</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../../index.html">Nmag home</a></li>
+<li>|</li>
+<li><a href="../index.html">nmag 0.2</a></li>
+<li>|</li>
+<li><a href="index.html">installation</a></li>
+<li>|</li>
+<li>Virtual Machine</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document" id="installing-nmag-using-the-vmware-player">
+<h1 class="title">Installing Nmag using the VMware Player</h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id2">Introduction</a></li>
+<li><a class="reference internal" href="#installing-the-vmware-player" id="id3">Installing the VMware Player</a></li>
+<li><a class="reference internal" href="#downloading-and-starting-the-nmag-virtual-machine" id="id4">Downloading and starting the Nmag virtual machine</a></li>
+<li><a class="reference internal" href="#using-the-nmag-virtual-machine" id="id5">Using the Nmag virtual machine</a></li>
+<li><a class="reference internal" href="#first-steps" id="id6">First steps</a></li>
+<li><a class="reference internal" href="#using-vmware-player" id="id7">Using VMware player</a></li>
+<li><a class="reference internal" href="#frequently-asked-questions" id="id8">Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#how-can-i-exchange-data-between-the-virtual-machine-and-the-host" id="id9">How can I exchange data between the virtual machine and the host?</a></li>
+<li><a class="reference internal" href="#how-can-i-change-the-keyboard-in-the-nmag-virtual-machine" id="id10">How can I change the keyboard in the Nmag virtual machine?</a></li>
+<li><a class="reference internal" href="#can-i-also-use-other-vmware-products-with-the-nmag-virtual-machine" id="id11">Can I also use other VMware products with the Nmag Virtual machine?</a></li>
+<li><a class="reference internal" href="#can-i-use-other-virtual-machine-products-such-as-virtualbox" id="id12">Can I use other virtual machine products, such as VirtualBox?</a></li>
+<li><a class="reference internal" href="#i-know-ubuntu-or-debian-linux-can-i-modify-this-system" id="id13">I know Ubuntu or Debian Linux -- can I modify this system?</a></li>
+<li><a class="reference internal" href="#how-can-i-learn-more-about-linux-or-this-distribution" id="id14">How can I learn more about Linux or this distribution?</a></li>
+<li><a class="reference internal" href="#additional-software" id="id15">Additional software</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id2">Introduction</a></h1>
+<p><a class="reference external" href="http://www.vmware.com">VMware</a> is a company that provides a software that emulates a virtual
+computer. Let's assume for simplicity that we have an existing machine
+with MS Windows. This is called the host machine. One needs to install
+the vmware software (see <a class="reference internal" href="#installing-the-vmware-player">Installing the VMware Player</a>) on this host
+machine. Once the software is installed, it can be started like any
+other application. Once this virtual machine software is running, it
+will simulate a PC environment so that one can have a second (virtual)
+machine running in that window. The 'virtual' hard drive of that
+virtual machine is realised through a (few) big files gathered in a
+particular directory on the hard drive of the (Windows, say,) host
+machine. It is of course required to provide an operating system for
+the virtual machine, which could be, for example, Linux.</p>
+<p>One would then have the normal MS Windows Operating system running on
+the host machine, and a Linux operating system in the VMware
+window. (In fact, the window can be blown up to appear as a
+full-screen, by pressing CTRL+ALT+Return, or clicking of the
+<cite>maximise</cite> icon of the window.)</p>
+<p>The performance penalty of running any software in the virtual machine
+(rather than on a real machine of similar specification) is usually
+less than 10%. In other words, a simulation that takes 10 minutes in
+the virtual machine, is not going to be faster than 9 minutes if run
+natively. However, 3d graphics may not be hardware accelerated in the
+virtual machine; and the virtual machine will only see a part of the
+physical RAM of the host machine (this can be adjusted in the vmware
+settings when the virtual machine is shut down).</p>
+<p>The nice thing about having this virtual machine is that one can
+continue to use one's email, word processing, web browsing and all
+other applications in one's usual operating system (Windows in our
+example), and simultaneously have a simulation environment for
+micromagnetic simulations (which provides all the necessary pre and
+postprocessing tools, based on the Linux operating system here).</p>
+<p>In terms of performance, the host machine should have at least 2 GB of
+RAM (the more the better). The virtual machine is set to use 1.5 GB
+RAM and 1 processor core. It currently needs about 7GB of disk space
+on the host machine.</p>
+</div>
+<div class="section" id="installing-the-vmware-player">
+<h1><a class="toc-backref" href="#id3">Installing the VMware Player</a></h1>
+<p><a class="reference external" href="http://www.vmware.com">VMware</a> provides a multitude of different products that allow
+different degrees of virtualisation. Some of them are free and some
+have to be paid for. We try to point to exactly the right product
+here, and to keep things simple although VMWare is frequently changing
+the names of their products.</p>
+<p>If your host runs <strong>MS Windows</strong> or <strong>Linux</strong>, then you can download
+the free <a class="reference external" href="http://www.vmware.com/products/player">VMware Player</a>:</p>
+<blockquote>
+<ul class="simple">
+<li>click on the <tt class="docutils literal">Download</tt> button</li>
+<li>click on <tt class="docutils literal">Download now</tt> button</li>
+<li>At this stage, <a class="reference external" href="http://www.vmware.com">VMware</a> asks you to provide some information to
+profile their customer base.  Complete the form and click <tt class="docutils literal">Submit</tt>.</li>
+<li>click on the <tt class="docutils literal">Download now</tt> button</li>
+<li>Agree to license agreement by pressing <tt class="docutils literal">Accept</tt></li>
+<li>Select the right version to download:<ul>
+<li>If your host runs <strong>MS Windows</strong>, then download the latest version of the VMware Player for Windows</li>
+<li>If your host runs <strong>Linux</strong>, then chose<ul>
+<li><tt class="docutils literal">.rpm</tt> for red-hat based systems, or</li>
+<li><tt class="docutils literal">.tar</tt> for all other Linux systems</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>After having downloaded the file, install it as you install any
+other application for your operating system (i.e. for Windows,
+double click on the executable) and follow the instructions.</li>
+</ul>
+</blockquote>
+<p>If your computer is an <strong>IntelMac</strong>, there is unfortunately no version of
+the free VMware Player for your machine. However, if you happen to own
+<a class="reference external" href="http://www.vmware.com/download/fusion/">VMware's Fusion</a> product
+(or are happy to pay for it), then install VMware fusion and use this
+as (a more powerful) VMware player.</p>
+<p>If you computer is a <strong>PowerPC Mac</strong>, then you cannot use the Virtual
+Machine method.</p>
+<p>At this stage, we have installed the VMware Player. Next, we need to
+obtain the 'virtual machine' that we want to execute.</p>
+</div>
+<div class="section" id="downloading-and-starting-the-nmag-virtual-machine">
+<h1><a class="toc-backref" href="#id4">Downloading and starting the Nmag virtual machine</a></h1>
+<ul class="simple">
+<li>Download the zipped Nmag virtual appliance from
+<a class="reference external" href="http://nmag.soton.ac.uk/nmag/0.2/download/vmware">this directory</a>.</li>
+<li>unzip the downloaded files: extract they content into a subdirectory with name <tt class="docutils literal"><span class="pre">nmag-0.2</span></tt>.</li>
+<li>start the VMware Player software</li>
+<li>Within the VMware Player window, select <tt class="docutils literal">Open</tt> or <tt class="docutils literal">Browse</tt> to<ul>
+<li>locate the directory into which you have unzipped the virtual machine.</li>
+<li>change into that directory and</li>
+<li>select the file ending in <tt class="docutils literal">.vmx</tt> to open (for example <tt class="docutils literal"><span class="pre">nmag0-2-Ubuntu64_1.vmx</span></tt>)</li>
+<li>and click open.</li>
+</ul>
+</li>
+</ul>
+<p>When you do this the first time, the VMware Player may warn that the machine is already in use. If so, select <tt class="docutils literal">Take ownership</tt>.</p>
+<p>It may ask you whether this virtual machine has been <em>moved</em> or
+<em>copied</em>. The right answer is <em>copied</em>.</p>
+<p>Once you have done this, the virtual machine will boot.</p>
+<p>When the kernel boot menu appears (the first line starts &quot;GNU GRUB&quot;), do nothing, or press return.</p>
+<p>Wait until the graphical login turns up.</p>
+</div>
+<div class="section" id="using-the-nmag-virtual-machine">
+<h1><a class="toc-backref" href="#id5">Using the Nmag virtual machine</a></h1>
+<p>The Nmag virtual machine is an Ubuntu64Bit 11.10 installation which should provide
+all the software required to run micromagnetic simulations with Nmag.</p>
+<p>After booting, a login screen appears. There is only one user
+registered. The username is <tt class="docutils literal">nmag</tt> and the password is
+<tt class="docutils literal">nmag</tt>. (The root account has the same password; should you ever
+need it.)</p>
+<p>At this point, you have a complete environment to start simulations,
+and the guided tour in the manual is a good starting point to explore
+nmag:</p>
+<ul class="simple">
+<li>Click CTRL+ALT+T to get a terminal (a shell window).</li>
+<li>You find a link on the Desktop (<tt class="docutils literal"><span class="pre">nmag-manual-html.sh</span></tt>) which will display a local copy of the manual on your harddrive (select <tt class="docutils literal">Run</tt> after double clicking).</li>
+</ul>
+<p>If you want to see the examples that are discussed in the manual
+directly, you can go to
+<tt class="docutils literal"><span class="pre">/home/nmag/Desktop/nmag-examples-drafts</span></tt>. Each subdirectory in there
+corresponds to one example. Note that there are sometimes additional
+files in the directory that are used for automatic creation of plots
+in the manual, and for automatic testing (you may want to ignore
+those). Some file may be out of date, but overall this is a useful
+resource to run some existing scripts quickly.  Often, there is a
+<tt class="docutils literal">makefile</tt> or <tt class="docutils literal">Makefile</tt> in a example directory, which summarises
+the commands that can be run to create a mesh, convert it, important
+it, run a simulation etc.</p>
+</div>
+<div class="section" id="first-steps">
+<h1><a class="toc-backref" href="#id6">First steps</a></h1>
+<ol class="arabic">
+<li><p class="first">Login as <tt class="docutils literal">nmag</tt>, password <tt class="docutils literal">nmag</tt>.</p>
+</li>
+<li><p class="first">Double click on <tt class="docutils literal"><span class="pre">nmag-manual-html.sh`,</span> then ``run</tt> to display the Nmag manual.</p>
+</li>
+<li><p class="first">Navigate to example 1 in the guided tour (Example: Demag field in uniformly magnetised sphere).</p>
+</li>
+<li><p class="first">Open a terminal (either through clicking on the terminal icon at the side bar, or pressing CTRL+ALT+T)</p>
+</li>
+<li><p class="first">change into the directory with the manual examples by typing:</p>
+<pre class="literal-block">
+cd Desktop/nmag-examples/drafts
+</pre>
+</li>
+<li><p class="first">change into the directory for the first example:</p>
+<pre class="literal-block">
+cd example1
+</pre>
+</li>
+<li><p class="first">run the simulation that is described in the manual by typing:</p>
+<pre class="literal-block">
+nsim sphere1.py
+</pre>
+<p>(When you run this the second time, you will need to use <tt class="docutils literal">nsim sphere1.py <span class="pre">--clean</span></tt> to allow overwriting of existing data files.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="using-vmware-player">
+<h1><a class="toc-backref" href="#id7">Using VMware player</a></h1>
+<p>The help function of the VMware Player provides a useful summary of
+how to use it.</p>
+<p>Note that you can switch to full-screen mode when pressing
+CTRL+ALT+RETURN, and that you return from full-screen mode by either
+pressing CTRL+ALT, or moving the mouse to the top of the screen (to
+get the VMPlayer menu).</p>
+</div>
+<div class="section" id="frequently-asked-questions">
+<h1><a class="toc-backref" href="#id8">Frequently Asked Questions</a></h1>
+<div class="contents local topic" id="id1">
+<ul class="simple">
+<li><a class="reference internal" href="#how-can-i-exchange-data-between-the-virtual-machine-and-the-host" id="id16">How can I exchange data between the virtual machine and the host?</a></li>
+<li><a class="reference internal" href="#how-can-i-change-the-keyboard-in-the-nmag-virtual-machine" id="id17">How can I change the keyboard in the Nmag virtual machine?</a></li>
+<li><a class="reference internal" href="#can-i-also-use-other-vmware-products-with-the-nmag-virtual-machine" id="id18">Can I also use other VMware products with the Nmag Virtual machine?</a></li>
+<li><a class="reference internal" href="#can-i-use-other-virtual-machine-products-such-as-virtualbox" id="id19">Can I use other virtual machine products, such as VirtualBox?</a></li>
+<li><a class="reference internal" href="#i-know-ubuntu-or-debian-linux-can-i-modify-this-system" id="id20">I know Ubuntu or Debian Linux -- can I modify this system?</a></li>
+<li><a class="reference internal" href="#how-can-i-learn-more-about-linux-or-this-distribution" id="id21">How can I learn more about Linux or this distribution?</a></li>
+<li><a class="reference internal" href="#additional-software" id="id22">Additional software</a></li>
+</ul>
+</div>
+<div class="section" id="how-can-i-exchange-data-between-the-virtual-machine-and-the-host">
+<h2><a class="toc-backref" href="#id16">How can I exchange data between the virtual machine and the host?</a></h2>
+<p>If you want to share data with your host, then</p>
+<ul>
+<li><p class="first">go to <tt class="docutils literal">Virtual <span class="pre">Machine-&gt;Settings</span></tt> (the precise name of this may vary) and look for <tt class="docutils literal">Sharing</tt></p>
+</li>
+<li><p class="first">Here, locations on the host system can be defined that are shared
+with the client system, for example example your Desktop (or a
+dedicated subfolder somewhere).</p>
+<p>Assuming we call this location <tt class="docutils literal">vmware</tt> we should see that</p>
+</li>
+<li><p class="first">On the linux system, there is now a folder <tt class="docutils literal">/mnt/hgfs/vmware</tt>
+which shows the content of the <tt class="docutils literal">Desktop</tt> folder on the host (or
+whichever folder has been chosen above), and can be used to exchange
+data.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="how-can-i-change-the-keyboard-in-the-nmag-virtual-machine">
+<h2><a class="toc-backref" href="#id17">How can I change the keyboard in the Nmag virtual machine?</a></h2>
+<p>Open a terminal (CTRL+ALT+T), then type <tt class="docutils literal">setxkbmap</tt> followed by the
+right code for the country. Typcial codes are <tt class="docutils literal">de</tt> for German,
+<tt class="docutils literal">gb</tt> for Great Britain, <tt class="docutils literal">dvorak</tt> for the Dvorak layout and <tt class="docutils literal">us</tt>
+for an american keyboard layout.</p>
+<p>Alternatively, click on the <tt class="docutils literal">System Settings</tt> icon on the left, then
+<tt class="docutils literal">keyboard layout</tt> and then <tt class="docutils literal">+</tt> to add a new layout.</p>
+<!-- comment:
+
+Log in, then go to the button on the right top, a menu pop downs. Then
+select System Settings. A window should appear in which you can select
+the ``Keyboard`` item. Then click on ``Layout Settings`` at the
+bottom, then click on the ``+`` (plus) symbol and take it from there. -->
+</div>
+<div class="section" id="can-i-also-use-other-vmware-products-with-the-nmag-virtual-machine">
+<h2><a class="toc-backref" href="#id18">Can I also use other VMware products with the Nmag Virtual machine?</a></h2>
+<p>Yes, as far as we know. For example, if you have the VMware Work
+station or VMware Server, then these can run the Nmag virtual machine
+as well. (It may, in fact, be easier to exchange data between the host
+and the virtual machine with these more powerful products, as you can
+add more shared locations.)</p>
+</div>
+<div class="section" id="can-i-use-other-virtual-machine-products-such-as-virtualbox">
+<h2><a class="toc-backref" href="#id19">Can I use other virtual machine products, such as VirtualBox?</a></h2>
+<p>Yes, although you will not be able to use the image we provide for
+download. This will only work with VMWare. We use VMWare for
+historical reasons (it has been around for some time), but we are not
+aware of any problems with other virtual machine tools.</p>
+<p>If you go this way, we suggest Ubuntu Linux as the client operating
+system as Nmag installs most easily in this.</p>
+</div>
+<div class="section" id="i-know-ubuntu-or-debian-linux-can-i-modify-this-system">
+<h2><a class="toc-backref" href="#id20">I know Ubuntu or Debian Linux -- can I modify this system?</a></h2>
+<p>Of course. Once you become root, you can use <tt class="docutils literal">aptitude</tt>, <tt class="docutils literal"><span class="pre">apt-get</span></tt> and all
+other tools to configure your debian system. This is, after all, a
+normal installation (even though it is executed within a virtual
+machine).</p>
+</div>
+<div class="section" id="how-can-i-learn-more-about-linux-or-this-distribution">
+<h2><a class="toc-backref" href="#id21">How can I learn more about Linux or this distribution?</a></h2>
+<p>Follow the <a class="reference external" href="http://www.ubuntu.com/">Ubuntu</a> tutorials.</p>
+</div>
+<div class="section" id="additional-software">
+<h2><a class="toc-backref" href="#id22">Additional software</a></h2>
+<p>We have installed additional software on the virtual machine,
+including</p>
+<ul class="simple">
+<li>Netgen and Gmsh (Mesh generators)</li>
+<li>Mayavi2 and Paraview (Visualisation packages that can read vtk files)</li>
+<li>XMGrace and Gnuplot (xy-plotting tools)</li>
+<li>emacs, vim, nano (editor)</li>
+<li>Scipy (scientific Python), Matplotlib, sympy (Useful python libraries)</li>
+</ul>
+<p>The relevant ubuntu packages are <tt class="docutils literal">gmsh netgen mayavi2 emacs grace gnuplot <span class="pre">python-scipy</span> <span class="pre">python-matplotlib</span> <span class="pre">python-sympy</span> nano vim</tt></p>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Mon Dec 30 00:48:41 2019</strong>.</small> 
+|  Created with <a href="../../rest2web.html">rest2web</a>, and <a href="../../computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>

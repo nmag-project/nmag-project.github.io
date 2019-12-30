@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>nmag - computational micromagnetics</title>
+    <link rel="stylesheet" href="../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">nmag 0.1
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="manual/html/manual.html">manual (html)</a></li>
+<li><a href="manual/manual.pdf">manual (pdf)</a></li>
+<li><a href="install/index.html">installation</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../index.html">Nmag home</a></li>
+<li>|</li>
+<li>nmag 0.1</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document">
+<p> This documentation refers to the 0.1
+ beta (rev (rev not found)) release.</p>
+<!-- comment:
+.. contents:: Table of contents -->
+<div class="section" id="download-and-install">
+<h1>Download and install</h1>
+<p>The code can be obtained from the <a class="reference external" href="install/index.html">installation page</a>.</p>
+</div>
+<div class="section" id="manual">
+<h1>Manual</h1>
+<p>Read the manual as <a class="reference external" href="manual/html/manual.html">html</a> or <a class="reference external" href="manual/manual.pdf">pdf</a></p>
+</div>
+<div class="section" id="changelog">
+<h1>Changelog</h1>
+<div class="section" id="release-0-1-beta-6481-22-december-2009">
+<h2>Release 0.1 beta (6481) 22 December 2009</h2>
+<ul>
+<li><p class="first">New Features</p>
+<ul class="simple">
+<li>Support of Hierarchical Matrix compression for boundary element matrix. See
+<a class="reference external" href="manual/html/manual.html#compression-of-the-boundary-element-matrix-using-hlib">example in documentation</a> for details, and <a class="reference external" href="http://link.aip.org/link/?JAPIAU/105/07D542/1">Knittel et al 105, 07D542 (2009)</a> (<a class="reference external" href="http://www.soton.ac.uk/~fangohr/publications/postprint/Knittel_etal_JAP_105_07D542_2009.pdf">postprint pdf</a>). This reduces the memory requirements for the boundary element matrix substantially.</li>
+</ul>
+</li>
+<li><p class="first">Bugfixes/Improvements</p>
+<ul>
+<li><p class="first">Minor improvements manual (Example 1 and 2, nmagpp, mayavi, 6170, updated MPI section)</p>
+</li>
+<li><p class="first">Updated plot.dat and plots for Example Hysteresis loop for thin disk to fix
+documentation bug (thanks to Weiwei Wang for spotting this, 6326).</p>
+</li>
+<li><p class="first">The time stopping criteria are now more faithfully respected. A new optional
+argument, 'exact_tstop', has been added to 'Simulation.advance_time' and to
+'Simulation.set_params' to give more freedom to the time integrator, in case
+performance is a concern and exact time-stopping is not really needed.</p>
+</li>
+<li><p class="first">Updated packages to their latest stable release in the compile from source.
+We are now using: Sundials 2.3.0, HDF5 1.6.10, Python 2.6.4, pytables 2.1.2,
+NumPy 1.3.0, IPython 0.10.</p>
+<p>This means an existing from-source installation <em>can not</em> be
+updated using <tt class="docutils literal">make update</tt>.</p>
+</li>
+<li><p class="first">The regression tests can now be called with three different targets (6430):</p>
+<p>make check : runs all fast tests (should complete in less than 5
+minutes). This is a good test to run after compiling nmag (from source).</p>
+<p>make checkmpi   : runs mpi-related checks</p>
+<p>make checkslow  : runs tests that take longer (order of hours)</p>
+<p>make checkall   : run all tests together</p>
+<p>(Previously, the mpi tests were part of target 'check'.)</p>
+</li>
+<li><p class="first">The virtual machine is now based on Debian Lenny (the current
+stable version of Lenny).</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Interface changes</p>
+<ul class="simple">
+<li>We stop providing a Debian package for this release. The from source
+compile works out of the box on Debian systems.</li>
+</ul>
+</li>
+</ul>
+<p>In this release, we update the <a class="reference external" href="install/install_a.html">install from source</a>, and the <a class="reference external" href="install/vmplayer.html">virtual machine</a> to version 0.1-6481.</p>
+</div>
+<div class="section" id="release-0-1-beta-6163-30-march-2009">
+<h2>Release 0.1 beta (6163) 30 March 2009</h2>
+<ul class="simple">
+<li>Bugfixes:<ul>
+<li>Fixed bug that resulted in simulation hanging when running in MPI
+mode (6039)</li>
+<li>Solved error in regression test (test_gmsh1_0_import.py). The error
+was in the test code, not in the conversion code. (5987)</li>
+</ul>
+</li>
+<li>New Features:<ul>
+<li>New functionality: Zhang-Li spin torque coupling term for uniform
+current densities added and documented. (6133)</li>
+</ul>
+</li>
+<li>Improvements:<ul>
+<li>Reduced memory footprint (by approx 7% for the problem in manual/example2)
+(6098)</li>
+<li>Documented <tt class="docutils literal">load_m_from_h5file</tt> (6041) and <tt class="docutils literal">save_restart_file</tt> (6096)</li>
+<li>Document LLG equation of motion (new subsection in section
+Background), and llg_gamma_G parameter in MagMaterials (6014)</li>
+<li>Added more <tt class="docutils literal">save=</tt> usage examples for hysteresis() and relax()
+functions (6096) in documentation of hysteresis command.</li>
+<li>Added MPI-regression tests (6031)</li>
+<li>tidied up file tree (removing out-dated examples, etc) (6059)</li>
+<li>Added mpi debug function nmag.mpi_hello() (6068)</li>
+<li>Allow to switch on debug messages from slaves (usually switched off)
+using --slavelog</li>
+<li>Adding release date to output of nsimversion (6153)</li>
+</ul>
+</li>
+<li>Interface change:<ul>
+<li>Configuration files (RUNID_*.conf) are now only written when the
+--dumpconf switch is provided (6093)</li>
+</ul>
+</li>
+</ul>
+<p>In this release, we update the <a class="reference external" href="install/install_a.html">install from source</a>, the <a class="reference external" href="install/debian.html">debian package (etch)</a>, and the <a class="reference external" href="install/vmplayer.html">virtual machine</a> to version 0.1-6163.</p>
+<p><a class="reference external" href="olderchangelog.html">Older change log entries</a></p>
+<!-- comment:
+
+Where can I find ...
+- - - - - - - - - - - - - - - - - - - -
+
+- some examples showhing how to use nmag?
+- an explanation of what fields and subfields are?
+- information on finite element meshes?
+- acknowledgements?
+
+You can find all this (and a lot more) in the manual (`html
+<manual/html/manual.html>`__ or `pdf <manual/manual.pdf>`__). -->
+<!-- comment:
+
+Site map
+- - - - - - - -
+
+ .. raw:: html
+
+   <div class="displaybox">
+       <h3>Pages</h3>
+<ul><li><a href="manual/html/manual.html">nmag manual (html)</a><p>Manual for nmag (html)</p>
+</li>
+<li><a href="manual/manual.pdf">nmag manual (pdf)</a><p>Manual for nmag (pdf)</p>
+</li></ul>
+<h3>Sub Sections</h3>
+<ul><li><a href="install/index.html">nmag installation instructions</a><p>nmag installation instructions</p>
+</li></ul>
+
+   </div> -->
+<!-- comment:
+
+<h2>License</h2>
+<p><em>nmag</em> is licensed under the GNU Public License.
+
+<h2>Download</h2> <p>The software will be released when it is
+ready. Interested beta users are invited to contact Hans Fangohr
+(fangohr@soton.ac.uk) to request an earlier release.
+
+<h2>Documentation</h2>
+
+<p>A draft of the (incomplete) manual is available <a href="nmag_manual_draft.pdf">here</a> for download.</p>
+
+<h2>Acknowledgements</h2>
+
+<p>This development of this tool is funded by the <a href="http://www.epsrc.ac.uk">Engineering and
+Physical Sciences Research Council (EPSRC)</a> (United Kingdom).
+
+
+<h2>Gallery</h2>
+
+  <p align="center">  <img src="../nsim/nmag/images/comparison.png" width="570"></p>
+
+  <p align="center">  <img src="../nsim/nmag/images/DyFeflip.png" ></p>
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+
+<hr>
+
+<!- - BEGINN GOWEB WEBCOUNTER - ->
+<p><a href="http://www.webcounter.goweb.de"><img src="http://webcounter.goweb.de/7725.GIF" alt="gratis Counter by GOWEB" border="0" vspace="0"></a>
+<font size="-3" color="#4c4c4c">Visits since 18 Sep 2006</font>
+<!- - ENDE GOWEB WEBCOUNTER - ->
+
+</body> </html> -->
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Mon Dec 30 00:48:41 2019</strong>.</small> 
+|  Created with <a href="../rest2web.html">rest2web</a>, and <a href="../computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>
