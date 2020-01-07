@@ -1,0 +1,657 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>Installation Nmag from source (big tarball, "all")</title>
+    <link rel="stylesheet" href="../../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">Install (0.2)
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="install_b.html">tarball (core)</a></li>
+<li><a href="vmware.html">Virtual Machine</a></li>
+<li><a href="install_a.html">tarball (all)</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../../index.html">Nmag home</a></li>
+<li>|</li>
+<li><a href="../index.html">nmag 0.2</a></li>
+<li>|</li>
+<li><a href="index.html">installation</a></li>
+<li>|</li>
+<li>tarball (all)</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document" id="guide-for-installing-nsim-nmag-all-from-sources-big-tar-ball">
+<h1 class="title">GUIDE FOR INSTALLING <tt class="docutils literal">nsim</tt>/<tt class="docutils literal">nmag</tt> all FROM SOURCES (big tar ball)</h1>
+<div class="contents topic" id="table-of-contents-installing-nmag-all-from-big-tarball">
+<p class="topic-title first">Table of Contents Installing Nmag all from big tarball</p>
+<ul class="simple">
+<li><a class="reference internal" href="#installation-requirements" id="id1">Installation requirements</a></li>
+<li><a class="reference internal" href="#download" id="id2">Download</a></li>
+<li><a class="reference internal" href="#installation" id="id3">Installation</a><ul>
+<li><a class="reference internal" href="#setting-up-the-environment" id="id4">Setting up the environment</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing-the-software" id="id5">Testing the software</a></li>
+<li><a class="reference internal" href="#common-test-failure" id="id6">Common test failure</a></li>
+<li><a class="reference internal" href="#removing-the-software" id="id7">Removing the software</a><ul>
+<li><a class="reference internal" href="#package-and-platform-specific-comments" id="id8">Package and platform specific comments</a><ul>
+<li><a class="reference internal" href="#debian-ubuntu" id="id9">Debian/Ubuntu</a></li>
+<li><a class="reference internal" href="#mac-os-x" id="id10">Mac OS X</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#platforms-that-compile-nmag-from-source" id="id11">Platforms that compile Nmag from source</a></li>
+<li><a class="reference internal" href="#faq-frequently-asked-questions" id="id12">FAQ (Frequently Asked Questions)</a><ul>
+<li><a class="reference internal" href="#what-is-all-this-talk-about-nsim-isn-t-the-package-named-nmag" id="id13">What is all this talk about <tt class="docutils literal">nsim</tt> --- Isn't the package named <tt class="docutils literal">nmag</tt>?</a></li>
+<li><a class="reference internal" href="#what-machines-operating-systems-does-nsim-compile-on" id="id14">What machines/operating systems does nsim compile on?</a></li>
+<li><a class="reference internal" href="#why-do-i-not-have-autocompletion-and-colours-in-nsim-i" id="id15">Why do I not have autocompletion and colours in <tt class="docutils literal">nsim_i</tt>?</a></li>
+<li><a class="reference internal" href="#how-can-i-recompile-the-nsim-package-together-with-all-the-required-libraries" id="id16">How can I recompile the <tt class="docutils literal">nsim</tt> package, <em>together</em> with all the required libraries*?</a></li>
+<li><a class="reference internal" href="#can-i-free-some-unused-disk-space-after-compiling-nsim-from-source" id="id17">Can I free some (unused) disk space after compiling nsim from source?</a></li>
+<li><a class="reference internal" href="#binary-files-in-nmag-0-2-0-bin-not-working" id="id18">Binary files in nmag-0.2.0/bin not working</a></li>
+<li><a class="reference internal" href="#i-want-to-recompile-only-nsim-how-can-i-do-this" id="id19">I want to recompile only <tt class="docutils literal">nsim</tt>, how can I do this?</a></li>
+<li><a class="reference internal" href="#i-get-an-hdf5-diag-error-message-when-trying-to-run-an-example" id="id20">I get an HDF5-DIAG error message when trying to run an example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#known-issues" id="id21">Known issues</a></li>
+</ul>
+</div>
+<div class="section" id="installation-requirements">
+<h1><a class="toc-backref" href="#id1">Installation requirements</a></h1>
+<p>Building <tt class="docutils literal">nmag all</tt> will require approximatively 1.4 GB of harddisk space.
+After compilation and issuing <tt class="docutils literal">make clean</tt>, ~550 MB will be
+used. (The reason for this large footprint is that the <tt class="docutils literal">nmag</tt>
+archive tries to make very few assumptions on pre-installed software
+and hence has to bring along all the packages it depends on. This is
+particularly relevant for computing clusters.)</p>
+<p>Depending on hardware characteristics, compilation will usually take
+between 15 minutes and 2 hours.</p>
+<p>The following software packages have to be available on the build system:</p>
+<ul class="simple">
+<li>A sane build environment:<ul>
+<li>The GNU compiler collection: <tt class="docutils literal">gcc</tt>, <tt class="docutils literal">g++</tt>, ...;</li>
+<li><tt class="docutils literal">m4</tt> (scripting language used by configure scripts that are generated by <tt class="docutils literal">autoconf</tt>);</li>
+<li>other GNU standard tools, such as <tt class="docutils literal">make</tt>, <tt class="docutils literal">tar</tt>, <tt class="docutils literal">gzip</tt>, <tt class="docutils literal">bzip2</tt>, ...;</li>
+</ul>
+</li>
+<li>Libraries for fast linear algebra: <tt class="docutils literal">blas</tt>, <tt class="docutils literal">lapack</tt>;</li>
+<li><tt class="docutils literal">gawk</tt> (GNU awk);</li>
+<li><tt class="docutils literal">readline</tt> libraries and headers (for <tt class="docutils literal">python</tt>, <tt class="docutils literal">ipython</tt>, <tt class="docutils literal">nsim_i</tt>).</li>
+<li>zlib / libz (package zlib1g-dev on Ubuntu/Debian)</li>
+</ul>
+<p>On Ubuntu 11.10 you can install these requirements using:</p>
+<pre class="literal-block">
+apt-get install readline-dev g++ libblas-dev libreadline-dev \
+  make m4 gawk zlib1g-dev readline-common liblapack-dev
+</pre>
+</div>
+<div class="section" id="download">
+<h1><a class="toc-backref" href="#id2">Download</a></h1>
+<p>Download the tarball (with a name such as nmag-0.2.0.tar.gz) from <a class="reference external" href="http://nmag.soton.ac.uk">http://nmag.soton.ac.uk</a>. (try <a class="reference external" href="http://nmag.soton.ac.uk/nmag/0.2/download/all">this directory</a> to see available tar balls.</p>
+</div>
+<div class="section" id="installation">
+<h1><a class="toc-backref" href="#id3">Installation</a></h1>
+<p>Untar the archive:</p>
+<pre class="literal-block">
+$ tar xvzf nmag-0.2.0.tar.gz
+</pre>
+<p>At this point you should know that, once the package has been compiled,
+you won't be able to move the nmag-0.2.0 directory to another location.
+Doing so would make the package unusable, since absolute paths are hard-coded
+inside the executables.
+Therefore be sure to unpack the package into an appropriate directory.
+Enter the directory just created by the tar command (which should be
+named &quot;nmag-0.2.0&quot;):</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+</pre>
+<p>and run <tt class="docutils literal">make</tt>:</p>
+<pre class="literal-block">
+$ make
+</pre>
+<p>This command will build <tt class="docutils literal">nsim</tt> and a number of other required
+packages.</p>
+<p>All the software is installed inside the directory <tt class="docutils literal"><span class="pre">nmag-0.2.0</span></tt>,
+so root privileges are not required (see <a class="reference internal" href="#setting-up-the-environment">Setting up the environment</a>).</p>
+<p>If all goes well, nsim can be started once the 'make' command has completed:</p>
+<pre class="literal-block">
+$ ./nsim/bin/nsim
+</pre>
+<p>If this produces a prompt:</p>
+<pre class="literal-block">
+&gt;&gt;&gt;
+</pre>
+<p>then <tt class="docutils literal">nsim</tt> was compiled successfully from source. (However, the readline-dev libraries were missing, and thus the prompt is not an Interactive Python prompt.)</p>
+<p>If:</p>
+<pre class="literal-block">
+$ ./nsim/bin/nsim
+</pre>
+<p>produces a prompt like:</p>
+<pre class="literal-block">
+In [1]:
+</pre>
+<p>then readline-dev has been found during the compilation, and the prompt resembles the IPython prompt.</p>
+<p>(The interpreter can be left, as usual, by pressing Control+d,
+which will send an &quot;End of File&quot; command on its input stream.)</p>
+<div class="section" id="setting-up-the-environment">
+<h2><a class="toc-backref" href="#id4">Setting up the environment</a></h2>
+<p>In order to run <tt class="docutils literal">nsim</tt> (and related programs such as <tt class="docutils literal">ncol</tt>,
+<tt class="docutils literal">nmagpp</tt>, etc.), the shell has to know the path where to find
+these utilities. While it is possible to start <tt class="docutils literal">nsim</tt> as
+<tt class="docutils literal">./nsim/bin/nsim</tt>, it is much more convenient in the long run
+to adjust the shell's $PATH environment variable appropriately.</p>
+<p>For the widespread <tt class="docutils literal">bash</tt> shell, this can be done with these
+commands:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0 # enter the main installation directory
+$ export PATH=`pwd`/nsim/bin:$PATH
+</pre>
+<p>After these adjustments, <tt class="docutils literal">nsim</tt> can be started with the command
+<tt class="docutils literal">nsim</tt> without further path adjustments, regardless of the current
+directory.</p>
+<p>However, as this <tt class="docutils literal">export</tt> command has to be issued within
+very new shell, it may make sense to add it to the shell startup
+command file <tt class="docutils literal">.bashrc</tt>.</p>
+<p>Executing the command <tt class="docutils literal">make hints</tt> in the <tt class="docutils literal">nsim</tt> build directory
+will give information on how to adjust <tt class="docutils literal">.bashrc</tt>:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ make hints
+</pre>
+<p>will produce output similar to</p>
+<pre class="literal-block">
+To be able to launch nsim more easily, append the following line
+to the end of your shell configuration file (for BASH users
+this file is .bashrc and can be found on your home directory ~/.bashrc):
+export PATH=&quot;/home/me/nmag-0.2.0/nsim/bin:$PATH&quot;
+</pre>
+<p>Note that there are other shells which behave differently from bash,
+such as in particular cshell or tcshell. For these in particular, the
+command to set environment variables is <tt class="docutils literal">setenv</tt> rather than
+<tt class="docutils literal">export</tt>.</p>
+</div>
+</div>
+<div class="section" id="testing-the-software">
+<h1><a class="toc-backref" href="#id5">Testing the software</a></h1>
+<p>After successful completion, we recommend to run a suite of unit and
+regression tests. If these pass (i.e. they do not fail), then
+everything seems to work.</p>
+<p>The test can be run by calling:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ make check
+</pre>
+<p>This should take less than one minute to complete. If the output finishes with</p>
+<pre class="literal-block">
+======== tests finished: k passed, l skipped in XX.XX seconds ==========
+</pre>
+<p>(where k and l are integers), then all seems to be
+well. Congratulations. While you can attempt to run the tests below,
+this should not be necessary.</p>
+<p>The l tests that have been skipped, take a bit more computation time (of the
+order of 1 hour). To test them as well, one can use:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ make checkslow
+</pre>
+<p>If, after completion of either of these checks, the last line reads:</p>
+<pre class="literal-block">
+======== tests finished: k passed, m failed, l skipped in XX.XX seconds ========
+</pre>
+<p>then m tests have failed. You will also get further debug output
+following this summary line.</p>
+<p>Other available test targets are <tt class="docutils literal">make checkmpi</tt> and <tt class="docutils literal">make
+checkhlib</tt>. Please read the corresponding sections in the manual
+before running those  -- they will fail unless the right environment has
+been set up.</p>
+</div>
+<div class="section" id="common-test-failure">
+<h1><a class="toc-backref" href="#id6">Common test failure</a></h1>
+<p>The following messages are typical for the output of <tt class="docutils literal">make check</tt> if the zlib library was not present <em>during the compilation of nmag</em>. (This relates to the pytables python module using hdf5 which in turn relies on zlib to read and write compressed data.)</p>
+<pre class="literal-block">
+regression/nmesh/import/gmsh1_0/test_gmsh1_0_import.py[2] .F
+../../../nsim/mpi/test_mpi_hello.py[2] ss
+../../../unit/nmeshmirror/test_nmeshmirror.py[1] .
+../../../unit/pycaml/test_refcount.py[1] .
+../../../unit/pycaml/test_trial.py[2] ..
+../../nmag/bigbar/mpi/test_slow_mpi_bigbar.py[2] ss
+../../nmag/bigbar/nmag4/test_slow_bigbar.py[2] ss
+../../nmag/bugs/twohmx/test_hlib_twohmx.py[1] s
+../../nmag/demag_twomat/test_slow_bug_ticket175.py[1] s
+../../nmag/nmagprobe/test_all.py[1] F
+../../nmag/pymodules/test_python_modules_installed.py[1] .
+../../nmag/restart/test_restart.py[1] .
+../../nmesh/import/gmsh1_0/test_gmsh1_0_import.py[2] .F
+../../../nsim/mpi/test_mpi_hello.py[2] ss
+../../../../unit/nmeshmirror/test_nmeshmirror.py[1] .
+../../../unit/pycaml/test_refcount.py[1] .
+../../../unit/pycaml/test_trial.py[2] ..
+
+&lt;snip&gt;
+
+% (complib, default_complib), FiltersWarning )
+HDF5-DIAG: Error detected in HDF5 (1.8.7) thread 0:
+#000: H5Dio.c line 174 in H5Dread(): can't read data
+  major: Dataset
+  minor: Read failed
+#001: H5Dio.c line 448 in H5D_read(): can't read data
+  major: Dataset
+  minor: Read failed
+#002: H5Dchunk.c line 1729 in H5D_chunk_read(): unable to read raw data chunk
+  major: Low-level I/O
+  minor: Read failed
+#003: H5Dchunk.c line 2760 in H5D_chunk_lock(): data pipeline read failed
+  major: Data filters
+  minor: Filter operation failed
+#004: H5Z.c line 1094 in H5Z_pipeline(): required filter is not registered
+  major: Data filters
+  minor: Read failed
+Closing remaining open files: /home/test/local/nmag-0.2.0/nsim/tests/mesh/s3n1ellipsoid.nmesh.h5... done
+make[3]: *** [run_dat.h5] Error 1
+make[2]: *** [all] Error 2
+
+&lt;snip&gt;
+
+        #check that file name exists;
+        if not os.path.exists(filename):
+E           raise NmeshUserError,&quot;file '%s' does not exist&quot; % filename
+&gt;           NmeshUserError: file 'sphere2.nmesh' does not exist
+
+[/home/test/local/nmag-0.2.0/nsim/interface/nmeshlib/lib1.py:853]
+- - - - - - - -  test_gmsh_1_0_import_gzipped: recorded stdout - - - - - - - - -
+       root:2011-12-07 11:24:05,242 nmesh_exceptions.py    8 CRITICAL Exception type: NmeshUserError
+       root:2011-12-07 11:24:05,243 nmesh_exceptions.py    9 CRITICAL Exception msg : file 'sphere2.nmesh' does not exist
+
+________________________________________________________________________________
+======= tests finished: 52 passed, 4 failed, 16 skipped in 18.17 seconds =======
+       root:2011-12-07 11:24:05,664   shell.py   85 WARNING SystemExit with exit_status=1
+make[1]: *** [check] Error 1
+make[1]: Leaving directory `/home/test/local/nmag-0.2.0/nsim/tests'
+</pre>
+<!-- comment:
+
+
+Testing the software
+- - - - - - - - - - - - - - - - - - - -
+
+After successful compilation, we suggest to run a small test to ensure
+``nsim`` is working properly.
+`gnuplot <http://www.gnuplot.info>`__ is required for producing the final
+graph with the results. ``gnuplot`` is a plotting program;
+many distributions provide an easy way to install it.
+The script runs a basic simulation example, which should bring up
+most unresolved problems::
+
+  $ cd nmag-0.2.0
+  $ cd nsim/tests/regression/nmag/bigbar
+  $ make check
+
+The simulation should take 5-10 minutes, depending on the machine's
+hardware. In the end, it will produce a graph that can be viewed with
+the command::
+
+  $ gv results/results.eps
+
+This graph shows the time evolution of the three components of the
+mean magnetization for a Permalloy bar of size 30 nm x 30 nm x 100
+nm. There should be good agreement between the ``nsim`` data and those
+produced using ``OOMMF`` and ``Magpar`` for the same problem. -->
+</div>
+<div class="section" id="removing-the-software">
+<h1><a class="toc-backref" href="#id7">Removing the software</a></h1>
+<p>When compilation has finished, unnecessary files can be removed with
+the command <tt class="docutils literal">make clean</tt>. The command <tt class="docutils literal">make uninstall</tt> will remove
+all the files produced in the compilation phase and essentially leave
+the bare source tree. (The name <tt class="docutils literal">uninstall</tt> may seem strange at
+first, as this way of building <tt class="docutils literal">nsim</tt> does not install anything in
+system directories such as <tt class="docutils literal">/usr/lib</tt>, but this is justified as we
+recursively call <tt class="docutils literal">make uninstall</tt> on all the packages <tt class="docutils literal">nsim</tt>
+depends on which will be installed into a <tt class="docutils literal"><span class="pre">nmag-0.2.0</span></tt> subdirectory.)</p>
+<p>To completely clean nmag from the system, it is sufficient to simply
+remove the <tt class="docutils literal"><span class="pre">nmag-0.2.0</span></tt> directory:</p>
+<pre class="literal-block">
+$ rm -rf nmag-0.2.0
+</pre>
+<p>The important point to remember is that the <tt class="docutils literal">nmag</tt>/<tt class="docutils literal">nsim</tt>
+installation lives entirely within this directory and does not touch
+anything outside it. (The directory /tmp may be an exception, though.)</p>
+<div class="section" id="package-and-platform-specific-comments">
+<h2><a class="toc-backref" href="#id8">Package and platform specific comments</a></h2>
+<p>The packages which are more likely to be missing are <tt class="docutils literal">gawk</tt> and
+<tt class="docutils literal">readline</tt>.</p>
+<p><tt class="docutils literal">gawk</tt> (GNU awk) is a very common program. Most operating system
+distributions provide means to fetch and install a <tt class="docutils literal">gawk</tt> package,
+which often already comes pre-installed. (We need gawk to compile one
+of the libraries [Petsc] that we depend on.)</p>
+<p><tt class="docutils literal">readline</tt> is commonly installed on linux systems, but often without
+its development files. If the directory <tt class="docutils literal">/usr/include/readline</tt> (or
+<tt class="docutils literal">/usr/local/include/readline</tt>) exists, readline development headers
+should be available. Otherwise, it is likely that the readline library
+is installed without its development files.  On Debian-based Linux
+distributions such as Ubuntu, one can issue the command
+<tt class="docutils literal">aptitude install <span class="pre">libreadline-dev</span></tt>
+(resp. <tt class="docutils literal"><span class="pre">apt-get</span> install <span class="pre">libreadline-dev</span></tt>) to install the
+missing package.</p>
+<p>Troubleshooting issues such as ending up with a <tt class="docutils literal">nsim_i</tt> executable
+which does not show a coloured prompt and misses features such as tab
+autocompletion are discussed in the section <a class="reference internal" href="#faq">FAQ</a>.</p>
+<p>The GNU compiler collection, as well as <tt class="docutils literal">m4</tt>, <tt class="docutils literal">tar</tt>, <tt class="docutils literal">gzip</tt>, <tt class="docutils literal">bzip2</tt>
+should already be present if the machine already has been used for
+some software development.</p>
+<p>These are widespread developer tools and --- as for <tt class="docutils literal">gawk</tt> --- the
+operating system distribution should provide an easy way to install
+them.</p>
+<p>The same holds for the <tt class="docutils literal">lapack</tt> and the <tt class="docutils literal">blas</tt> linear algebra
+libraries.</p>
+<div class="section" id="debian-ubuntu">
+<h3><a class="toc-backref" href="#id9">Debian/Ubuntu</a></h3>
+<p>A fresh installation on debian (etch) requires the following extra
+packages to be installed:</p>
+<p><tt class="docutils literal">m4</tt> <tt class="docutils literal">gawk</tt> <tt class="docutils literal"><span class="pre">zlib1g-dev</span></tt> <tt class="docutils literal">g++</tt> <tt class="docutils literal"><span class="pre">libblas-dev</span></tt>
+<tt class="docutils literal"><span class="pre">liblapack-dev</span></tt> <tt class="docutils literal"><span class="pre">readline-common</span></tt> <tt class="docutils literal"><span class="pre">libreadline-dev</span></tt> <tt class="docutils literal">make</tt></p>
+<p>for example through executing:</p>
+<pre class="literal-block">
+apt-get install readline-dev g++ libblas-dev libreadline-dev \
+  make m4 gawk zlib1g-dev readline-common liblapack-dev
+</pre>
+</div>
+<div class="section" id="mac-os-x">
+<h3><a class="toc-backref" href="#id10">Mac OS X</a></h3>
+<p>On Mac OS X, <a class="reference external" href="http://finkproject.org/">fink</a> can be used to install the additional tools needed by
+<tt class="docutils literal">nsim</tt> (such as <tt class="docutils literal">gawk</tt>, for example).</p>
+</div>
+</div>
+</div>
+<div class="section" id="platforms-that-compile-nmag-from-source">
+<h1><a class="toc-backref" href="#id11">Platforms that compile Nmag from source</a></h1>
+<p>The Nmag 0.1 software has been compiled successfully (and without intervention)
+on the following systems:</p>
+<blockquote>
+<ul class="simple">
+<li>on Windows XP SP3 (Intel Core 2) through andLinux based on Ubuntu 9.04;</li>
+<li>IntelMac (=CoreDuo CPU in MacBook) Mac OS X (10.4) system;</li>
+<li>IntelMac (Intel Core 2 in iMac) Mac OS X (10.4.11) system;</li>
+<li>PowerPC Mac (MacMini, iMac) Mac OS X Tiger (10.4) system;</li>
+<li>MacBook Pro (Intel), Mac OS X Leopard (10.5) system;</li>
+<li>AMD Athlon 64 (running in 32bit mode) with Debian Linux (Etch);</li>
+<li>AMD Athlon 64 (running in 32bit mode) with Debian Linux (Lenny);</li>
+<li>Opteron machine running 64bit linux;</li>
+<li>Pentium 3 machine running 32bit linux;</li>
+<li>Pentium M machine running 32bit Ubuntu Linux (Gutsy);</li>
+<li>AthlonXP 2200+ running Ubuntu 7.04 (Feisty), and Ubuntu 7.10
+(Gutsy), both 32 bit</li>
+<li>Athlon64 X2 4200+ Dual Core running Ubuntu 7.10 64bit</li>
+<li>IBM x440 system (with 8x1.9Ghz Intel Xeon processors) running
+Red Hat Enterprise Linux AS release 3 (Taroon Update 2)</li>
+<li>Debian 32 and 64 bit with Pentium 4, E7200, and Q9300 processors</li>
+<li>AMD64 Athlon64 3200, OpenSuSE 11.0, 64bit, Kernel 2.6.25.20</li>
+<li>Dual Xeon quad core processors, 2.4 GHz, 24GB RAM, Red Hat Enterprise Linux Desktop 5.3</li>
+<li>Fedora 12</li>
+</ul>
+</blockquote>
+<p>Platforms that needed a little help:</p>
+<blockquote>
+<ul class="simple">
+<li>Aspire One Netbook running the (Fedora based) Linux Linpus Lite
+on intel Atom processor. The user reports that the 'diffutils'
+package on the Linpus is broken and stopped the installation. He
+downloaded the original diffutils from the GNU webpage, installed
+this. Afterwards, Nmag compiled automatically from source (Dec 2008).</li>
+</ul>
+</blockquote>
+<p>The Nmag 0.2 software has been compiled successfully (and without intervention)
+on the following systems:</p>
+<blockquote>
+<ul class="simple">
+<li>Ubuntu 11.10 (Intel 32 and 64 bit)</li>
+<li>Ubuntu 11.04</li>
+<li>Mac OS X 10.6 (Snow Leopard)</li>
+<li>Mac OS X 10.7 (Lion)</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="faq-frequently-asked-questions">
+<span id="faq"></span><h1><a class="toc-backref" href="#id12">FAQ (Frequently Asked Questions)</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#what-is-all-this-talk-about-nsim-isn-t-the-package-named-nmag" id="id22">What is all this talk about <tt class="docutils literal">nsim</tt> --- Isn't the package named <tt class="docutils literal">nmag</tt>?</a></li>
+<li><a class="reference internal" href="#what-machines-operating-systems-does-nsim-compile-on" id="id23">What machines/operating systems does nsim compile on?</a></li>
+<li><a class="reference internal" href="#why-do-i-not-have-autocompletion-and-colours-in-nsim-i" id="id24">Why do I not have autocompletion and colours in <tt class="docutils literal">nsim_i</tt>?</a></li>
+<li><a class="reference internal" href="#how-can-i-recompile-the-nsim-package-together-with-all-the-required-libraries" id="id25">How can I recompile the <tt class="docutils literal">nsim</tt> package, <em>together</em> with all the required libraries*?</a></li>
+<li><a class="reference internal" href="#can-i-free-some-unused-disk-space-after-compiling-nsim-from-source" id="id26">Can I free some (unused) disk space after compiling nsim from source?</a></li>
+<li><a class="reference internal" href="#binary-files-in-nmag-0-2-0-bin-not-working" id="id27">Binary files in nmag-0.2.0/bin not working</a></li>
+<li><a class="reference internal" href="#i-want-to-recompile-only-nsim-how-can-i-do-this" id="id28">I want to recompile only <tt class="docutils literal">nsim</tt>, how can I do this?</a></li>
+<li><a class="reference internal" href="#i-get-an-hdf5-diag-error-message-when-trying-to-run-an-example" id="id29">I get an HDF5-DIAG error message when trying to run an example</a></li>
+</ul>
+</div>
+<div class="section" id="what-is-all-this-talk-about-nsim-isn-t-the-package-named-nmag">
+<h2><a class="toc-backref" href="#id22">What is all this talk about <tt class="docutils literal">nsim</tt> --- Isn't the package named <tt class="docutils literal">nmag</tt>?</a></h2>
+<p><tt class="docutils literal">nsim</tt> is a general purpose multiphysics simulation
+package. <tt class="docutils literal">nmag</tt> is a particular application based on it,
+providing micromagnetism.</p>
+<p>The major effort is to install <tt class="docutils literal">nsim</tt>. Once this is done
+<tt class="docutils literal">nmag</tt> will ''just work''. It is for this reason, that there are
+many references to <tt class="docutils literal">nsim</tt> in this document.</p>
+</div>
+<div class="section" id="what-machines-operating-systems-does-nsim-compile-on">
+<h2><a class="toc-backref" href="#id23">What machines/operating systems does nsim compile on?</a></h2>
+<p>This installation tool was designed to work on Linux platforms.  It
+does not (yet) work on MS Windows, but it has been successfully
+used to compile <tt class="docutils literal">nsim</tt> on Mac (both PowerPC and Intel
+architectures) and may work under other flavours of unix OSes.</p>
+<p>See <a class="reference internal" href="#platforms-that-compile-nmag-from-source">Platforms that compile nmag from source</a> for a list of systems on
+which a successful compilation has been reported.</p>
+</div>
+<div class="section" id="why-do-i-not-have-autocompletion-and-colours-in-nsim-i">
+<h2><a class="toc-backref" href="#id24">Why do I not have autocompletion and colours in <tt class="docutils literal">nsim_i</tt>?</a></h2>
+<p>You have just installed <tt class="docutils literal">nsim</tt>.  And <tt class="docutils literal">nsim_i</tt> works, but the
+<tt class="docutils literal">nsim_i</tt> output is not coloured and the auto-completition is not
+available either.</p>
+<p>Probably <tt class="docutils literal">nsim</tt>, was compiled on a system where the readline library
+(or its developer files) was not installed.  <tt class="docutils literal">nsim_i</tt> needs this
+library for features such as command auto-completition and coloured
+text.</p>
+<p>One way to resolve this is to install the libreadline developer
+files (which should in particular provide <tt class="docutils literal">readline.h</tt>),
+as explained in the section <a class="reference internal" href="#installation-requirements">Installation requirements</a>
+and then recompile from scratch.</p>
+<p>This is a short-cut to recompile just the python interpreter
+(i.e. the readline-dependent part):</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ rm -rf .deps_python_* python/
+$ make .deps_python_install
+$ make --dry-run | grep touch | sh
+</pre>
+<p>The last line is necessary to update the dependency files:
+normally rebuilding <tt class="docutils literal">python</tt> would cause all the other libraries
+(mpich, petsc, etc.) to be rebuilt as well, the last line
+is a trick to avoid this!</p>
+</div>
+<div class="section" id="how-can-i-recompile-the-nsim-package-together-with-all-the-required-libraries">
+<h2><a class="toc-backref" href="#id25">How can I recompile the <tt class="docutils literal">nsim</tt> package, <em>together</em> with all the required libraries*?</a></h2>
+<p>Normally there should be no need to recompile the <tt class="docutils literal">nsim</tt> package.
+If for some reasons you want to do so, you can issue the following
+commands:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ make uninstall
+$ make
+</pre>
+<p>Note that <tt class="docutils literal">make uninstall</tt> will remove all the files produced by a
+previous compilation of <tt class="docutils literal">nsim</tt>. So, all the programs and libraries
+required by <tt class="docutils literal">nsim</tt> will be rebuilt by these commands (this can take
+some time).</p>
+</div>
+<div class="section" id="can-i-free-some-unused-disk-space-after-compiling-nsim-from-source">
+<h2><a class="toc-backref" href="#id26">Can I free some (unused) disk space after compiling nsim from source?</a></h2>
+<p>You have compiled <tt class="docutils literal">nsim</tt> from source and it occupies more about 1.4 GB
+of space on your hard-drive. Some directories which were necessary for
+the compilation can be removed after the compilation has finished. The
+command is:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ make clean
+</pre>
+<p>This will free about 0.9 GB.</p>
+</div>
+<div class="section" id="binary-files-in-nmag-0-2-0-bin-not-working">
+<h2><a class="toc-backref" href="#id27">Binary files in nmag-0.2.0/bin not working</a></h2>
+<p>The installation of <tt class="docutils literal">nsim</tt> produces a number of executables in the
+<tt class="docutils literal"><span class="pre">nmag-0.2.0/bin</span></tt> directory. When you try to run some of these, they do
+not necessarily work properly. Do you need to be concerned that there
+is something wrong with the installation?</p>
+<p>No, probably everything is alright.  The software is not installed
+in the traditional unix directories (<tt class="docutils literal">/usr/bin</tt>, <tt class="docutils literal">/usr/lib</tt>,
+etc.) therefore the operating system needs to be instructed where
+to find executables, libraries, etc.</p>
+<p><tt class="docutils literal">nsim</tt> does that by calling the shell script
+<tt class="docutils literal"><span class="pre">nmag-0.2.0/exports.bash</span></tt>.</p>
+<p>If (for some strange reason) you want to execute the binary files
+under <tt class="docutils literal"><span class="pre">.../nmag-0.2.0/bin</span></tt>, these definitions have to be pre-loaded
+into the shell. For example, to start the Objective Caml interpreter
+that is compiled as part of the <tt class="docutils literal">nsim</tt> installation from source, you
+could use:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ . exports.bash
+$ ./bin/ocaml
+</pre>
+<p>This may not be necessary, but is strongly suggested.
+(Note that this is specific to the bash shell.)</p>
+</div>
+<div class="section" id="i-want-to-recompile-only-nsim-how-can-i-do-this">
+<h2><a class="toc-backref" href="#id28">I want to recompile only <tt class="docutils literal">nsim</tt>, how can I do this?</a></h2>
+<p>This should not be necessary for normal users. If you are a developer
+and you are extending the <tt class="docutils literal">nsim</tt> OCaml core, then this is what you
+need:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ . exports.bash
+$ cd nsim # enter the nsim source directory
+$ make
+</pre>
+<p>These commands will only compile <tt class="docutils literal">nsim</tt>, without reconfiguring it.
+If you want to reconfigure and recompile <tt class="docutils literal">nsim</tt> use the following
+commands:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ rm nsim/config/configuration.inc
+$ make
+</pre>
+<p>Note that the <tt class="docutils literal">make</tt> command is used from the main <tt class="docutils literal"><span class="pre">nmag-0.2.0</span></tt>
+directory, not <tt class="docutils literal"><span class="pre">nmag-0.2.0/nsim</span></tt>.  These commands will configure
+<tt class="docutils literal">nsim</tt> by running <tt class="docutils literal"><span class="pre">nmag-0.2.0/config/configure.py</span></tt> and passing to it
+the proper command line options to specify the paths of the required
+libraries.</p>
+</div>
+<div class="section" id="i-get-an-hdf5-diag-error-message-when-trying-to-run-an-example">
+<h2><a class="toc-backref" href="#id29">I get an HDF5-DIAG error message when trying to run an example</a></h2>
+<p>The error message reads:</p>
+<pre class="literal-block">
+HDF5-DIAG: Error detected in HDF5 library version: 1.6.5 thread 0.
+Back trace follows.
+</pre>
+<p>This error has been seen on a (misconfigured) linux system and is
+caused by the hdf5 library believing to link to <tt class="docutils literal">libz</tt> but
+actually linking to a library that has the same name but different
+content. In particular, it seems that Matlab provides it's own
+<tt class="docutils literal">libz</tt> library (which has nothing to do with the standard
+<tt class="docutils literal">libz</tt>) and this library was earlier in the search path than the
+actual <tt class="docutils literal">libz</tt>.</p>
+<p>A workaround is to copy the right <tt class="docutils literal">libz</tt> (a file like
+<tt class="docutils literal">/usr/lib/libz.so.*</tt>) to the <tt class="docutils literal"><span class="pre">nmag-0.2.0/lib</span></tt> directory. It
+seems prudent to also copy the symbolic links to this
+library, for example with:</p>
+<pre class="literal-block">
+$ cp /usr/lib/libz.so.* nmag-0.2.0/lib
+</pre>
+</div>
+</div>
+<div class="section" id="known-issues">
+<h1><a class="toc-backref" href="#id21">Known issues</a></h1>
+<p>On some Suse systems the installation failed, due to a weakness
+of the petsc configuration process: petsc seems unable to link against
+the lapack library. The problem was solved by adding an appropriate
+flag to the <tt class="docutils literal">LDFLAGS</tt> environment variable:</p>
+<pre class="literal-block">
+$ cd nmag-0.2.0
+$ export LDFLAGS=-lgfortran
+$ make
+</pre>
+<p>This is the same procedure as explained in the section <a class="reference internal" href="#installation">Installation</a>
+with just one more line to set the LDFLAGS variable.</p>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Tue Jan 24 14:36:37 2012</strong>.</small> 
+|  Created with <a href="../../rest2web.html">rest2web</a>, and <a href="../../computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>
