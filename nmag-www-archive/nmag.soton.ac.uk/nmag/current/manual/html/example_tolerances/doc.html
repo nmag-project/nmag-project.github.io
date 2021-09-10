@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.26. Example: Timestepper tolerances &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.27. Example: Parallel execution (MPI)" href="../example_mpi1/doc.html" />
+    <link rel="prev" title="2.25. Example: Calculation of dispersion curves" href="../example_nmagprobe/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_mpi1/doc.html" title="2.27. Example: Parallel execution (MPI)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_nmagprobe/doc.html" title="2.25. Example: Calculation of dispersion curves"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-timestepper-tolerances">
+<span id="example-tolerances"></span><h1>2.26. Example: Timestepper tolerances<a class="headerlink" href="doc.html#example-timestepper-tolerances" title="Permalink to this headline">¶</a></h1>
+<p>The tolerance settings of a simulation can greatly affect the
+performance, the accuracy and the usefulness of a simulation. Section
+<a class="reference internal" href="../background.html#solvers-and-tolerance-settings"><em>Solvers and tolerance settings</em></a> provides an overview. In this
+example, we demonstrate</p>
+<ul class="simple">
+<li>how the time integrator&#8217;s tolerances can be set and</li>
+<li>how these tolerances affect the simulation results and performance.</li>
+</ul>
+<p>The time integrator we use is the PVODE solver from the <a class="reference external" href="http://www.llnl.gov/CASC/sundials/">SUNDIALS</a>
+package. It is optimised to deal with stiff systems of ordinary
+differential equations and is therefore very suited for micromagnetic
+simulations. It can also execute in parallel (i.e. across several CPUs
+at the same time using MPI). The computational challenge of the time
+integration lies in the different time scales associated with the
+(fast) exchange field and the (slower) demagnetisation field.</p>
+<p>Sundials provides two parameters <tt class="docutils literal"><span class="pre">rtol</span></tt> and <tt class="docutils literal"><span class="pre">atol</span></tt> (see <a class="reference external" href="https://computation.llnl.gov/casc/sundials/documentation/cv_guide.pdf">sundials
+documentation</a>)
+to control the required accuracy of the calculations. Sundials uses
+these parameters to determine the number of iterations required to
+simulate a given amount of real time (for example one pico
+second). Equivalently, these parameters determine the amount of real
+time that can be simulated per iteration.</p>
+<p>It is common that the amount of time simulated per iteration varies
+throughout a simulation as different time step sizes are required to
+resolve the physics to the same accuracy level. (The <a class="reference internal" href="../files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> data file
+contains one column <tt class="docutils literal"><span class="pre">last_step_dt</span></tt> which provides the size of the
+time step. Use <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> to extract this data conveniently.)</p>
+<p>The sundials tolerance parameters <tt class="docutils literal"><span class="pre">rtol</span></tt> and <tt class="docutils literal"><span class="pre">atol</span></tt> can be set in
+nmag using the <tt class="docutils literal"><span class="pre">ts_rel_tol</span></tt> and <tt class="docutils literal"><span class="pre">ts_abs_tol</span></tt> arguments in the
+<a class="reference internal" href="../command_reference.html#set-params"><em>set_params</em></a> function. (The letters <tt class="docutils literal"><span class="pre">ts</span></tt> in <tt class="docutils literal"><span class="pre">ts_rel_tol</span></tt> and
+<tt class="docutils literal"><span class="pre">ts_abs_tol</span></tt> stand for Time Stepper).</p>
+<p>The integration of the Landau Lifshitz and Gilbert equation is carried
+out on the <em>normalised</em> magnetisation, and the corresponding field
+(see <a class="reference internal" href="../background.html#fields-and-subfields-in-nmag"><em>Fields and Subfields in Nmag</em></a>) is called <tt class="docutils literal"><span class="pre">m</span></tt> (the magnetisation with the saturation magnetisation magnitude is called capital <tt class="docutils literal"><span class="pre">M</span></tt> in nmag). Because this
+field is normalised, we set <tt class="docutils literal"><span class="pre">rtol</span></tt> and <tt class="docutils literal"><span class="pre">atol</span></tt> to the same value in
+this example, and refer to the value just as <tt class="docutils literal"><span class="pre">tol</span></tt>.</p>
+<p>We use the program <a class="reference download internal" href="../_downloads/bar_tol.py"><tt class="xref download docutils literal"><span class="pre">bar_tol.py</span></tt></a> that:</p>
+<ul class="simple">
+<li>re-uses the bar studied in <a class="reference internal" href="../example2/doc.html#example-2"><em>Example 2: Computing the time development of a system</em></a> but</li>
+<li>carries out the time integration for a number of different tolerance values.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="kn">import</span> <span class="nn">time</span> <span class="c">#python standard modules, used to measure run time</span>
+
+<span class="k">def</span> <span class="nf">run_sim</span><span class="p">(</span><span class="n">tol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function that is called repeatedly with different tolerance values.</span>
+<span class="sd">    Each function call is carrying out one simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                              <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                              <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                              <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c">#compose name of simulation to inlude value of tolerance</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="s">&quot;bar_</span><span class="si">%.6f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">tol</span><span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;bar30_30_100.nmesh.h5&quot;</span><span class="p">,</span>
+                  <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span>
+                  <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c">#set tolerance (has to be called after set_m())</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">ts_abs_tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">ts_rel_tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">2.5e-12</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)</span> 
+
+    <span class="n">timing</span> <span class="o">=</span> <span class="mi">0</span> <span class="c">#initialise variable to measure execution time</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">121</span><span class="p">):</span> 
+        <span class="n">timing</span> <span class="o">-=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>    <span class="c">#start measuring time</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">advance_time</span><span class="p">(</span><span class="n">dt</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>   <span class="c">#compute time development for 300ps</span>
+        <span class="n">timing</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>    <span class="c">#stop measuring time</span>
+                                 <span class="c">#we exclude time required to save data</span>
+                                 
+        <span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>          <span class="c">#save averages every 2.5 ps</span>
+
+    <span class="c">#at end of simulation, write performance data into summary file</span>
+    <span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;resultsummary.txt&#39;</span><span class="p">,</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="c">#open file to append </span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%g</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%g</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tol</span><span class="p">,</span><span class="n">sim</span><span class="o">.</span><span class="n">clock</span><span class="p">[</span><span class="s">&#39;step&#39;</span><span class="p">],</span><span class="n">timing</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="c">#main program</span>
+<span class="n">tols</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-1</span><span class="p">,</span><span class="mf">1e-2</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-5</span><span class="p">,</span><span class="mf">1e-6</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">tol</span> <span class="ow">in</span> <span class="n">tols</span><span class="p">:</span>
+    <span class="n">run_sim</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From a conceptual point of view, we see something new here: the section of the code that starts with:</p>
+<div class="highlight-python"><pre>def run_sim(tol):</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">def</span></tt>ines a function with name <tt class="docutils literal"><span class="pre">run_sim</span></tt> which will carry out a
+complete simulation every time it is called. It takes one argument:
+the parameter <tt class="docutils literal"><span class="pre">tol</span></tt>. The simulation name (which is re-used in the
+name of the <a class="reference internal" href="../files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> data file) contains the value of <tt class="docutils literal"><span class="pre">tol</span></tt>. For
+example, if the <tt class="docutils literal"><span class="pre">tol=0.1</span></tt>, then the name of the simulation is
+<tt class="docutils literal"><span class="pre">bar_0.100000</span></tt> and the name of the ndt data file is
+<tt class="docutils literal"><span class="pre">bar_0.100000_dat.ndt</span></tt>. We can thus call this function repeatedly
+for different values of <tt class="docutils literal"><span class="pre">tol</span></tt>, and each time a complete simulation
+will be run and new data files created. <a class="footnote-reference" href="doc.html#repeatsimulation" id="id1">[1]</a></p>
+<p>The main loop of the script:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#main program</span>
+<span class="n">tols</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-1</span><span class="p">,</span><span class="mf">1e-2</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-5</span><span class="p">,</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">tol</span> <span class="ow">in</span> <span class="n">tols</span><span class="p">:</span>
+    <span class="n">run_sim</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>simply iterates over values <tt class="docutils literal"><span class="pre">0.1,</span> <span class="pre">0.01,</span> <span class="pre">0.001,</span> <span class="pre">0.0001,</span> <span class="pre">0.00001</span></tt> and
+<tt class="docutils literal"><span class="pre">0.000001</span></tt> and calls the function <tt class="docutils literal"><span class="pre">run_sim</span></tt> with a different
+tolerance value in every iteration of the for-loop.</p>
+<p>Once the program has finished, we have data files
+<tt class="docutils literal"><span class="pre">bar_0.000001_dat.ndt,</span> <span class="pre">bar_0.000010_dat.ndt,</span> <span class="pre">...</span></tt> and
+<tt class="docutils literal"><span class="pre">bar_0.100000_dat.ndt</span></tt> that can be analysed and plotted in the usual
+way.</p>
+<p>We show a plot of the x, y and z components of the magnetisation
+against time (as in <a class="reference internal" href="../example2/doc.html#example-2"><em>Example 2: Computing the time development of a system</em></a>) for each of the tolerance
+values. The run with <tt class="docutils literal"><span class="pre">tol=1e-6</span></tt> is the most accurate, and the
+corresponding black line has been tagged with little <tt class="docutils literal"><span class="pre">+</span></tt> characters.</p>
+<img alt="../_images/plot1.png" class="align-center" src="../_images/plot1.png" style="width: 710px; height: 470px;" />
+<p>We can see that curves seem to coincide (at this scale) apart from the
+red <tt class="docutils literal"><span class="pre">tol=1e-1</span></tt> curve which deviates somewhat.
+We zoom in to region between 1.2e-10 seconds and 2e-10 seconds and
+focus on the lowers curves in the main plot:</p>
+<img alt="../_images/plot2.png" class="align-center" src="../_images/plot2.png" style="width: 702px; height: 470px;" />
+<p>The better resolution reveals that there is a clear deviation of the
+various curves: the red (0.1), indigo (0.01) and yellow (1e-3) curves
+approach the black (1e-6) curve in this order. The blue (1e-4) and
+green (1e-5) curves appear to coincide with the black reference curve.</p>
+<p>Another zoom at the z-component of the magnetisation towards the end
+of the simulated time interval (time&gt;1.8e-10 seconds) shows that the
+less accurate curves (red, and then indigo and yellow) show a large
+amount of jitter (although following the reference curve <em>on
+average</em>).</p>
+<img alt="../_images/plot3.png" class="align-center" src="../_images/plot3.png" style="width: 706px; height: 471px;" />
+<p>We conclude that we should use a tolerance of at most 1e-3 for this
+simulation; better 1e-4 or smaller.</p>
+<p>In simulation work, we are of course interested to get the most
+accurate simulation results. However, in reality this is conflicting
+with the increased run time that is associated with more accurate
+simulations. In this example, we have written some performance data
+into <a class="reference download internal" href="../_downloads/resultsummary.txt"><tt class="xref download docutils literal"><span class="pre">resultssummary.txt</span></tt></a>. Reformatted,
+postprocessed and the rows re-ordered, this is the data complete with
+table headings:</p>
+<div class="highlight-python"><pre>========== ========== ============== =====================
+       tol      steps   CPU time (s) CPU time per step (s)
+========== ========== ============== =====================
+  0.000001        740         120.81                 0.163
+  0.000010        356          62.37                 0.175
+  0.000100        182          46.10                 0.253
+  0.001000        119          66.36                 0.558
+  0.010000        114          92.08                 0.808
+  0.100000         88          94.69                 1.076
+========== ========== ============== =====================
+</pre>
+</div>
+<p>The accuracy of the simulation results decreases from the top of the
+table downwards. We know from the graphs above that we should use a
+tolerance setting of 1e-4 or smaller to obtain fairly accurate results
+(assuming that the 1e-6 curve is used as a reference).</p>
+<p>The number of iterations required increases from the tolerance 1e-4 to
+tolerance 1e-6 by a factor of 4 while the total CPU time increases by
+a factor of 2.6.</p>
+<p>Looking at the greater tolerances 1e-3 and 0.01, we see that while the
+number of iterations required decreases, the CPU time is
+increasing. This is the first indication that at this tolerance level
+the system becomes difficult to treat efficiently by sundials (it
+basically appears to be noisy and stochastic equations are hard to
+integrate).</p>
+<p>In summary,</p>
+<ul class="simple">
+<li>to minimise the simulation time, we need to choose a tolerance value
+as large as &#8220;possible&#8221;.</li>
+<li>The definition of &#8220;possible&#8221; will depend on the context. A good way
+of obtaining a suitable tolerance value is to run the same simulation
+repeatedly with decreasing tolerance values. Once the resulting curves
+converge (as a function of decreasing tolerance settings), a good tolerance level
+has been found. (This would be 1e-4 for the example shown here.)</li>
+<li>Choosing the tolerance values to be too large, can be counter
+productive (and take much more CPU time than the lower accuracy
+level).</li>
+<li>The default value for the sundials tolerances is shown in the
+documentation of <a class="reference internal" href="../command_reference.html#set-params"><em>set_params</em></a>. A simulation can often be accelerated
+significantly by increasing this value.</li>
+<li>A change of the tolerances has to be considered together with the
+convergence criterion for hysterises loop calculations (see next
+section: <a class="reference internal" href="doc.html#hysteris-loop-calculation-not-converging-a-word-of-warning">Hysteris loop calculation not converging? A word of warning ...</a>)</li>
+</ul>
+<div class="section" id="hysteris-loop-calculation-not-converging-a-word-of-warning">
+<span id="id2"></span><h2>2.26.1. Hysteris loop calculation not converging? A word of warning ...<a class="headerlink" href="doc.html#hysteris-loop-calculation-not-converging-a-word-of-warning" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> and the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command need to have a criterion how to
+decide when the simulation has reached a (meta)stable state and when
+the relaxation (at a given applied field) should be considered to have
+been reached. A common approach (which is used by OOMMF and nmag, for
+example) is to monitor the change of the (normalised) magnetisation
+with respect to time (i.e. dm/dt). If the absolute value of this drops
+below a given threshold, then one considers the system as converged
+(the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command will return at this point, while the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a>
+command will move to the next field). This threshold can be changed
+from its default value with the <a class="reference internal" href="../command_reference.html#set-params"><em>set_params</em></a> simulation method (the
+attribute is <cite>stopping_dm_dt</cite>).</p>
+<p>The choice of the tolerances (<cite>ts_rel_tol</cite> and <cite>ts_abs_tol</cite>) <em>must</em>
+respect the chosen <cite>stopping_dm_dt</cite> value (or conversely
+the <cite>stopping_dm_dt</cite> needs to be adapted to work with
+the chosen tolerances):
+large values for the tolerances correspond to lower accuracy
+and to larger random fluctuations of dm/dt,
+which consequently may never become lower than <cite>stopping_dm_dt</cite>.
+In such a case the simulation never returns from the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command,
+because the convergence criterion is never satisfied.</p>
+<p>In all the examples we have studied, we have found that the default
+parameters work fine. However, if you find that a simulation never
+returns from the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> or <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command, it is worth reducing
+the tolerances for the time stepper (on increasing <cite>stopping_dm_dt</cite>)
+to see whether this resolves the problem).</p>
+<hr class="docutils" />
+<table class="docutils footnote" frame="void" id="repeatsimulation" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id1">[1]</a></td><td>We could, in fact, avoid re-creating all the operator matrices
+and the BEM, and just repeat the simulation with varying values of the
+<tt class="docutils literal"><span class="pre">tol</span></tt> parameter. However, this would mean that the data is written
+into the same file (so is slightly less convenient here).  It would
+also be a less pedagogical example in this guided tour.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_mpi1/doc.html" title="2.27. Example: Parallel execution (MPI)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_nmagprobe/doc.html" title="2.25. Example: Calculation of dispersion curves"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

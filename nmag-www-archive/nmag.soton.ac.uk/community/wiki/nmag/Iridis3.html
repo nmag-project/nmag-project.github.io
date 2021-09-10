@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Iridis3 - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Iridis3/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Compiling-Nmag-on-Iridis-3">Compiling Nmag on Iridis 3<a href="Iridis3.html#Compiling-Nmag-on-Iridis-3" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>On Iridis 3 the compilation of Nmag is complicated by the fact that one has to use the Intel provided versions of BLAS/LAPACK. On the other hand, such libraries are able to exploit the hardware of the machine and should allow Nmag to use the multi-core architecture of the CPUs.</p>
+
+
+	<h2 id="Using-Intel-Math-Kernel-Library-MKL">Using Intel Math Kernel Library (MKL)<a href="Iridis3.html#Using-Intel-Math-Kernel-Library-MKL" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>To compile against the Intel MKL one has to load the appropriate module on Iridis 3.<br />
+Login on Iridis 3, <code>ssh yourusername@iridis3_a.soton.ac.uk</code> and type:</p>
+
+
+<pre>
+module load intel/mkl
+</pre>
+
+	<p>Documentation for the library can be found by typing:</p>
+
+
+<pre>
+mkl_ref
+mkl_use
+</pre>
+
+	<p>These are two shell scripts launching acrobat reader with the appropriate path for the PDF files.<br />
+Try <code>less `which mkl_ref`</code> and <code>less `which mkl_use`</code>.<br />
+In theory you could now compile Nmag, download the tarball, place it somewhere on the system</p>
+
+
+	<h2 id="PETSc">PETSc<a href="Iridis3.html#PETSc" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Note that PETSc configuration may fail due to a problem with python and libssl.so (which on Iridis3 does reference a symbol, <code>pqueue_size</code>, which is not defined anywhere). If you have this problem, then jump to  the section about Python later before reading this one.</p>
+
+
+	<p>For PETSc 2.3.3-p15 the following works:</p>
+
+
+<pre>
+python ./config/configure.py --with-shared \
+ --with-mpi-dir=/temp/franchin/i3/nmag-0.1/lib/mpich2 \
+ --COPTFLAGS=-O3 --CXXOPTFLAGS=-O3 --with-debugging=no \
+ --with-blas-lapack-lib="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm" 
+</pre>
+
+	<p>While for PETSc 3.1-p5 the following works:</p>
+
+
+<pre>
+python ./config/configure.py --with-shared --with-single-library=1 \
+ --with-mpi-dir=/temp/franchin/i3/nmag-0.1/lib/mpich2 \
+ --COPTFLAGS=-O3 --CXXOPTFLAGS=-O3 --with-debugging=no \
+ --with-blas-lapack-lib="" --LDFLAGS="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm" 
+</pre>
+
+	<h2 id="HLib">HLib<a href="Iridis3.html#HLib" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>To configure HLib:</p>
+
+
+With sequential MKL:<br />
+<pre>
+./configure --with-blas-ldflags='-lm -L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread' --prefix=/home/franchin/nmag-0.1/nsim/interface/extra'
+</pre>
+
+With parallel MKL:<br />
+<pre>
+./configure --prefix=/work/franchin/par/nmag-0.1/nsim/interface/extra --with-blas-ldflags="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -liomp5 -lm -lpthread" 
+</pre>
+
+	<h2 id="Python">Python<a href="Iridis3.html#Python" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>If compilation of Python fails, do as follows. First, Iridis 3 has its own version of Python, in particular what we need is Python 2.6 or above. Get it from Iridis:</p>
+
+
+<pre>
+cd nmag-0.1
+cp /local/software/rh53/python/2.6.5/source/Python-2.6.5.tar pkgs/
+</pre>
+
+	<p>Now adjust the package (it looks as a .tar file but it actually isn't, it is a zipped tar file):</p>
+
+
+<pre>
+cd nmag-0.1/pkgs
+mv Python-2.6.5.tar Python-2.6.5.tar.gz
+gunzip Python-2.6.5.tar.gz
+bzip2 Python-2.6.5.tar
+</pre>
+
+	<p>Now change the <code>nmag-0.1/Makefile</code> so that it uses this file. Type <code>make</code>. Python 2.6.5 should be compiled. PETSc is the next to be compiled and it fails. Indeed, Iridis 3 is apparently broken: the symbol pqueue_size in libssl.so is not defined anywhere else (at least at the time of writing) and this makes it impossible to import modules such as md5 or hashlib. No worries, Iridis 3 has its own python2.6 (apparently it has been compiled before the package damage) we can steal it.</p>
+
+
+<pre>
+cd nmag-0.1/lib
+mv python2.6 old-python2.6
+cp -r /local/software/rh53/python/2.6.5/gcc/lib/python2.6 .
+</pre>
+
+	<p>Now your local python almost works, but you still needs some adjustments:</p>
+
+
+<pre>
+cd nmag-0.1/lib
+cp old-python2.6/config/libpython2.6.a python2.6/config/
+# ^^^ This is needed because the Iridis 3 guys didn't use --enable-shared when configuring
+cp old-python2.6/config/Makefile python2.6/config/
+# ^^^ This will let python compile new modules appropriately
+</pre>
+
+	<p>You now have your own working copy of Python 2.6. Note that you cannot easily use the Iridis 3 Python, as it doesn't have pytables (and maybe other modules). This is why here we build our own version of Python, so that we can install on it whatever we want.<br />
+Note that Python >= 2.6 is necessary, since Nmag is using syntax features which are not present in Python 2.4. Now you can use Python to compile PETSc and Nmag.</p>
+
+
+	<h2 id="libutilsso">libutils.so<a href="Iridis3.html#libutilsso" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>You may also have to do the following in order for the pycaml module to compile correctly</p>
+
+
+<pre>
+cd nmag-0.1/lib
+ln -s /usr/lib64/libutil.so .
+</pre>
+
+	<p>Indeed, in order to link against libpython one also needs to link against libutil (sometimes), which is not stored inside <code>/usr/lib</code> for some reasons...</p>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Iridis3?export=html&amp;version=11" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Iridis3?export=txt&amp;version=11" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

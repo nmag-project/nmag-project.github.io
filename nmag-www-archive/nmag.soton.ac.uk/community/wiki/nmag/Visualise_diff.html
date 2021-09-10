@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Visualise diff - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Visualise_diff/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="How-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh">How to visualise the difference between two fields defined over the same mesh?<a href="Visualise_diff.html#How-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>First save the data into two <b>ASCII</b> VTK files. For example,</p>
+
+
+<pre>
+nmagpp --vtk=m.vtk --vtkascii --fields=m simulation_name
+</pre>
+
+	<p>Note the option <code>"--vtkascii"</code> to force the creation of a ASCII file. <br />
+Let's say this command created the two files <code>m-000000.vtk</code> and <code>m-000001.vtk</code>.<br />
+You can now use the library <code>pyvtk</code> to load the two files, compute the difference and save it back to a third file.</p>
+
+
+<pre>
+import numpy, pyvtk
+a = pyvtk.VtkData("m-000000.vtk")
+b = pyvtk.VtkData("m-000001.vtk")
+va = a.point_data.data[0].vectors
+vb = b.point_data.data[0].vectors
+for i in range(len(va)):
+    va[i] = list(numpy.array(va[i]) - numpy.array(vb[i]))
+a.tofile("difference.vtk")
+</pre>
+
+	<p>Save this text to a file named <code>diff.py</code> and run it as:</p>
+
+
+<pre>
+python diff.py
+</pre>
+
+	<p>You'll get a third file with name <code>difference.vtk</code> containing the difference of the two fields.</p>
+
+
+	<h2 id="A-step-forward">A step forward<a href="Visualise_diff.html#A-step-forward" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>If you are repeating this operation many times, it may become annoying to open again and again the <code>diff.py</code> file to change the names of the input files. You can then modify the script as follows:</p>
+
+
+<pre>
+import sys, numpy, pyvtk
+a = pyvtk.VtkData(sys.argv[1])
+b = pyvtk.VtkData(sys.argv[2])
+va = a.point_data.data[0].vectors
+vb = b.point_data.data[0].vectors
+for i in range(len(va)):
+    assert a.structure.points[i] == b.structure.points[i]
+    va[i] = list(numpy.array(va[i]) - numpy.array(vb[i]))
+a.tofile(sys.argv[3])
+</pre>
+
+	<p>The name of the files are taken from the command line. You can then compute the difference using:</p>
+
+
+<pre>
+python diff.py a.vtk b.vtk a_minus_b.vtk 
+</pre>
+
+	<p>Notice that in the last version of the script we also added the line,</p>
+
+
+<pre>
+assert a.structure.points[i] == b.structure.points[i]
+</pre>
+
+	<p>which does just check that the two files are using the same set of points (i.e. the same mesh).</p>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Visualise_diff?export=html&amp;version=2" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Visualise_diff?export=txt&amp;version=2" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

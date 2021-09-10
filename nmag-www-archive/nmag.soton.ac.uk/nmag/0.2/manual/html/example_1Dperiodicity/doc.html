@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.17. Example: 1D periodicity &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.18. Example: 2D periodicity" href="../example_2Dperiodicity/doc.html" />
+    <link rel="prev" title="2.16. Example: Larmor precession" href="../example_larmor/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_2Dperiodicity/doc.html" title="2.18. Example: 2D periodicity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_larmor/doc.html" title="2.16. Example: Larmor precession"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-1d-periodicity">
+<h1>2.17. Example: 1D periodicity<a class="headerlink" href="doc.html#example-1d-periodicity" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction-periodic-boundary-conditions-macro-geometry">
+<span id="id1"></span><h2>2.17.1. Introduction periodic boundary conditions (&#8220;macro geometry&#8221;)<a class="headerlink" href="doc.html#introduction-periodic-boundary-conditions-macro-geometry" title="Permalink to this headline">¶</a></h2>
+<p>Concerning the simulation of periodic magnetic structures, there are a
+few somewhat subtle issues to be taken into account, both with respect
+to the demagnetising and the exchange field.</p>
+<p>The issue with the exchange field is that we may encounter situations
+where the magnetic material crosses the boundary of an elementary
+cell: a periodic array of non-touching spheres in a cubic lattice is
+fundamentally different from its complement, a cubic lattice made of
+spherical holes, insofar as that in the latter case, it is impossible
+to do a simulation using periodic boundary conditions without
+identifying degrees of freedom that live on boundaries of the
+simulation cell. Nmag can deal with this automatically, provided the
+mesh file contains periodicity information, i.e. data on how to
+identify nodes on exterior faces.</p>
+<p>As for the demagnetising field, the most important problem is that one
+cannot ignore the effect of the faraway boundaries of the system: a
+100 nm x 100 nm x 100 nm cell made of magnetic material in the center
+of a large (three-dimensional) periodic array will experience very different demagnetising
+fields depending on the shape of the outer boundaries of this array.
+Assuming spatially constant magnetisation, if these cells form a
+&#8220;macroscopic&#8221; (tree-dimensional) sphere, H_demag will be -1/3 M, while for a flat box,
+H_demag may be very close to -M. Nmag takes these &#8220;macro-geometry&#8221;
+effects into account by allowing the user to provide a geometrical
+layout for a finite number (say, 100-1000) of cells that approximates
+the shape of the faraway outer boundary of the system.</p>
+<p>The macro geometry approach is described in <a class="footnote-reference" href="doc.html#fangohretal" id="id2">[1]</a> which may serve as a
+more detailed instruction to the concept.</p>
+<table class="docutils footnote" frame="void" id="fangohretal" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id2">[1]</a></td><td>Hans Fangohr, Giuliano Bordignon, Matteo Franchin, Andreas Knittel, Peter A. J. de Groot, Thomas Fischbacher. <em>A new approach to (quasi) periodic boundary conditions in micromagnetics: the macro geometry</em>, Journal of Applied Physics <strong>105</strong>, 07D529 (2009), Online at <a class="reference external" href="http://link.aip.org/link/?JAP/105/07D529">http://link.aip.org/link/?JAP/105/07D529</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="d-example">
+<span id="id3"></span><h2>2.17.2. 1d example<a class="headerlink" href="doc.html#d-example" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we simulate a single cell in the middle of a long
+one-dimensional periodic array where for the purpose of computing the
+demagnetising field, we take three extra copies of this cell to the
+left and three copies to the right along the x axis. (For real
+applications, one would use more copies. The only effect of additional
+copies are to increase the setup time needed to compute an internal
+boundary/boundary interaction matrix.)</p>
+<p>The next <a class="reference internal" href="../example_2Dperiodicity/doc.html#example-2d-periodicity"><em>Example: 2D periodicity</em></a> demonstrates the macro geometry
+concept for a thin film. This is followed by the <a class="reference internal" href="../example_periodic_spinwaves/doc.html#spin-waves-example"><em>Spin-waves example</em></a>
+which includes exchange coupling between periodic copies (and is of
+more practical value).</p>
+<p>The mesh of the central simulation cell used is described in <a class="reference download internal" href="../_downloads/cube.geo"><tt class="xref download docutils literal"><span class="pre">cube.geo</span></tt></a> which reads:</p>
+<div class="highlight-python"><pre>algebraic3d
+
+# prism
+solid prism = orthobrick (-7.50, -7.50, -7.50; 7.50, 7.50, 7.50) -maxh = 1.8000;
+tlo prism;
+
+</pre>
+</div>
+<p>Note that the mesh is centered around the origin. This is recommended for periodic simulations. (We need to document this better.) The resulting mesh is this (the periodic copies are not shown):</p>
+<div class="figure align-center">
+<img alt="../_images/mesh.png" src="../_images/mesh.png" />
+</div>
+<p>The script <a class="reference download internal" href="../_downloads/periodic1.py"><tt class="xref download docutils literal"><span class="pre">periodic1.py</span></tt></a> reads:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">)</span>
+                      <span class="p">)</span>
+
+<span class="c"># size of simulation cell, plus extra spacing</span>
+<span class="c"># to avoid exchange interaction across interfaces</span>
+<span class="c"># between repeated copies of the simulation cell.</span>
+<span class="n">x_lattice</span> <span class="o">=</span> <span class="mf">15.01</span>  <span class="c"># the spacing is 0.01</span>
+<span class="n">y_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">z_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+
+<span class="c"># list to store the lattice points where the periodic</span>
+<span class="c"># copies will be placed </span>
+<span class="n">lattice_points</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">lattice_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xi</span><span class="o">*</span><span class="n">x_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">y_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">z_lattice</span><span class="p">])</span>
+
+<span class="c">#  create data structure pbc for this macro geometry</span>
+<span class="n">pbc</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">SetLatticePoints</span><span class="p">(</span><span class="n">vectorlist</span><span class="o">=</span><span class="n">lattice_points</span><span class="p">,</span> <span class="n">scalefactor</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c">#create simulation object,  passing macro geometry data structure</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">periodic_bc</span><span class="o">=</span><span class="n">pbc</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;cube1.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;repeated-cube-1D&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="c"># set initial magnetisation along the periodic axis</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># compute the demagnetising field</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">advance_time</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">))</span>
+
+<span class="c"># probe demag field at the centre of the cube, function</span>
+<span class="c"># returns an SI-Value (&#39;siv&#39;)</span>
+<span class="n">H_demag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">print</span> <span class="s">&quot;H_demag_x at centre of cube = &quot;</span><span class="p">,</span> <span class="n">H_demag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span> <span class="s">&quot;H_demag_y at centre of cube = &quot;</span><span class="p">,</span> <span class="n">H_demag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">print</span> <span class="s">&quot;H_demag_z at centre of cube = &quot;</span><span class="p">,</span> <span class="n">H_demag</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Setup can be splitted into three steps. In the first step we set the
+x_lattice parameter to be slightly larger than the dimension of the
+unit cell (in order not to have any overlap between the cells) and set
+the y_lattice and z_lattice parameters to zero to indicate no
+periodidicity along these directions</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x_lattice</span> <span class="o">=</span> <span class="mf">15.01</span> <span class="c"># the spacing is 0.01</span>
+<span class="n">y_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">z_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p>In the second step we define the lattice points where we want
+the periodic copies to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">lattice_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xi</span><span class="o">*</span><span class="n">x_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">y_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">z_lattice</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>and in the third step we define the object whose structure attribute
+will be used as the parameter in the definition of the simulation
+object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pbc</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">SetLatticePoints</span><span class="p">(</span><span class="n">vectorlist</span><span class="o">=</span><span class="n">lattice_points</span><span class="p">,</span> <span class="n">scalefactor</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">periodic_bc</span><span class="o">=</span><span class="n">pbc</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The remaining part of the script computes the demagnetisation field at
+the center of the cube. This calculation can be carried out for a
+varying number of copies of the simulation cell. The next figures show
+components of demagnetising field in the center of the cube as a
+function of the number of periodic copies. As in the code above, we
+impose an uniform magnetisation along the periodic x-axis. The first
+figure shows the demagnetisation field along the x-axis, and the
+second figure along the y-axis. In both figures, we have added green
+crosses that have been obtained by computing the demagfield using
+OOMMF (where in OOMMF we have actually made the simulation cell larger
+and larger to represent the growing number of periodic copies).</p>
+<img alt="../_images/periodic1_in_axis.png" class="align-center" src="../_images/periodic1_in_axis.png" style="width: 726px; height: 513px;" />
+<p>Demagnetising field as a function of the number of periodic
+copies with the magnetisation aligned along the periodic axis.</p>
+<img alt="../_images/periodic1_out_of_axis.png" class="align-center" src="../_images/periodic1_out_of_axis.png" style="width: 726px; height: 513px;" />
+<p>Demagnetising field as a function of the number of periodic
+copies with the magnetisation aligned along an axis orthogonal
+to the periodic one.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_2Dperiodicity/doc.html" title="2.18. Example: 2D periodicity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_larmor/doc.html" title="2.16. Example: Larmor precession"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

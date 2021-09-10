@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Compile cblaslapack - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Compile_cblaslapack/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Compile-Nmag-with-BLASLAPACK-versions-downloaded-automatically-by-PETSc">Compile Nmag with BLAS/LAPACK versions downloaded automatically by PETSc<a href="Compile_cblaslapack.html#Compile-Nmag-with-BLASLAPACK-versions-downloaded-automatically-by-PETSc" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>This is a contribution from Gilles Nguyen from the University of Brest (France):</p>
+
+
+	<p>To compile nmag :</p>
+
+
+	<p>1. you should compile Nmag using GCC. If you are in a cluster, you may then have to disable using the Intel C compiler, by commenting in your .cshrc (or equivalent) the line <code>module intel</code> (otherwise, the header files for Intel compiler are selected during compilation, leading to compilation errors each time the headers are included with #include<...> (because using <...> instead of using "..." commands to the preprocessor to find the header files in the environment paths which depend to the modules used)</p>
+
+
+	<p>2. add in the Makefile:</p>
+
+
+<pre>
+  PETSC_MORE_CONFIG_OPTS=-COPTFLAGS=$(COPTFLAGS) -CXXOPTFLAGS=$(COPTFLAGS) --download-c-blas-lapack=1
+</pre>
+
+	<p>as mentioned when the compilation error prompted to do this.</p>
+
+
+	<p>3. make uninstall</p>
+
+
+	<p>4 - make The option <code>"--download-c-blas-lapack=1"</code> downloads effectively the C source files of the libraries blas et lapack in "nmag-0.1/lib/petsc/externalpackages/f2cblaslapack". It seems that they are detected as they were already compiled. But they are in fact not compiled.</p>
+
+
+	<p>The error is probably due to the file "BlasLapack.py" in "/lib/petsc/python/BuildSystem/config/packages/":</p>
+
+
+<pre>
+   if os.path.isfile(os.path.join(libdir,'tmpmakefile')) and
+                     (SourceDB.getChecksum(os.path.join(libdir,'tmpmakefile'))
+                     == SourceDB.getChecksum(os.path.join(blasDir,'tmpmakefile'))):
+      self.framework.log.write('Do not need to compile '+l +'blaslapack, already compiled\n')
+      return libdir  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+</pre>
+
+	<p>5 - So after, we compile the libraries with "tmpmakefile" : <code>make -f tmpmakefile</code></p>
+
+
+6- After, we add in the "Makefile"  the path where the librairy files could be found:<br />
+<pre>
+
+PETSC_MORE_CONFIG_OPTS=-COPTFLAGS=$(COPTFLAGS) -CXXOPTFLAGS=$(COPTFLAGS) --with-blas-lapack-dir=/home3/caparmor/gnguyen/Gilles/nmag/nmag-0.1/lib/petsc/externalpackages/f2cblaslapack
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Compile_cblaslapack?export=html&amp;version=1" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Compile_cblaslapack?export=txt&amp;version=1" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

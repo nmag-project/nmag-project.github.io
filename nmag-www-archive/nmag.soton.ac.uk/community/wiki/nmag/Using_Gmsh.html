@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Using Gmsh - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Using_Gmsh/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Using-Gmsh">Using Gmsh<a href="Using_Gmsh.html#Using-Gmsh" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>If you want to create many meshes using Gmsh, you may first generate a mesh manually.<br />
+Then you can create a Python script which uses this mesh as a template to quickly create a mesh for a different set of parameters.<br />
+Here is a script which shows how to do so. The mesh file (geo) has been enclosed between quotes <code>"""</code> and some of the values for the points coordinates have been substituted with strings that the Python script substitutes with real values.</p>
+
+
+	<p>Note that we use <code>Mesh.CharacteristicLengthFactor = 5.0;</code> to control the discretisation of the mesh. We also use <code>Physical Volume(1) = {1};</code> to make sure that the mesh region is labeled starting from region number 1.</p>
+
+
+<pre>
+mesh = """ 
+cl1 = 1;
+Point(1) = {$x2$, 0, 0, cl1};
+Point(2) = {$x2$, $x2$, 0, cl1};
+Point(3) = {0, $x2$, 0, cl1};
+Point(4) = {0, $x1$, 0, cl1};
+Point(5) = {$x1$, 0, 0, cl1};
+Point(6) = {$x0$, $x0$, 0, cl1};
+Point(7) = {$x0$, $x1$, 0, cl1};
+Point(8) = {$x1$, $x0$, 0, cl1};
+Point(9) = {$x2$, 0, $y1$, cl1};
+Point(10) = {$x1$, 0, $y1$, cl1};
+Point(14) = {$x1$, $x0$, $y1$, cl1};
+Point(18) = {$x0$, $x0$, $y1$, cl1};
+Point(19) = {$x0$, $x1$, $y1$, cl1};
+Point(23) = {0, $x1$, $y1$, cl1};
+Point(27) = {0, $x2$, $y1$, cl1};
+Point(31) = {$x2$, $x2$, $y1$, cl1};
+Line(1) = {1, 5};
+Line(2) = {5, 8};
+Circle(3) = {8, 6, 7};
+Line(4) = {7, 4};
+Line(5) = {4, 3};
+Line(6) = {3, 2};
+Line(7) = {2, 1};
+Line(11) = {9, 10};
+Line(12) = {10, 14};
+Circle(13) = {14, 18, 19};
+Line(14) = {19, 23};
+Line(15) = {23, 27};
+Line(16) = {27, 31};
+Line(17) = {31, 9};
+Line(19) = {1, 9};
+Line(20) = {5, 10};
+Line(24) = {8, 14};
+Line(28) = {7, 19};
+Line(32) = {4, 23};
+Line(36) = {3, 27};
+Line(40) = {2, 31};
+Line Loop(9) = {1, 2, 3, 4, 5, 6, 7};
+Plane Surface(9) = {9};
+Line Loop(21) = {1, 20, -11, -19};
+Ruled Surface(21) = {21};
+Line Loop(25) = {2, 24, -12, -20};
+Ruled Surface(25) = {25};
+Line Loop(29) = {3, 28, -13, -24};
+Ruled Surface(29) = {29};
+Line Loop(33) = {4, 32, -14, -28};
+Ruled Surface(33) = {33};
+Line Loop(37) = {5, 36, -15, -32};
+Ruled Surface(37) = {37};
+Line Loop(41) = {6, 40, -16, -36};
+Ruled Surface(41) = {41};
+Line Loop(45) = {7, 19, -17, -40};
+Ruled Surface(45) = {45};
+Line Loop(46) = {11, 12, 13, 14, 15, 16, 17};
+Plane Surface(46) = {46};
+Surface Loop(1) = {9, 46, 21, 25, 29, 33, 37, 41, 45};
+
+Volume(1) = {1};
+
+Physical Volume(1) = {1};
+
+Mesh.CharacteristicLengthFactor = $discret$;
+""" 
+
+def create_mesh(filename,
+                inner_size=100.0,
+                curvature=5.0,
+                width=10.0,
+                thickness=20.0,
+                discretisation=2.5):
+  global mesh
+  s = str(mesh)
+  x = 0.5*inner_size
+  variables = [("x0", x - curvature),
+               ("x1", x),
+               ("x2", x + 0.5*width),
+               ("y1", thickness),
+               ("discret", discretisation)]
+  for variable_name, variable_value in variables:
+    s = s.replace("$%s$" % variable_name, str(variable_value))
+
+  f = open(filename, "w")
+  f.write(s)
+  f.close()
+
+create_mesh("dots.geo")
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Using_Gmsh?export=html&amp;version=3" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Using_Gmsh?export=txt&amp;version=3" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

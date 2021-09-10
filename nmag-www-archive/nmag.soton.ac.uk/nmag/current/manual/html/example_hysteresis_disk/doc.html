@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.5. Example: Hysteresis loop for thin disk &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.6. Example: Vortex formation and propagation in disk" href="../example_vortex/doc.html" />
+    <link rel="prev" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle" href="../example_stoner_wohlfarth/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_vortex/doc.html" title="2.6. Example: Vortex formation and propagation in disk"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_stoner_wohlfarth/doc.html" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-hysteresis-loop-for-thin-disk">
+<span id="example-hysteresis-disk"></span><h1>2.5. Example: Hysteresis loop for thin disk<a class="headerlink" href="doc.html#example-hysteresis-loop-for-thin-disk" title="Permalink to this headline">¶</a></h1>
+<p>This example computes the hysteresis loop of a flat disc magnetised
+along a direction orthogonal to the main axis. In comparison to the
+previous <a class="reference internal" href="../example_stoner_wohlfarth/doc.html#stoner-wohlfarth-example"><em>Example: Hysteresis loop for Stoner-Wohlfarth particle</em></a>, it demonstrates the use of a
+more complex sequence of applied fields.</p>
+<p>We use a disc 20 nm thick and 200 nm in diameter for this example (the
+mesh is contained in <a class="reference download internal" href="../_downloads/nanodot1.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">nanodot1.nmesh.h5</span></tt></a>
+which is created from <a class="reference download internal" href="../_downloads/the_nanodot.geo"><tt class="xref download docutils literal"><span class="pre">the_nanodot.geo</span></tt></a> with <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>):</p>
+<img alt="../_images/nanodot1_mesh.png" class="align-center" src="../_images/nanodot1_mesh.png" style="width: 515px; height: 346px;" />
+<p>To compute the hysteresis loop for the disc, we use the script
+<a class="reference download internal" href="../_downloads/nanodot1.py"><tt class="xref download docutils literal"><span class="pre">nanodot1.py</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                       <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mi">795774</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                       <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">)</span>
+                     <span class="p">)</span>
+
+<span class="c"># load mesh: the mesh dimensions are scaled by 100nm</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span> <span class="s">&quot;nanodot1.nmesh.h5&quot;</span><span class="p">,</span>
+               <span class="p">[(</span><span class="s">&quot;cylinder&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+               <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">100e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span>
+             <span class="p">)</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span> <span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span>
+                      <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="mf">95.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">200.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">1000.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">900.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">95.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">1000.0</span><span class="p">],</span>
+                      <span class="n">units</span><span class="o">=</span><span class="mf">1e3</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+
+<span class="c"># loop over the applied fields Hs</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))]</span>
+               <span class="p">)</span>
+</pre></div>
+</div>
+<p>We assume that the previous example have been sufficiently instructive
+to explain the basic steps such as importing nmag, creating a
+simulation object, defining the material and leading the mesh. Here,
+we focus on the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command:</p>
+<p>We would like to apply fields ranging from <tt class="docutils literal"><span class="pre">[1e6,</span> <span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt> to
+<tt class="docutils literal"><span class="pre">[100e3,</span> <span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt> in steps of <tt class="docutils literal"><span class="pre">100e3</span> <span class="pre">A/m</span></tt>. Then, from <tt class="docutils literal"><span class="pre">[95e3,</span>
+<span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt> to <tt class="docutils literal"><span class="pre">[-95e3,</span> <span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt> we would like to use a smaller
+step size of <tt class="docutils literal"><span class="pre">5e3</span> <span class="pre">A/m</span></tt> (to resolve this applied field range better).</p>
+<p>This will take us through zero applied field (<tt class="docutils literal"><span class="pre">[0,0,0]</span> <span class="pre">A/m</span></tt>). Now,
+symmetrically to the positive field values, we would like to use a
+step size of <tt class="docutils literal"><span class="pre">100e3</span> <span class="pre">A/m</span></tt> again to go from <tt class="docutils literal"><span class="pre">[-100e3,</span> <span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt> to
+<tt class="docutils literal"><span class="pre">[-1e6,</span> <span class="pre">0,</span> <span class="pre">0]</span> <span class="pre">A/m</span></tt>. At this point, we would like to reverse the whole
+sequence (to sweep the field back to the initial value).</p>
+<p>The information we need for the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command includes:</p>
+<ol class="arabic">
+<li><p class="first">a direction for the applied field (here just <tt class="docutils literal"><span class="pre">[1,0,0]</span></tt>),</p>
+</li>
+<li><p class="first">a list of magnitudes of the field (this is the <tt class="docutils literal"><span class="pre">norm_list</span></tt>) that
+will be interpreted, and then multiplied with the direction vector,</p>
+<p>As in the <a class="reference internal" href="../example_hysteresis_ellipsoid/doc.html#simple-hysteresis-example"><em>Example: Simple hysteresis loop</em></a> and in the
+<a class="reference internal" href="../example_stoner_wohlfarth/doc.html#stoner-wohlfarth-example"><em>Example: Hysteresis loop for Stoner-Wohlfarth particle</em></a>, we employ a special notation for
+ranges of field strengths understood by <tt class="docutils literal"><span class="pre">nmag.vector_set</span></tt>.  The
+expression:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">95.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>means that we start with a magnitude of 1000, the next magnitude is
+900. The empty brackets (<tt class="docutils literal"><span class="pre">[]</span></tt>) indicate that this sequence should
+be continued (i.e. 800, 700, 600, 500, 400, 300, 200, 100) up to but
+not beyond the next value given (i.e. 95).</p>
+</li>
+<li><p class="first">another multiplier that defines the strength of the applied fields
+(here, <tt class="docutils literal"><span class="pre">1e3*SI('A/m')</span></tt>).</p>
+</li>
+</ol>
+<p>The corresponding command is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span> <span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="p">[],</span>
+                                   <span class="mf">95.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">200.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">1000.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">900.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="o">-</span><span class="mf">95.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="p">[],</span>
+                                 <span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">1000.0</span><span class="p">],</span>
+                      <span class="n">units</span><span class="o">=</span><span class="mf">1e6</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+</pre></div>
+</div>
+<p>which computes a list of vectors <tt class="docutils literal"><span class="pre">Hs</span></tt>. The <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command takes
+this list of applied fields <tt class="docutils literal"><span class="pre">Hs</span></tt> as one input parameter, and will
+compute the hysteresis loop for these fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))]</span>
+              <span class="p">)</span>
+</pre></div>
+</div>
+<p>Again, the second parameter (<tt class="docutils literal"><span class="pre">save</span></tt>) is used to tell the hysteresis
+command what data to save, and how often. We request that the
+<em>averages</em> of the fields, the <em>fields</em> and the <em>restart</em> data
+should be saved <em>at</em> those points in time where we reach <em>convergence</em>.
+(See also <a class="reference internal" href="../example_restart/doc.html#restart-example"><em>Restart example</em></a>).</p>
+<div class="section" id="thin-disk-hysteresis-loop">
+<span id="id1"></span><h2>2.5.1. Thin disk hysteresis loop<a class="headerlink" href="doc.html#thin-disk-hysteresis-loop" title="Permalink to this headline">¶</a></h2>
+<p>Once the calculation has finished, we can plot the hysteresis loop,
+i.e. the graph of the magnetisation computed along the direction of
+the applied field as a function of the applied field strength.</p>
+<p>We use the <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> command to extract the data into a text file <a class="reference download internal" href="../_downloads/plot.dat"><tt class="xref download docutils literal"><span class="pre">plot.dat</span></tt></a>:</p>
+<div class="highlight-python"><pre>$ ncol nanodot1 H_ext_0 m_Py_0 &gt; plot.dat</pre>
+</div>
+<p>This file starts as follows:</p>
+<div class="highlight-python"><pre>      1000000  0.9995058139817 
+      1000000  0.9995058139817 
+       900000  0.9994226410102 
+       900000  0.9994226410102 
+       800000  0.9993139080655 
+</pre>
+</div>
+<p>We use <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> to plot the hysteresis loop:</p>
+<div class="highlight-python"><pre>$ gnuplot make_plot.gnu</pre>
+</div>
+<p>using the gnuplot script <a class="reference download internal" href="../_downloads/make_plot.gnu"><tt class="xref download docutils literal"><span class="pre">make_plot.gnu</span></tt></a>:</p>
+<div class="highlight-python"><pre>set term postscript eps enhanced color
+set out 'nanodot_hyst.eps'
+set xlabel 'Applied field (A/m)'
+set ylabel 'M / Ms'
+set xrange [-1.2e6:1.2e6]
+set yrange [-1.2:1.2]
+plot 'plot.dat' u 1:2 ti 'nmag' with linespoints lw 3 pt 5
+</pre>
+</div>
+<p>The resulting graph is:</p>
+<img alt="../_images/nanodot_hyst.png" class="align-center" src="../_images/nanodot_hyst.png" style="width: 717px; height: 508px;" />
+<p>and the comparison with the <a class="reference external" href="http://www.magpar.net/">Magpar</a> data, obtained with the
+script <a class="reference download internal" href="../_downloads/make_comparison_plot.gnu"><tt class="xref download docutils literal"><span class="pre">make_comparison_plot.gnu</span></tt></a>:</p>
+<div class="highlight-python"><pre>set term postscript eps enhanced color
+set out 'nanodot_comparison_hyst.eps'
+set xlabel 'Applied field (kA/m)'
+set ylabel 'M / Ms'
+set xrange [-0.2e3:0.2e3]
+set yrange [-1.2:1.2]
+plot 'plot.dat' u ($1/1000):2  ti 'nmag' w lp 3, 'magpar.dat' u 1:2  ti 'magpar' w p 4
+</pre>
+</div>
+<p>is shown here (note that the <a class="reference external" href="http://www.magpar.net/">Magpar</a> computation only shows half of
+the hysteresis loop.):</p>
+<img alt="../_images/nanodot_comparison_hyst.png" class="align-center" src="../_images/nanodot_comparison_hyst.png" style="width: 730px; height: 508px;" />
+<p>Here we can see a slight difference between nmag and <a class="reference external" href="http://www.magpar.net/">Magpar</a> in the
+location of the switching point, probably due to different tolerances
+in both programs when determining time integrator convergence.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_vortex/doc.html" title="2.6. Example: Vortex formation and propagation in disk"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_stoner_wohlfarth/doc.html" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.10. Example: Uniaxial anisotropy &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.11. Example: Cubic Anisotropy" href="../example_cubic_anis/doc.html" />
+    <link rel="prev" title="2.9. Example: Pinning Magnetisation" href="../example_pinning/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_cubic_anis/doc.html" title="2.11. Example: Cubic Anisotropy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_pinning/doc.html" title="2.9. Example: Pinning Magnetisation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-uniaxial-anisotropy">
+<h1>2.10. Example: Uniaxial anisotropy<a class="headerlink" href="doc.html#example-uniaxial-anisotropy" title="Permalink to this headline">¶</a></h1>
+<p>In this example we would like to simulate the development of a Bloch type
+domain wall on a thin cobalt bar of dimension 504 x 1 x 1 nm
+(<a class="reference download internal" href="../_downloads/bar.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">bar.nmesh.h5</span></tt></a>) due to uniaxial
+anisotropy.</p>
+<div class="section" id="uniaxial-anisotropy-simulation-script">
+<span id="id1"></span><h2>2.10.1. Uniaxial anisotropy simulation script<a class="headerlink" href="doc.html#uniaxial-anisotropy-simulation-script" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c"># Create simulation object (no demag field!)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">do_demag</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c"># Define magnetic material (data from OOMMF materials file)</span>
+<span class="n">Co</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Co&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1400e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">30e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">uniaxial_anisotropy</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">520e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+
+<span class="c"># Load the mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;bar.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="n">Co</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="c"># Our bar is subdivided into 3 regions:</span>
+<span class="c"># - region A: for x &lt; offset;</span>
+<span class="c"># - region B: for x between offset and offset+length</span>
+<span class="c"># - region C: for x &gt; offset+length;</span>
+<span class="c"># The magnetisation is defined over all the three regions,</span>
+<span class="c"># but is pinned in region A and C.</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mf">2e-9</span>   <span class="c"># m (meters)</span>
+<span class="n">length</span> <span class="o">=</span> <span class="mf">500e-9</span> <span class="c"># m</span>
+
+<span class="c"># Set initial magnetisation</span>
+<span class="k">def</span> <span class="nf">sample_m0</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="c"># relative_position goes linearly from -1 to +1 in region B</span>
+  <span class="n">relative_position</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span><span class="o">/</span><span class="n">length</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="n">mz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">relative_position</span><span class="p">))</span>
+  <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mz</span><span class="o">*</span><span class="n">mz</span><span class="p">),</span> <span class="n">mz</span><span class="p">]</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">sample_m0</span><span class="p">)</span>
+
+<span class="c"># Pin magnetisation outside region B</span>
+<span class="k">def</span> <span class="nf">sample_pinning</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">offset</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">sample_pinning</span><span class="p">)</span>
+
+<span class="c"># Save the magnetisation along the x-axis</span>
+<span class="k">def</span> <span class="nf">save_magnetisation_along_x</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;bar_mag_x.dat&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">504</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="n">i</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-9</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;M_Co&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="c"># Relax the system</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="n">save_magnetisation_along_x</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>We shall now discuss the <a class="reference download internal" href="../_downloads/bar.py"><tt class="xref download docutils literal"><span class="pre">bar.py</span></tt></a>  script
+step-by-step:</p>
+<p>In this particular example we are solely interested in energy terms resulting
+from exchange interaction and anisotropy. Hence we disable the demagnetisation
+field as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">do_demag</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We then create the material <tt class="docutils literal"><span class="pre">Co</span></tt> used for the bar, cobalt in this case, which exhibits <a class="reference internal" href="../command_reference.html#uniaxial-anisotropy"><em>uniaxial_anisotropy</em></a> in z direction with phenomenological anisotropy constant
+<tt class="docutils literal"><span class="pre">K1</span> <span class="pre">=</span> <span class="pre">SI(520e3,</span> <span class="pre">&quot;J/m^3&quot;)</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Co</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Co&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1400e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">30e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">uniaxial_anisotropy</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">520e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>After loading the mesh, we set the initial magnetisation direction such that
+it rotates from +z to -z while staying in the plane normal to x direction
+(hence suggesting the development of a Bloch type domain wall):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_m0</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="c"># relative_position goes linearly from -1 to +1 in region B</span>
+  <span class="n">relative_position</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span><span class="o">/</span><span class="n">length</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="n">mz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">relative_position</span><span class="p">))</span>
+  <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mz</span><span class="o">*</span><span class="n">mz</span><span class="p">),</span> <span class="n">mz</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We further pin the magnetisation at the very left (x &lt; offset = 2 nm)
+and right (x &gt; offset + length = 502 nm) of the bar
+(note that the pinning function may also just return a python truth
+value rather than the number 0.0 or 1.0):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_pinning</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">offset</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">sample_pinning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we relax the system to find the equilibrium magnetisation
+configuration, which is saved to the file <tt class="docutils literal"><span class="pre">bar_mag_x.dat</span></tt> in a format
+understandable by <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>.</p>
+</div>
+<div class="section" id="visualization">
+<span id="id2"></span><h2>2.10.2. Visualization<a class="headerlink" href="doc.html#visualization" title="Permalink to this headline">¶</a></h2>
+<p>We can then use the following <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> script to visualize
+the equilibrium magnetisation:</p>
+<div class="highlight-python"><pre>set term png giant size 800, 600
+set out 'bar_mag_x.png'
+set xlabel 'x (nm)'
+set ylabel 'M.z (millions of A/m)'
+
+plot [0:504] [-1.5:1.5] \
+  1.4 t "" w l 0, -1.4 t "" w l 0, \
+  'bar_mag_x.dat' u ($1/1e-9):($4/1e6) t 'nmag' w l 2
+</pre>
+</div>
+<p>The resulting plot clearly shows that a Bloch type domain wall has developed:</p>
+<img alt="../_images/bar_mag_x.png" class="align-center" src="../_images/bar_mag_x.png" style="width: 800px; height: 600px;" />
+<p>The figure shows also that the Bloch domain wall is well localized at the center
+of the bar, in the region where x goes from 200 to 300 nm.</p>
+</div>
+<div class="section" id="comparison">
+<span id="id3"></span><h2>2.10.3. Comparison<a class="headerlink" href="doc.html#comparison" title="Permalink to this headline">¶</a></h2>
+<p>After simulating the same scenario with
+OOMMF (see <a class="reference download internal" href="../_downloads/bar.mif"><tt class="xref download docutils literal"><span class="pre">oommf/bar.mif</span></tt></a>),
+we can compare results using another <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> script:</p>
+<div class="highlight-python"><pre>#set term postscript enhanced eps color
+set term png giant size 800, 600
+set out 'bar_mag_x_compared.png'
+
+set xlabel 'x (nm)'
+set ylabel 'M.z (millions of A/m)'
+
+Mz(x) = 1400e3 * cos(pi/2 + atan(sinh((x - 252e-9)/sqrt(30e-12/520e3))))
+
+plot [220:280] [-1.5:1.5] \
+  1.4 t "" w l 0, -1.4 t "" w l 0, \
+  'bar_mag_x.dat' u ($1/1e-9):($4/1e6) t 'nmag' w lp 2, \
+  'oommf/bar_mag_x.txt'u ($1/1e-9):($4/1e6) t 'oommf' w lp 1, \
+  Mz(x*1e-9)/1e6 ti 'analytical' w l 3
+</pre>
+</div>
+<p>which generates the following plot showing good agreement of both systems:</p>
+<img alt="../_images/bar_mag_x_compared.png" class="align-center" src="../_images/bar_mag_x_compared.png" style="width: 800px; height: 600px;" />
+<p>The plot shows also the known analytical solution:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mz</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">Ms</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">atan</span><span class="p">(</span><span class="n">sinh</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_wall</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="n">A</span><span class="o">/</span><span class="n">K1</span><span class="p">))))</span>
+</pre></div>
+</div>
+<p>The plot shows only a restricted region located at the center of the bar,
+thus allowing an easier comparison between the three sets of data.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_cubic_anis/doc.html" title="2.11. Example: Cubic Anisotropy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_pinning/doc.html" title="2.9. Example: Pinning Magnetisation"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

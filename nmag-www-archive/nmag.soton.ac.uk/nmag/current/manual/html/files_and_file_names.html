@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. Files and file names &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="8. Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="6. Executables" href="executables.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="faq.html" title="8. Frequently Asked Questions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="executables.html" title="6. Executables"
+             accesskey="P">previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="files-and-file-names">
+<span id="id1"></span><h1>7. Files and file names<a class="headerlink" href="files_and_file_names.html#files-and-file-names" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="mesh-files-nmesh-nmesh-h5">
+<span id="id2"></span><h2>7.1. mesh files (<tt class="docutils literal"><span class="pre">.nmesh</span></tt>, <tt class="docutils literal"><span class="pre">.nmesh.h5</span></tt>)<a class="headerlink" href="files_and_file_names.html#mesh-files-nmesh-nmesh-h5" title="Permalink to this headline">¶</a></h2>
+<p>Files that contain a finite element mesh. See <a class="reference internal" href="finite_element_mesh_generation.html#nmesh-file-format"><em>Nmesh file format</em></a>.</p>
+</div>
+<div class="section" id="simulation-scripts-py">
+<span id="id3"></span><h2>7.2. Simulation scripts (<tt class="docutils literal"><span class="pre">.py</span></tt>)<a class="headerlink" href="files_and_file_names.html#simulation-scripts-py" title="Permalink to this headline">¶</a></h2>
+<p>Files that contain simulation program code. The ending is (by
+convention) <tt class="docutils literal"><span class="pre">.py</span></tt> which reflects that the programming language used
+is Python.</p>
+<p>All the example codes provided in the <a class="reference internal" href="guided_tour.html#guided-tour"><em>Guided Tour</em></a> are such simulation scripts.</p>
+</div>
+<div class="section" id="data-files-ndt">
+<span id="ndt"></span><h2>7.3. Data files (<tt class="docutils literal"><span class="pre">.ndt</span></tt>)<a class="headerlink" href="files_and_file_names.html#data-files-ndt" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">ndt</span></tt> stands for Nmag Data Table, analog to <tt class="docutils literal"><span class="pre">odt</span></tt> files (<a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a>
+Data Table) for the OOMMF project. In fact, <tt class="docutils literal"><span class="pre">ndt</span></tt> and <tt class="docutils literal"><span class="pre">odt</span></tt> files
+are very similar.</p>
+<p><tt class="docutils literal"><span class="pre">ndt</span></tt> files are ascii files where each row corresponds to one time
+step (or, more generally, configuration of the system). The columns
+contain:</p>
+<ul class="simple">
+<li>metadata such as<ul>
+<li>a unique identifier for every row</li>
+<li>the time at which the row was written</li>
+</ul>
+</li>
+<li>(spatially) averaged <a class="reference internal" href="background.html#field"><em>field</em></a> data</li>
+</ul>
+<p>The first two lines contain information about what data is stored in the various columns:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>The first line provides a header</li>
+<li>The second line provides the SI units</li>
+</ol>
+</div></blockquote>
+<p>All other lines contain the actual data.</p>
+<p>The file can be loaded into any data processing software (such as MS
+Excel, Origin, Matlab, Gnuplot, ...). However, often it is more
+convenient to use the <a class="reference internal" href="executables.html#ncol"><em>ncol</em></a> tool to select the relevant columns, and
+only to pass the filtered data to a post-processing (e.g. plotting)
+program.</p>
+<p>Data is written into the <tt class="docutils literal"><span class="pre">ndt</span></tt> file whenever the <a class="reference internal" href="command_reference.html#save-data"><em>save_data</em></a> method
+of the simulation object is called.</p>
+</div>
+<div class="section" id="data-files-h5">
+<span id="h5-data-files"></span><h2>7.4. Data files (<tt class="docutils literal"><span class="pre">.h5</span></tt>)<a class="headerlink" href="files_and_file_names.html#data-files-h5" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">h5</span></tt> data files store spatially resolved <a class="reference internal" href="background.html#field"><em>fields</em></a>. The format is
+a binary and compressed <a class="reference external" href="http://www.hdfgroup.org/">hdf5</a> format to which we have convenient
+access via the <a class="reference external" href="http://www.pytables.org/">pytables</a> package for Python. The user should not have
+to worry about reading this file directly, but use the <a class="reference internal" href="executables.html#nmagpp"><em>nmagpp</em></a> tool to
+access the data.</p>
+</div>
+<div class="section" id="file-names-for-data-files">
+<span id="id4"></span><h2>7.5. File names for data files<a class="headerlink" href="files_and_file_names.html#file-names-for-data-files" title="Permalink to this headline">¶</a></h2>
+<p>The filenames for the <a class="reference internal" href="files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> and <a class="reference internal" href="files_and_file_names.html#h5-data-files"><em>Data files (.h5)</em></a> are given by
+concatenation of the <em>simulation name</em>, the extension <tt class="docutils literal"><span class="pre">_dat.</span></tt> and
+the extension (<tt class="docutils literal"><span class="pre">.h5</span></tt> or <tt class="docutils literal"><span class="pre">.ndt</span></tt>).</p>
+<p>When a simulation object is created, for example in a file called
+<tt class="docutils literal"><span class="pre">mybar.py</span></tt> starting like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then the simulation name is <tt class="docutils literal"><span class="pre">bar</span></tt>.</p>
+<p>If no name is provided, i.e. the file <tt class="docutils literal"><span class="pre">mybar.py</span></tt> starts like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>then the simulation name will be the <em>run id</em>. The <em>run id</em> is the
+filename of the simulation script (without the <tt class="docutils literal"><span class="pre">.py</span></tt> extension),
+i.e. the simulation name then will be <tt class="docutils literal"><span class="pre">mybar</span></tt>.</p>
+<p>Let us assume for the rest of this section that the simulation name
+is <tt class="docutils literal"><span class="pre">bar</span></tt>.  Once we use the <a class="reference internal" href="command_reference.html#save-data"><em>save_data</em></a> command, for example like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>an <tt class="docutils literal"><span class="pre">ndt</span></tt> file will be created, with name <tt class="docutils literal"><span class="pre">bar_dat.ndt</span></tt> (= <tt class="docutils literal"><span class="pre">bar</span></tt>
++ <tt class="docutils literal"><span class="pre">_dat.</span></tt> + <tt class="docutils literal"><span class="pre">ndt</span></tt>).</p>
+<p>Similarly, if we write the fields spatially resolved:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>a <a class="reference internal" href="files_and_file_names.html#h5-data-files"><em>h5 data file</em></a> with name <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt> (= <tt class="docutils literal"><span class="pre">bar</span></tt> + <tt class="docutils literal"><span class="pre">_dat.</span></tt> + <tt class="docutils literal"><span class="pre">h5</span></tt>)
+will be created.</p>
+</div>
+<div class="section" id="file-names-for-log-files">
+<span id="id5"></span><h2>7.6. File names for log files<a class="headerlink" href="files_and_file_names.html#file-names-for-log-files" title="Permalink to this headline">¶</a></h2>
+<p>A log file is created that stores (most of) the messages displayed to
+stdout (i.e. the screen). The name of the log file starts with the
+name of the simulation script (without the <tt class="docutils literal"><span class="pre">.py</span></tt> extension), and ends with <tt class="docutils literal"><span class="pre">_log.log</span></tt>.</p>
+<p>For example, a simulation script with name <tt class="docutils literal"><span class="pre">mybar.py</span></tt> will have an
+associated log file with name <tt class="docutils literal"><span class="pre">mybar_log.log</span></tt>.</p>
+<p>Another three files will be created if the (undocumented)
+<tt class="docutils literal"><span class="pre">--dumpconf</span></tt> switch is provided. This are primarily of use to the
+developers and can usually be ignored:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">mybar_log.conf</span></tt>:
+This can be used to configure what data is logged.</li>
+<li><tt class="docutils literal"><span class="pre">mybar_ocaml.conf</span></tt>:
+Configuration of some variables used in the ocaml code</li>
+<li><tt class="docutils literal"><span class="pre">mybar_nmag.conf</span></tt>:
+Some variables used in the nmag code</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="faq.html" title="8. Frequently Asked Questions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="executables.html" title="6. Executables"
+             >previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

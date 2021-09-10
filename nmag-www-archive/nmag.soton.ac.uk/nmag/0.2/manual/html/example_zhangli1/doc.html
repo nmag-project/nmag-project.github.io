@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.21. Example: Spin transfer torque (Zhang-Li model) &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.22. Example: Current-driven magnetisation precession in nanopillars" href="../example_zhangli2/doc.html" />
+    <link rel="prev" title="2.20. Example: post processing of saved field data" href="../example2/doc2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_zhangli2/doc.html" title="2.22. Example: Current-driven magnetisation precession in nanopillars"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example2/doc2.html" title="2.20. Example: post processing of saved field data"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-spin-transfer-torque-zhang-li-model">
+<h1>2.21. Example: Spin transfer torque (Zhang-Li model)<a class="headerlink" href="doc.html#example-spin-transfer-torque-zhang-li-model" title="Permalink to this headline">¶</a></h1>
+<p>Nmag provides support for the Zhang-Li extension to the
+Landau-Lifshitz-Gilbert (LLG) equation <a class="footnote-reference" href="doc.html#zhangli" id="id1">[1]</a>, in order to model the interaction
+between a uniform electric current density and a spatially varying
+magnetisation. The extened LLG equation reads</p>
+<div class="math">
+<p><img src="../_images/math/38e6b38f7ffaaf40d78e76cd46aca2b723fe328a.png" alt="\frac{\partial \vec{M}}{\partial t} =
+  -\gamma \, \vec{M} \times \vec{H}
+  +\frac{\alpha}{M_{\mathrm{sat}}} \, \vec{M} \times \frac{\partial \vec{M}}{\partial t}
+  -\frac{v}{M_{\mathrm{sat}}^2} \, \vec{M} \times
+   \left(\vec{M} \times \hat{j} \cdot \nabla \vec{M} \right)
+  -\frac{\xi v}{M_{\mathrm{sat}}} \, \vec{M} \times \hat{j} \cdot \nabla \vec{M}" /></p>
+</div><p>where the first two terms on the right-hand side are the normal LLG equation, and the extra terms come from the Zhang-Li model, and</p>
+<img alt="../_images/eq_zhangli_llg_d.png" class="align-center" src="../_images/eq_zhangli_llg_d.png" style="width: 668px; height: 196px;" />
+<p>The central column shows the method which can be used to set
+the field (<tt class="docutils literal"><span class="pre">Simulation.set_m</span></tt> or <tt class="docutils literal"><span class="pre">Simulation.set_H_ext</span></tt>) or
+the name of the corresponding parameter in the material definition
+(for example, <tt class="docutils literal"><span class="pre">mat</span> <span class="pre">=</span> <span class="pre">MagMaterial(Ms=SI(0.8e6,</span> <span class="pre">&quot;A/m&quot;),</span> <span class="pre">...)</span></tt>).
+The current density appears only throughout the quantity <tt class="docutils literal"><span class="pre">v</span></tt>, which
+we define as:</p>
+<div class="math">
+<p><img src="../_images/math/e6d2300f0caf912cdcb2158a0c552b3a3828a4a8.png" alt="v = \frac{P \; j \; \mu_B}{e \; M_{\mathrm{sat}} \; (1 + \xi^2)}" /></p>
+</div><p>with:</p>
+<img alt="../_images/eq_v_d.png" class="align-center" src="../_images/eq_v_d.png" style="width: 755px; height: 169px;" />
+<p>In this and in the next examples we show how to set up a micromagnetic
+simulation including such spin transfer torque effects.
+We show how the current density can be specified and how the required
+parameters can be included in the material definitions.</p>
+<p>As a first example, we consider a thin Permalloy film which develops
+a vortex in the center. We compute the dynamics of the vortex
+as a response to the application of a current.</p>
+<table class="docutils footnote" frame="void" id="zhangli" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id1">[1]</a></td><td>S. Zhang and Z. Li, <em>Roles of Nonequilibrium Conduction Electrons
+on the Magnetization Dynamics of Ferromagnets</em>, Physical Review
+Letters <strong>93</strong>, 127204 (2004), online at
+<a class="reference external" href="http://link.aps.org/doi/10.1103/PhysRevLett.93.127204">http://link.aps.org/doi/10.1103/PhysRevLett.93.127204</a></td></tr>
+</tbody>
+</table>
+<div class="section" id="current-driven-motion-of-a-vortex-in-a-thin-film">
+<span id="id2"></span><h2>2.21.1. Current-driven motion of a vortex in a thin film<a class="headerlink" href="doc.html#current-driven-motion-of-a-vortex-in-a-thin-film" title="Permalink to this headline">¶</a></h2>
+<p>The system under investigation is a 100 x 100 x 10 nm Permalloy film.
+The mesh is stored in the file
+<a class="reference download internal" href="../_downloads/pyfilm.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">pyfilm.nmesh.h5</span></tt></a>.</p>
+<p>The simulation is subdivided in two parts:</p>
+<ul class="simple">
+<li>In part I, the system is
+relaxed to obtain the initial magnetisation configuration when the
+current <strong>is not</strong> applied, which is just a vortex in the center of
+the film.</li>
+<li>In part II, the vortex magnetisation obtained in part I is
+loaded and used as the initial magnetisation configuration. A current
+is applied and the magnetisation dynamics is analysed by
+saving periodically the data (the magnetisation, the other fields and
+their averages).</li>
+</ul>
+<p>Here we use two separate simulation scripts to carry out part I and
+part II subsequentely. This is the approach that is easiest to
+understand. Once the basic ideas have become clear, it is often a good
+idea to write only one simulation script that carries out both part I
+and part II. (Indeed many of the parameters, such as the saturation
+magnetisation or the exchange coupling need to be specified in each of
+the two scripts leading to possible errors: for example if one decides
+to investigate a different material and changes the parameters just in
+one file and forgets the other, etc.). In the next section
+(<a class="reference internal" href="../example_zhangli2/doc.html#example-current-driven-magnetisation-precession-in-nanopillars"><em>Example: Current-driven magnetisation precession in nanopillars</em></a>), we present
+a more robust approach, where both part I and part II are executed by
+just one script.</p>
+</div>
+<div class="section" id="part-i-relaxation">
+<h2>2.21.2. Part I: Relaxation<a class="headerlink" href="doc.html#part-i-relaxation" title="Permalink to this headline">¶</a></h2>
+<p>The first script carries out a normal micromagnetic simulation
+(i.e. no spin transfer torque), and determines the relaxed
+magnetisation configuration for a given geometry, material and initial
+configuration. It saves the final magnetisation to disk. Here is the
+full listing of <a class="reference download internal" href="../_downloads/relaxation1.py"><tt class="xref download docutils literal"><span class="pre">relaxation.py</span></tt></a>
+:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># We model a bar 100 nm x 100 nm x 10 nm where a vortex sits in the center.</span>
+<span class="c"># This is part I: we just do a relaxation to obtain the shape of the vortex.</span>
+<span class="kn">import</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">at</span>
+<span class="kn">from</span> <span class="nn">nsim.si_units.si</span> <span class="kn">import</span> <span class="n">degrees_per_ns</span>
+
+<span class="c"># Define the material</span>
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                          <span class="n">llg_gamma_G</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.2211e6</span><span class="p">,</span> <span class="s">&quot;m/A s&quot;</span><span class="p">),</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c"># Define the simulation object and load the mesh</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;pyfilm.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set a initial magnetisation which will relax into a vortex</span>
+<span class="k">def</span> <span class="nf">initial_m</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+  <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">p</span>
+  <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mf">50.0e-9</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mf">50.0e-9</span><span class="p">),</span> <span class="mf">40.0e-9</span><span class="p">]</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>
+
+<span class="c"># Set convergence parameters and run the simulation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">degrees_per_ns</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">))])</span>
+
+<span class="c"># Write the final magnetisation to file &quot;vortex_m.h5&quot;</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="s">&quot;vortex_m.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After importing the usual Nmag module and helper objects, we define
+the material, create the simulation object and load the mesh,
+(similar to what is shown in previous examples):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Define the material</span>
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                          <span class="n">llg_gamma_G</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.2211e6</span><span class="p">,</span> <span class="s">&quot;m/A s&quot;</span><span class="p">),</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c"># Define the simulation object and load the mesh</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;pyfilm.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Notice that the damping parameter <tt class="docutils literal"><span class="pre">llg_damping</span></tt> is set to a high value,
+to allow for quick relaxation of the magnetisation.
+We write a function <tt class="docutils literal"><span class="pre">initial_m</span></tt> that is being given the position of each
+site in the mesh as a vector <tt class="docutils literal"><span class="pre">p</span></tt> with three components, and which returns
+an initial magnetisation vector. This vector is chosen such that the initial
+magnetisation that is described by this function is likely to relax into a
+vortex configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">initial_m</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+  <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">p</span>
+  <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mf">50.0e-9</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mf">50.0e-9</span><span class="p">),</span> <span class="mf">40.0e-9</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The magnetisation at point <tt class="docutils literal"><span class="pre">p</span></tt> is obtained from a 90 degree rotation
+of the vector which connects <tt class="docutils literal"><span class="pre">p</span></tt> to the center of the film.
+This vector doesn&#8217;t have to be normalised: Nmag will take care of
+normalising it for us.</p>
+<p>We need to instruct the simulation object <tt class="docutils literal"><span class="pre">sim</span></tt> to use this function
+to set the magnetisation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We set the criterion to be used to decide when the magnetisation has
+relaxed. The value used here in <a class="reference internal" href="../command_reference.html#set-params"><em>set_params</em></a> (i.e. one degree per
+nanosecond) is the default value (so we could omit this, but we change
+the value in the second part of this example):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">degrees_per_ns</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We finally run the simulation using the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command until the
+convergence criterion dm/dt &lt; 1 degree per nanosecond is
+fullfilled. In the process, we save spatially resolved data for all
+fields at step 0, and the same data at the end of the stage
+(i.e. when an equilibrium has been reached, just before the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a>
+function returns):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>We finally save the relaxed magnetisation to a file using the function
+<a class="reference internal" href="../command_reference.html#save-restart-file"><em>save_restart_file</em></a>, so that we can use this in part 2 as the initial
+configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="s">&quot;vortex_m.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can launch the script with the command:</p>
+<div class="highlight-python"><pre>$ nsim relaxation.py</pre>
+</div>
+<p>The output files for this simulation will have the prefix <tt class="docutils literal"><span class="pre">relaxation</span></tt> in
+their names. The script saves the magnetisation at the beginning
+(before relaxation) and at the end (after relaxation). The magnetisations
+can be extracted and saved into vtk files using the command
+<tt class="docutils literal"><span class="pre">nmagpp</span> <span class="pre">relaxation</span> <span class="pre">--vtk=m.vtk</span></tt>, as usual. MayaVi can then be used
+to show the initial magnetisation (as described by the <tt class="docutils literal"><span class="pre">initial_m</span></tt> function):</p>
+<div class="figure align-center">
+<img alt="zhangli-1" src="../_images/m-begin.png" />
+</div>
+<p>The magnetisation at the end of the relaxation process:</p>
+<div class="figure align-center">
+<img alt="zhangli-2" src="../_images/m-end.png" />
+</div>
+<p>The relaxed vortex is much smaller than the initial one.  The
+important thing to notice is that such a magnetisation configuration
+has now been saved into the file <tt class="docutils literal"><span class="pre">vortex_m.h5</span></tt> which will be used as
+the initial magnetisation for part II of this simulation, where we
+study the current driven dynamics of the vortex.</p>
+</div>
+<div class="section" id="part-ii-current-driven-dynamics">
+<h2>2.21.3. Part II: Current driven dynamics<a class="headerlink" href="doc.html#part-ii-current-driven-dynamics" title="Permalink to this headline">¶</a></h2>
+<p>For part II we need to use a slightly modified version of the script
+used for part I. Here is the full listing of
+<a class="reference download internal" href="../_downloads/stt.py"><tt class="xref download docutils literal"><span class="pre">stt.py</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># We model a bar 100 nm x 100 nm x 10 nm where a vortex sits in the center.</span>
+<span class="c"># This is part II: we load the vortex from file and apply a spin-polarised current</span>
+
+<span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="c"># Define the material</span>
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                          <span class="n">llg_gamma_G</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.2211e6</span><span class="p">,</span> <span class="s">&quot;m/A s&quot;</span><span class="p">),</span>
+                          <span class="n">llg_polarisation</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                          <span class="n">llg_xi</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c"># Define the simulation object and load the mesh</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;pyfilm.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set the initial magnetisation: part II uses the one saved by part I</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="s">&quot;vortex_m.h5&quot;</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_current_density</span><span class="p">([</span><span class="mf">1e12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&quot;A/m^2&quot;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="c"># * WE * decide when the simulation should stop!</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1.0e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">))),</span>
+                <span class="p">(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">0.05e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">))],</span>
+          <span class="n">do</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">10e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)))])</span>
+</pre></div>
+</div>
+<p>We now discuss the script with particular emphasis on the differences
+with the first one. One difference lies in the material definition:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Define the material</span>
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                          <span class="n">llg_gamma_G</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.2211e6</span><span class="p">,</span> <span class="s">&quot;m/A s&quot;</span><span class="p">),</span>
+                          <span class="n">llg_polarisation</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                          <span class="n">llg_xi</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we use two new arguments for the <a class="reference internal" href="../command_reference.html#magmaterial"><em>MagMaterial</em></a> class.
+The first is <tt class="docutils literal"><span class="pre">llg_polarisation</span></tt> which is used to specify the spin polarisation
+of the conduction electrons inside the given material.
+The second, <tt class="docutils literal"><span class="pre">llg_xi</span></tt>, is used to specify the degree of non-adiabaticity.
+Note that for the damping parameter, <tt class="docutils literal"><span class="pre">llg_damping</span></tt>, we are now using
+a smaller value, 0.1 (these values are not realistic for Permalloy).</p>
+<p>The script then continues by creating the simulation object
+and loading the mesh (which is identical to the relaxation script shown in part I). The initial magnetisation is read from the <tt class="docutils literal"><span class="pre">vortex_m.h5</span></tt> file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Set the initial magnetisation: part II uses the one saved by part I</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="s">&quot;vortex_m.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we use the function <a class="reference internal" href="../command_reference.html#load-m-from-h5file"><em>load_m_from_h5file</em></a> to load the magnetisation
+from the file <tt class="docutils literal"><span class="pre">vortex_m.h5</span></tt>, which was created in part I by using
+the function <a class="reference internal" href="../command_reference.html#save-restart-file"><em>save_restart_file</em></a>.
+We set the current density:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_current_density</span><span class="p">([</span><span class="mf">1e12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&quot;A/m^2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The current density has norm <tt class="docutils literal"><span class="pre">10^12</span> <span class="pre">A/m^2</span></tt> and is aligned in the <tt class="docutils literal"><span class="pre">x</span></tt>
+direction. We then disable the convergence check:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="c"># * WE * decide when the simulation should stop!</span>
+</pre></div>
+</div>
+<p>Here we decide that convergence should be reached when the magnetisation moves
+less than 0.0 degrees per nanosecond. This cannot happen and hence convergence
+is never reached: we&#8217;ll tell the <tt class="docutils literal"><span class="pre">relax</span></tt> method to exit after a fixed amount
+of time has been simulated:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1.0e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">))),</span>
+                <span class="p">(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">0.05e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">))],</span>
+          <span class="n">do</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">10e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)))])</span>
+</pre></div>
+</div>
+<p>We run the simulation for just 10 nanoseconds by forcing an exit with
+<tt class="docutils literal"><span class="pre">('exit',</span> <span class="pre">at('time',</span> <span class="pre">SI(10e-9,</span> <span class="pre">&quot;s&quot;)))</span></tt>.  We also save the fields
+every nanosecond and save the averages more often, every 50
+picoseconds. The relax method will simulate a vortex &#8220;hit&#8221; by a spin
+polarised current and will save the averages so that we can see how
+the magnetisation changes in time.</p>
+<p>To run the script (which takes of the order of half an hour) we use as usual:</p>
+<blockquote>
+<div>$ nsim stt.py</div></blockquote>
+<p>The output files for this simulation will start with the prefix <tt class="docutils literal"><span class="pre">stt</span></tt>.
+The script saves the average magnetisation periodically in time.
+We can therefore plot it using the following gnuplot script:</p>
+<div class="highlight-python"><pre>set term postscript color eps enhanced
+set out "m_of_t.eps"
+
+set xlabel "time (ns)"
+set ylabel "average magnetisation (10^6 A/m)"
+plot [0:10] \
+  "m_of_t.dat" u ($1*1e9):($2/1e6) t "&lt;M_x&gt;" w lp, \
+  "" u ($1*1e9):($3/1e6) t "&lt;M_y&gt;" w lp, \
+  "" u ($1*1e9):($4/1e6) t "&lt;M_z&gt;" w lp
+</pre>
+</div>
+<p>to obtain the following graph:</p>
+<div class="figure align-center">
+<img alt="zhangli-3" src="../_images/m_of_t.png" />
+</div>
+</div>
+<div class="section" id="standard-problem">
+<span id="id3"></span><h2>2.21.4. Standard problem<a class="headerlink" href="doc.html#standard-problem" title="Permalink to this headline">¶</a></h2>
+<p>The simulation carried out here is a (coarse) version of the recently
+proposed standard problem for spin transfer torque micromagnetic
+studies <a class="footnote-reference" href="doc.html#najafietal" id="id4">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="najafietal" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id4">[2]</a></td><td>Massoud Najafi, Benjamin Kruger, Stellan Bohlens, Matteo Franchin, Hans Fangohr, Antoine Vanhaverbeke, Rolf Allenspach, Markus Bolte, Ulrich Merkt, Daniela Pfannkuche, Dietmar P. F. Moller, and Guido Meier, <em>Proposal for a Standard Problem for Micromagnetic Simulations Including Spin-Transfer Torque</em>, Journal of Applied Physics, in print (2009), preprint available at <a class="reference external" href="http://www.soton.ac.uk/~fangohr/publications/preprint/Najafi_etal_2009.pdf">http://www.soton.ac.uk/~fangohr/publications/preprint/Najafi_etal_2009.pdf</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_zhangli2/doc.html" title="2.22. Example: Current-driven magnetisation precession in nanopillars"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example2/doc2.html" title="2.20. Example: post processing of saved field data"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.22. Example: Current-driven magnetisation precession in nanopillars &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.23. Mesh distortion for edge roughness simulation" href="../mesh_distortion/doc.html" />
+    <link rel="prev" title="2.21. Example: Spin transfer torque (Zhang-Li model)" href="../example_zhangli1/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mesh_distortion/doc.html" title="2.23. Mesh distortion for edge roughness simulation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_zhangli1/doc.html" title="2.21. Example: Spin transfer torque (Zhang-Li model)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-current-driven-magnetisation-precession-in-nanopillars">
+<span id="id1"></span><h1>2.22. Example: Current-driven magnetisation precession in nanopillars<a class="headerlink" href="doc.html#example-current-driven-magnetisation-precession-in-nanopillars" title="Permalink to this headline">¶</a></h1>
+<p>This is the second example we provide in order to illustrate the usage
+of the Zhang-Li extension to model spin-transfer-torque in Nmag.
+While in the <a class="reference internal" href="../example_zhangli1/doc.html#current-driven-motion-of-a-vortex-in-a-thin-film"><em>Current-driven motion of a vortex in a thin film</em></a> example we tried to present two scripts (one for initial relaxation, and one for the spin torque transfer simulation),
+sacrificing usability for the sake of clarity, here we&#8217;ll try to present
+a real-life script, using the power of the Python programming language
+as much as it is needed to achieve our goal.</p>
+<div class="figure align-center">
+<img alt="../_images/nanopillar.png" src="../_images/nanopillar.png" />
+</div>
+<p>We consider a ferromagnetic nanopillar in the shape of a cylinder.
+We assume that the magnetisation in the nanopillar is pinned in the two
+faces of the cylinder along opposite directions: on the right face
+the magnetisation points to the right, while on the left face it points
+to the left. The magnetisation is then forced to develop a domain wall.
+We then study how such an &#8220;artificial&#8221; domain wall interacts with a current
+flowing throughout the cylinder, along its axis.</p>
+<p>By &#8220;artificial&#8221; we mean that the domain wall is developed as a
+consequence of the pinning, which we artificially impose.  In real
+systems, the pinning can be provided through interface exchange
+coupling or may have a geometrical origin, in combination with
+suitable material parameters. The situation we consider here is
+described and studied in more detail in publications <a class="footnote-reference" href="doc.html#franchin2008a" id="id2">[1]</a> and <a class="footnote-reference" href="doc.html#franchin2008b" id="id3">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="franchin2008a" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="doc.html#id2">1</a>, <a class="fn-backref" href="doc.html#id5">2</a>)</em> Matteo Franchin, Thomas Fischbacher, Giuliano Bordignon, Peter de Groot, Hans Fangohr, <em>Current-driven dynamics of domain walls constrained in ferromagnetic nanopillars</em>, Physical Review B <strong>78</strong>, 054447 (2008), online at <a class="reference external" href="http://eprints.soton.ac.uk/59253">http://eprints.soton.ac.uk/59253</a>,</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="franchin2008b" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="doc.html#id3">1</a>, <a class="fn-backref" href="doc.html#id6">2</a>)</em> Matteo Franchin, Giuliano Bordignon, Peter A. J. de Groot, Thomas Fischbacher, Jurgen P. Zimmermann, Guido Meier, Hans Fangohr, <em>Spin-polarized currents in exchange spring systems</em>, Journal of Applied Physics <strong>103</strong>, 07A504 (2008), online at <a class="reference external" href="http://link.aip.org/link/?JAPIAU/103/07A504/1">http://link.aip.org/link/?JAPIAU/103/07A504/1</a></td></tr>
+</tbody>
+</table>
+<div class="section" id="two-simulations-in-one-single-script">
+<span id="id4"></span><h2>2.22.1. Two simulations in one single script<a class="headerlink" href="doc.html#two-simulations-in-one-single-script" title="Permalink to this headline">¶</a></h2>
+<p>The nanopillar is made of Permalloy and has the shape of a cylinder with
+radius of 10 nm and length 30 nm. The mesh is loaded from the file
+<a class="reference download internal" href="../_downloads/l030.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">l030.nmesh.h5</span></tt></a>
+which was created using <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> from the file
+<a class="reference download internal" href="../_downloads/l030.geo"><tt class="xref download docutils literal"><span class="pre">l030.geo</span></tt></a>.</p>
+<img alt="../_images/mesh3.png" class="align-center" src="../_images/mesh3.png" style="width: 590px; height: 308px;" />
+<p>The simulation is subdivided into two parts, similarly to the previous
+example:</p>
+<ul class="simple">
+<li>In part I, the system is relaxed to obtain the initial magnetisation
+configuration when the current is not applied.</li>
+<li>In part II the current is applied to the artificial domain wall
+whose shape was calculated in part I.</li>
+</ul>
+<p>This time, however, we use just one single script to execute both
+parts of the simulation in one go.  In particular, we define a
+function which takes some input parameters such as the current
+density, the damping, etc and uses them to carry out a simulation. We
+then call this function twice: once for part I and once for part
+II.</p>
+<p>The full listing of the script <a class="reference download internal" href="../_downloads/stt_nanopillar.py"><tt class="xref download docutils literal"><span class="pre">stt_nanopillar.py</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="kn">from</span> <span class="nn">nsim.si_units.si</span> <span class="kn">import</span> <span class="n">degrees_per_ns</span>
+
+<span class="n">l</span> <span class="o">=</span> <span class="mf">30.0</span>                        <span class="c"># The nanopillar thickness is 30 nm</span>
+<span class="n">hl</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mi">2</span>                        <span class="c"># hl is half the nanopillar thickness</span>
+<span class="n">relaxed_m_file</span> <span class="o">=</span> <span class="s">&quot;relaxed_m.h5&quot;</span> <span class="c"># File containing the relaxed magnetisation</span>
+<span class="n">mesh_name</span> <span class="o">=</span> <span class="s">&quot;l030.nmesh.h5&quot;</span>     <span class="c"># Mesh name</span>
+<span class="n">mesh_unit</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span>       <span class="c"># Unit length for space used by the mesh</span>
+
+<span class="k">def</span> <span class="nf">run_simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="n">initial_m</span><span class="p">,</span> <span class="n">damping</span><span class="p">,</span> <span class="n">stopping_dm_dt</span><span class="p">,</span>
+                   <span class="n">j</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[],</span> <span class="n">do</span><span class="o">=</span><span class="p">[],</span> <span class="n">do_demag</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+  <span class="c"># Define the material</span>
+  <span class="n">mat</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span>
+          <span class="n">name</span><span class="o">=</span><span class="s">&quot;mat&quot;</span><span class="p">,</span>
+          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+          <span class="n">llg_damping</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
+          <span class="n">llg_xi</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.01</span><span class="p">),</span>
+          <span class="n">llg_polarisation</span><span class="o">=</span><span class="n">P</span><span class="p">)</span>
+
+  <span class="c"># Create the simulation object and load the mesh</span>
+  <span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="n">do_demag</span><span class="o">=</span><span class="n">do_demag</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;np&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">mesh_unit</span><span class="p">)</span>
+
+  <span class="c"># Set the pinning at the top and at the bottom of the nanopillar</span>
+  <span class="k">def</span> <span class="nf">pinning</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">mesh_unit</span><span class="o">*</span><span class="n">hl</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.999</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mf">1.0</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">pinning</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>            <span class="c"># Set the initial magnetisation</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>   <span class="c"># a) from file if a string is provided</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>                <span class="c"># b) from function/vector, otherwise</span>
+
+  <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>                          <span class="c"># Set the current, if needed</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_current_density</span><span class="p">([</span><span class="n">j</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&quot;A/m^2&quot;</span><span class="p">))</span>
+
+  <span class="c"># Set additional parameters for the time-integration and run the simulation</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="n">stopping_dm_dt</span><span class="p">,</span>
+                 <span class="n">ts_rel_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="n">ts_abs_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span> <span class="n">do</span><span class="o">=</span><span class="n">do</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">sim</span>
+
+<span class="c"># If the initial magnetisation has not been calculated and saved into</span>
+<span class="c"># the file relaxed_m_file, then do it now!</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">relaxed_m_file</span><span class="p">):</span>
+  <span class="c"># Initial direction for the magnetisation</span>
+  <span class="k">def</span> <span class="nf">m0</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+      <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">p</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">mesh_unit</span><span class="o">*</span><span class="n">hl</span><span class="p">))))</span>
+      <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">tmp</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">]</span>
+
+  <span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)),</span>
+          <span class="p">(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">5e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+
+  <span class="n">sim</span> <span class="o">=</span> <span class="n">run_simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="o">=</span><span class="s">&quot;relaxation&quot;</span><span class="p">,</span> <span class="n">initial_m</span><span class="o">=</span><span class="n">m0</span><span class="p">,</span>
+                       <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span>
+                       <span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">degrees_per_ns</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="n">relaxed_m_file</span><span class="p">)</span>
+  <span class="k">del</span> <span class="n">sim</span>
+
+<span class="c"># Now we simulate the magnetisation dynamics</span>
+<span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">9e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+<span class="n">do</span>   <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">6e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+<span class="n">run_simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="o">=</span><span class="s">&quot;dynamics&quot;</span><span class="p">,</span> <span class="n">initial_m</span><span class="o">=</span><span class="n">relaxed_m_file</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+               <span class="n">j</span><span class="o">=</span><span class="mf">0.1e12</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span> <span class="n">do</span><span class="o">=</span><span class="n">do</span><span class="p">,</span> <span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After importing the required modules, we define some variables such as
+the length of the cylinder, <tt class="docutils literal"><span class="pre">l</span></tt>; the name of the file where to put
+the relaxed magnetisation, <tt class="docutils literal"><span class="pre">relaxed_m_file</span></tt>; the name of the mesh,
+<tt class="docutils literal"><span class="pre">mesh_name</span></tt>; its unit length, <tt class="docutils literal"><span class="pre">mesh_unit</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">l</span> <span class="o">=</span> <span class="mf">30.0</span>                        <span class="c"># The nanopillar thickness is 30 nm</span>
+<span class="n">hl</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mi">2</span>                        <span class="c"># hl is half the nanopillar thickness</span>
+<span class="n">relaxed_m_file</span> <span class="o">=</span> <span class="s">&quot;relaxed_m.h5&quot;</span> <span class="c"># File containing the relaxed magnetisation</span>
+<span class="n">mesh_name</span> <span class="o">=</span> <span class="s">&quot;l030.nmesh.h5&quot;</span>     <span class="c"># Mesh name</span>
+<span class="n">mesh_unit</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span>       <span class="c"># Unit length for space used by the mesh</span>
+</pre></div>
+</div>
+<p>These quantities are used later in the script. For example, knowing
+the length of the nanopillar is necessary in order to set a proper
+initial magnetisation for the relaxation. By making this a parameter
+at the top of the program, we can change it there (if we wan to study
+the same system for a different l), and just run the script again.</p>
+<p>We define the function <tt class="docutils literal"><span class="pre">run_simulation</span></tt>: we teach Python how to run
+a simulation given some parameters, such as the initial magnetisation,
+the damping, the current density, etc.  The function is defined
+starting with the line:</p>
+<div class="highlight-python"><pre>def run_simulation(sim_name, initial_m, damping, stopping_dm_dt,
+                   j, P=0.0, save=[], do=[], do_demag=True):</pre>
+</div>
+<p>The arguments of the function (the names inside the parenthesis) are
+those parameters which must be choosen differently in part I and part II.
+For example, we decided to make the current density <tt class="docutils literal"><span class="pre">j</span></tt> an argument
+for the function <tt class="docutils literal"><span class="pre">run_simulation</span></tt>, because in part I <tt class="docutils literal"><span class="pre">j</span></tt> must be set
+to zero, while in part II it must be set to some value greater than zero.
+On the other hand, the saturation magnetisation does not appear
+in the argument list of the function, since it has the same value
+both in part I and part II.</p>
+<p>A remark about the Python syntax: arguments such as <tt class="docutils literal"><span class="pre">sim_name</span></tt>
+must be specified explicitly when using the function <tt class="docutils literal"><span class="pre">run_simulation</span></tt>,
+while arguments such as <tt class="docutils literal"><span class="pre">P=0</span></tt> have a default value (0.0 in this case)
+and the user may omit them, meaning that Python will then use
+the default values.</p>
+<p>We skip the explanation of the body of the function and focus on the code which
+follows it. We&#8217;ll return later on the implementation of <tt class="docutils literal"><span class="pre">run_simulation</span></tt>.
+For now, the user should keep in mind that <tt class="docutils literal"><span class="pre">run_simulation</span></tt> just runs
+one distinct micromagnetic simulation every time it is called (and what simulation this is will depend on the parameters given to the function). The function returns
+the simulation object which it created.</p>
+<p>We now comment the code which follows the function <tt class="docutils literal"><span class="pre">run_simulation</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># If the initial magnetisation has not been calculated and saved into</span>
+<span class="c"># the file relaxed_m_file, then do it now!</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">relaxed_m_file</span><span class="p">):</span>
+  <span class="c"># Initial direction for the magnetisation</span>
+  <span class="k">def</span> <span class="nf">m0</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+      <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">pos</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">mesh_unit</span><span class="o">*</span><span class="n">hl</span><span class="p">))))</span>
+      <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">tmp</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">]</span>
+
+  <span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)),</span>
+          <span class="p">(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">5e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+
+  <span class="n">sim</span> <span class="o">=</span> <span class="n">run_simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="o">=</span><span class="s">&quot;relaxation&quot;</span><span class="p">,</span> <span class="n">initial_m</span><span class="o">=</span><span class="n">m0</span><span class="p">,</span>
+                       <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span>
+                       <span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">degrees_per_ns</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="n">relaxed_m_file</span><span class="p">)</span>
+  <span class="k">del</span> <span class="n">sim</span>
+</pre></div>
+</div>
+<p>This piece of code carries out part I of the simulation: it relaxes
+the system starting from a sensible initial guess for the
+magnetisation and saves the relaxed magnetisation configuration so
+that it can be used in part II.</p>
+<p>In more detail, it starts by checking (using the function
+<tt class="docutils literal"><span class="pre">os.path.exists</span></tt>) if a file containing the initial magnetisation
+exists. If this is not the case, then the following indented block
+will be executed, which computes and saves this initial
+magnetisation. If the file exists, the whole indented block is
+skipped, and we go straight to part II of the calculation.</p>
+<p>In order to compute the relaxed configuration, an initial guess <tt class="docutils literal"><span class="pre">m0</span></tt>
+for the magnetisation is defined.  Such magnetisation linearly rotates
+from left to right as the position changes from the left face to the
+right face of the cylinder.  Here <tt class="docutils literal"><span class="pre">x</span></tt> is the x coordinate of the
+position vector <tt class="docutils literal"><span class="pre">p</span></tt> and <tt class="docutils literal"><span class="pre">tmp</span> <span class="pre">=</span> <span class="pre">min(1.0,</span> <span class="pre">max(-1.0,</span> <span class="pre">float(SI(x,</span>
+<span class="pre">&quot;m&quot;)/(mesh_unit*hl))))</span></tt> is a continuous function which changes
+linearly from -1 to 1 when going from the left to the right face,
+keeping constant outside the cylinder.</p>
+<p>In the code above we also define the variable <tt class="docutils literal"><span class="pre">save</span></tt> which is used
+to specify when and what should be saved to disk. Here we save the
+fields before and after the relaxation and save the averages every 5
+picoseconds.</p>
+<p>We then call the <tt class="docutils literal"><span class="pre">run_simulation</span></tt> function we defined above to relax
+the magnetisation. This function returns the simulation object
+<tt class="docutils literal"><span class="pre">sim</span></tt>, which we use to save the magnetisation using the
+<a class="reference internal" href="../command_reference.html#save-restart-file"><em>save_restart_file</em></a> function.</p>
+<p>Once this is done, we delete the simulation object, releasing resources
+(memory) we have used for the simulation of part I.  Note that for
+the relaxation, we use <tt class="docutils literal"><span class="pre">j=0.0</span></tt> (zero current density), <tt class="docutils literal"><span class="pre">damping=0.5</span></tt>
+(fast damping, to reach convergence quickly) and
+<tt class="docutils literal"><span class="pre">stopping_dm_dt=1.0*degrees_per_ns</span></tt> (this means that the simulation
+should end when the magnetisation moves slower than 1 degree per
+nanosecond).</p>
+<p>The following part of the script deals with part II, the computation
+of the current-driven dynamics:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Now we simulate the magnetisation dynamics</span>
+<span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">9e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+<span class="n">do</span>   <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">6e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))]</span>
+
+<span class="n">run_simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="o">=</span><span class="s">&quot;dynamics&quot;</span><span class="p">,</span>
+               <span class="n">initial_m</span><span class="o">=</span><span class="n">relaxed_m_file</span><span class="p">,</span>
+               <span class="n">damping</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+               <span class="n">j</span><span class="o">=</span><span class="mf">0.1e12</span><span class="p">,</span>
+               <span class="n">P</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span>
+               <span class="n">do</span><span class="o">=</span><span class="n">do</span><span class="p">,</span>
+               <span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we decide to save the averages every 9 picoseconds and exit the
+simulation after 6 nanoseconds. We use <tt class="docutils literal"><span class="pre">stopping_dm_dt=0.0</span></tt> to
+disable the convergence check (here we just want to simulate for a
+fixed amount of time). We also use full spin polarisation, <tt class="docutils literal"><span class="pre">P=1.0</span></tt>,
+we apply a current density of <tt class="docutils literal"><span class="pre">j=0.1e12</span> <span class="pre">A/m^2</span></tt> and use a realistic
+damping parameter for Permalloy, <tt class="docutils literal"><span class="pre">damping=0.02</span></tt>. For the initial
+magnetisation we pass the name of the file where the relaxed
+magnetisation was saved in part I and we specify a simulation name
+<tt class="docutils literal"><span class="pre">sim_name=&quot;dynamics&quot;</span></tt> which is different from the one used for the
+relaxation (which was <tt class="docutils literal"><span class="pre">sim_name=&quot;relaxation&quot;</span></tt>). The simulation name
+will decide the prefix of any filenames that are being created when
+saving data. (If the simulation name is not specified, the name of the
+script file is used.)</p>
+<p>We now return to discuss the function <tt class="docutils literal"><span class="pre">run_simulation</span></tt> and see how
+it carries out the actual simulations. First, the function defines the
+material:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Define the material</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s">&quot;mat&quot;</span><span class="p">,</span>
+        <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.8e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+        <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+        <span class="n">llg_damping</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
+        <span class="n">llg_xi</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.01</span><span class="p">),</span>
+        <span class="n">llg_polarisation</span><span class="o">=</span><span class="n">P</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It uses the variable <tt class="docutils literal"><span class="pre">P</span></tt> which is passed as an argument to the function.
+Then the simulation object is created and the mesh is loaded:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Create the simulation object and load the mesh</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="n">do_demag</span><span class="o">=</span><span class="n">do_demag</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;np&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">mesh_unit</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that <tt class="docutils literal"><span class="pre">sim_name</span></tt> is passed to the Simulation object,
+allowing the user to use different prefixes for the output files
+of the simulation. For example, if <tt class="docutils literal"><span class="pre">sim_name</span> <span class="pre">=</span> <span class="pre">&quot;relaxation&quot;</span></tt>,
+then the output files produced when saving the fields or their averages
+to disk will have names starting with the prefix <tt class="docutils literal"><span class="pre">relaxation_</span></tt>.
+On the other hand, if <tt class="docutils literal"><span class="pre">sim_name</span> <span class="pre">=</span> <span class="pre">&quot;dynamics&quot;</span></tt>, the names of these files
+will all start with the prefix <tt class="docutils literal"><span class="pre">dynamics_</span></tt>.</p>
+<p>Using different simulation names allows us to save the data of part I
+and part II in different independent files.  The function continues
+with the code above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Set the pinning at the left and right face of the nanopillar</span>
+<span class="k">def</span> <span class="nf">pinning</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+  <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">p</span>
+  <span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">mesh_unit</span><span class="o">*</span><span class="n">hl</span><span class="p">))</span>
+  <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.999</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mf">0.0</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mf">1.0</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">pinning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is used to pin the magnetisation at the left and right faces of
+the cylinder.  Note here that <tt class="docutils literal"><span class="pre">x</span></tt> is the x component of the position
+of the mesh site and that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">SI</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">mesh_unit</span><span class="o">*</span><span class="n">hl</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>is equal to -1 at the right face, and to +1 at the left face.
+We then set the magnetisation. If <tt class="docutils literal"><span class="pre">initial_m</span></tt> is a string,
+then we assume it is the name of the file and load the magnetisation
+with the method <tt class="docutils literal"><span class="pre">load_m_from_h5file</span></tt>, otherwise we assume it is just
+a function and set the magnetisation in the usual way, using the method
+<tt class="docutils literal"><span class="pre">set_m</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>            <span class="c"># Set the initial magnetisation</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>   <span class="c"># a) from file if a string is provided</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">initial_m</span><span class="p">)</span>                <span class="c"># b) from function/vector, otherwise</span>
+</pre></div>
+</div>
+<p>We then set the current density along the x direction
+(only if <tt class="docutils literal"><span class="pre">j</span></tt> is not zero):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>                          <span class="c"># Set the current, if needed</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_current_density</span><span class="p">([</span><span class="n">j</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&quot;A/m^2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Finally, we set tolerances, the stopping criterion and launch the simulation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Set additional parameters for the time-integration and run the simulation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="n">stopping_dm_dt</span><span class="p">,</span>
+               <span class="n">ts_rel_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="n">ts_abs_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">([</span><span class="bp">None</span><span class="p">],</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span> <span class="n">do</span><span class="o">=</span><span class="n">do</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">sim</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> function carries out the simulation, taking into account the stopping criterion and <tt class="docutils literal"><span class="pre">save</span></tt> and <tt class="docutils literal"><span class="pre">do</span></tt> actions. Finally, the function returns the simulation object which it created.</p>
+</div>
+<div class="section" id="results-precession-of-the-magnetisation">
+<h2>2.22.2. Results: precession of the magnetisation<a class="headerlink" href="doc.html#results-precession-of-the-magnetisation" title="Permalink to this headline">¶</a></h2>
+<p>We launch the script with:</p>
+<div class="highlight-python"><pre>$ nsim stt_nanopillar.py</pre>
+</div>
+<p>The script runs both part I (output files starting with <tt class="docutils literal"><span class="pre">relaxation_</span></tt>)
+and part II (output files starting with <tt class="docutils literal"><span class="pre">dynamics_</span></tt>).
+The relaxed magnetisation can be extracted and saved into a vtk file using
+the command <tt class="docutils literal"><span class="pre">nmagpp</span> <span class="pre">relaxation</span> <span class="pre">--vtk=m.vtk</span></tt>. MayaVi can then be used
+to obtain the following picture:</p>
+<div class="figure align-center">
+<img alt="zhangli2-1" src="../_images/m-end1.png" />
+</div>
+<p>We can now take a look at the results obtained for the dynamics.
+The average magnetisation as a function of time can be extracted
+using:</p>
+<div class="highlight-python"><pre>ncol dynamics time M_mat_0 M_mat_1 M_mat_2 &gt; m_of_t.dat</pre>
+</div>
+<p>We can use the following gnuplot script:</p>
+<div class="highlight-python"><pre>set term postscript color eps enhanced solid
+set out "m_of_t.eps"
+
+set xlabel "time (ns)"
+set ylabel "average magnetisation (10^6 A/m)"
+plot [0:6] \
+  "m_of_t.dat" u ($1*1e9):($2/1e6) t "&lt;M_x&gt;" w l, \
+  "" u ($1*1e9):($3/1e6) t "&lt;M_y&gt;" w l, \
+  "" u ($1*1e9):($4/1e6) t "&lt;M_z&gt;" w l
+
+</pre>
+</div>
+<p>and obtain the following graph:</p>
+<div class="figure align-center">
+<img alt="zhangli2-2" src="../_images/m_of_t1.png" />
+</div>
+<p>The sinusoidal dependence of the y and z magnetisation components suggests
+that the magnetisation rotates around the nanopillar axis with a frequency
+which increases to approach its maximum value.</p>
+<p>A more detailed discussion of results and interpretation is provided
+in the publications <a class="footnote-reference" href="doc.html#franchin2008a" id="id5">[1]</a> and <a class="footnote-reference" href="doc.html#franchin2008b" id="id6">[2]</a> mentioned in section <a class="reference internal" href="doc.html#example-current-driven-magnetisation-precession-in-nanopillars"><em>Example: Current-driven magnetisation precession in nanopillars</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mesh_distortion/doc.html" title="2.23. Mesh distortion for edge roughness simulation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_zhangli1/doc.html" title="2.21. Example: Spin transfer torque (Zhang-Li model)"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

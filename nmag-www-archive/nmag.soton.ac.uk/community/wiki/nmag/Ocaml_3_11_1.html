@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Ocaml 3 11 1 - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Ocaml_3_11_1/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Compiling-Nmag-with-OCaml-3111">Compiling Nmag with OCaml 3.11.1<a href="Ocaml_3_11_1.html#Compiling-Nmag-with-OCaml-3111" class="wiki-anchor">&para;</a></h1>
+
+
+The newer version of the OCaml (3.11.1) compiler introduces two problems with the compilation of Nmag.<br />
+The first is connected with the changes to the Camlp4 preprocessor, which break version 0.4.0 of ocamlgsl. This can be solved by updating gsl and ocamlgsl to the latest versions (1.13 for gsl and 0.6.0 for ocamlgsl). Alternatively the old version of gsl (1.8) can be used together with version 0.5.3 of ocamlgsl.<br />
+The second problem has to do with changes in the implementation of OCaml, which break the code used to find the size of an OCaml data structure, i.e. the file <code>nsim/snippets/objsize.c</code>. The problem can be solved by replacing the content of the file <code>nsim/snippets/objsize.c</code> (or <code>nmag-0.1/nsim/snippets/objsize.c</code> for those who compiled everything from source) with the following:<br />
+<pre>
+#include &lt;stdlib.h&gt;
+
+#include &lt;caml/mlvalues.h&gt;
+#include &lt;caml/memory.h&gt;
+#include &lt;caml/alloc.h&gt;
+
+CAMLprim value caml_memory_footprint(value start) {
+      CAMLparam1(start);
+      CAMLlocal1(res);
+      size_t s = 0;
+
+      res = caml_alloc_tuple(3);
+      Store_field(res, 0, copy_double(s));
+      Store_field(res, 1, copy_double(s));
+      Store_field(res, 2, copy_double(s));
+      CAMLreturn(res);
+}
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Ocaml_3_11_1?export=html&amp;version=2" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Ocaml_3_11_1?export=txt&amp;version=2" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

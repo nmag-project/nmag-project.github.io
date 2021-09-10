@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.15. Example: two different magnetic materials &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.16. Example: Larmor precession" href="../example_larmor/doc.html" />
+    <link rel="prev" title="2.14. Applying a field that changes both in time and in space" href="../example_changing_space_time_field/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_larmor/doc.html" title="2.16. Example: Larmor precession"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_changing_space_time_field/doc.html" title="2.14. Applying a field that changes both in time and in space"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-two-different-magnetic-materials">
+<span id="id1"></span><h1>2.15. Example: two different magnetic materials<a class="headerlink" href="doc.html#example-two-different-magnetic-materials" title="Permalink to this headline">¶</a></h1>
+<p>In this example, we study the dynamics of a simple system consisting
+of two 15 nm x 15 nm x 15 nm cubes close to one another (with 2 nm
+spacing along the x-axis). We take the right cube to be made of
+PermAlloy and the left cube to be made of Cobalt, with the magnetic
+anisotropy axis pointing in z-direction. The mesh has been generated
+with <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> from the geometry file <a class="reference download internal" href="../_downloads/two_cubes.geo"><tt class="xref download docutils literal"><span class="pre">two_cubes.geo</span></tt></a>.</p>
+<img alt="../_images/cubes.png" class="align-center" src="../_images/cubes.png" style="width: 568px; height: 468px;" />
+<p>We use the <a class="reference download internal" href="../_downloads/two_cubes.py"><tt class="xref download docutils literal"><span class="pre">two_cubes.py</span></tt></a> script to carry out the simulation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># define magnetic material Cobalt (data from OOMMF materials file)</span>
+<span class="n">Co</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Co&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1400e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">30e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">uniaxial_anisotropy</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">520e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+
+<span class="c"># define magnetic material Permalley</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">860e3</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;two_cubes.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&quot;cube1&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">),(</span><span class="s">&quot;cube2&quot;</span><span class="p">,</span> <span class="n">Co</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span>
+              <span class="p">)</span> 
+
+<span class="c"># set initial magnetisation along the </span>
+<span class="c"># positive x axis for both cubes, slightly off in z-direction</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">0.999847695156</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01745240643731</span><span class="p">])</span>
+
+<span class="n">ns</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)</span> <span class="c"># corresponds to one nanosecond</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">ns</span><span class="p">)),</span>
+                  <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">ns</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The script is very similar to the one used in <a class="reference internal" href="../example2/doc.html#example-2"><em>Example 2: Computing the time development of a system</em></a>. However,
+here we have two materials. The related changes are that we define two
+magnetic materials, and assign them to objects <tt class="docutils literal"><span class="pre">Co</span></tt> and <tt class="docutils literal"><span class="pre">Py</span></tt>.</p>
+<p>When loading the mesh:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;two_cubes.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&quot;cube1&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">),(</span><span class="s">&quot;cube2&quot;</span><span class="p">,</span> <span class="n">Co</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span>
+              <span class="p">)</span>
+</pre></div>
+</div>
+<p>we need to assign regions 1 and 2 in the mesh file (which correspond
+to the two cubes) to the materials. This is done with this list of tuples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[(</span><span class="s">&quot;cube1&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">),(</span><span class="s">&quot;cube2&quot;</span><span class="p">,</span> <span class="n">Co</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The first list entry is <tt class="docutils literal"><span class="pre">(&quot;cube1&quot;,</span> <span class="pre">Py)</span></tt> and tells nmag that we would
+like to refer to the region 1 as <tt class="docutils literal"><span class="pre">cube1</span></tt>, and that we would like to
+assign the material <tt class="docutils literal"><span class="pre">Py</span></tt> to this region. This entry refers to region
+1 because it is the <em>first</em> entry in the list.</p>
+<p>The second list entry is <tt class="docutils literal"><span class="pre">(&quot;cube2&quot;,</span> <span class="pre">Co)</span></tt> and tells nmag that we
+would like to refer to the region 2 as <tt class="docutils literal"><span class="pre">cube2</span></tt>, and that we would
+like to assign the material <tt class="docutils literal"><span class="pre">Co</span></tt> to this region.</p>
+<p>If there was a region 3 in the mesh file, we would add a third list
+entry, for example (&#8220;cylinder&#8221;,Co) for a Co cylinder.</p>
+<p>Note that at this stage of nmag, the region name (such as <tt class="docutils literal"><span class="pre">cube1</span></tt>,
+<tt class="docutils literal"><span class="pre">cube2</span></tt>, etc) are not used in the simulation, apart from diagnostic
+purposes in progress messages.</p>
+<p>Physically, what happens in this system is that the magnetisation of
+the Cobalt cube aligns rather fast with the anisotropy direction and
+then slowly forces the magnetisation of the PermAlloy cube into the
+opposite direction (through the action of the stray field) to minimise
+total energy of the configuration.</p>
+<p>The Initial magnetisation is taken to point in x-direction. As this is an
+unstable equilibrium direction for the magnetisation anisotropy of the
+Cobalt cube, we slightly distort the initial magnetisation by adding a
+tiny component in +z-direction.</p>
+<p>It is instructive to compare the <a class="reference internal" href="../background.html#field"><em>Field</em></a>s and <a class="reference internal" href="../background.html#subfield"><em>Subfield</em></a>s for this
+particular example with the list of fields and subfields for a
+single-material simulation. In effect, all the fields that are related
+to the properties of some particular magnetic component carry multiple
+subfields. In particular, there is only one <tt class="docutils literal"><span class="pre">H_ext</span></tt> field, as the
+externally applied field is experienced in the same way by all
+materials, but the <tt class="docutils literal"><span class="pre">M*H</span></tt> energy density associated with <tt class="docutils literal"><span class="pre">H_ext</span></tt>
+has a dependency on the magnetic component (through <tt class="docutils literal"><span class="pre">M</span></tt>), so we have
+two subfields <tt class="docutils literal"><span class="pre">E_ext_Py</span></tt> and <tt class="docutils literal"><span class="pre">E_ext_Co</span></tt> in the field <tt class="docutils literal"><span class="pre">E_ext</span></tt>.</p>
+<p>The situation is virtually identical with <tt class="docutils literal"><span class="pre">H_demag</span></tt>/<tt class="docutils literal"><span class="pre">E_demag</span></tt> and
+the related charge density <tt class="docutils literal"><span class="pre">rho</span></tt> and magnetic scalar potential
+<tt class="docutils literal"><span class="pre">phi</span></tt>. All the other relevant fields in this example turn out to be
+related to a particular magnetic component.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="28%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Field</th>
+<th class="head">Subfield(s)</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>m</td>
+<td>m_Py, m_Co</td>
+<td>normalised magnetisation</td>
+</tr>
+<tr><td>M</td>
+<td>M_Py, M_Co</td>
+<td>magnetisation</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py, H_total_Co</td>
+<td>total effective field</td>
+</tr>
+<tr><td>H_ext</td>
+<td>H_ext</td>
+<td>external (applied) field (only one)</td>
+</tr>
+<tr><td>E_ext</td>
+<td>E_ext_Py, E_ext_Co</td>
+<td>energy density of Py due to external field</td>
+</tr>
+<tr><td>H_anis</td>
+<td>H_anis_Py, H_anis_Co</td>
+<td>crystal anisotropy field</td>
+</tr>
+<tr><td>E_anis</td>
+<td>E_anis_Py, E_anis_Co</td>
+<td>crystal anisotropy energy density</td>
+</tr>
+<tr><td>H_exch</td>
+<td>H_exch_Py, H_exch_Co</td>
+<td>exchange field</td>
+</tr>
+<tr><td>E_exch</td>
+<td>E_exch_Py, E_exch_Co</td>
+<td>exchange energy</td>
+</tr>
+<tr><td>H_demag</td>
+<td>H_demag</td>
+<td>demagnetisation field (only one)</td>
+</tr>
+<tr><td>E_demag</td>
+<td>E_demag_Py, E_demag_Co</td>
+<td>demagnetisation field energy density</td>
+</tr>
+<tr><td>phi</td>
+<td>phi</td>
+<td>scalar potential for H_demag</td>
+</tr>
+<tr><td>rho</td>
+<td>rho</td>
+<td>magnetic charge density (div M)</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py, H_total_Co</td>
+<td>total effective field</td>
+</tr>
+</tbody>
+</table>
+<p>The issue of multiple magnetic components becomes much more
+interesting when we study multi-component alloys, i.e. if we associate
+more than one type of magnetisation to a single region in the
+mesh. Usually, we will then also have to introduce some &#8220;generalized
+anisotropy energy&#8221; term of the form <tt class="docutils literal"><span class="pre">E=c*M_a*M_b</span></tt> that depends on
+more than a single magnetisation subfield (see <a class="reference internal" href="../example_excoupling/doc.html#more-than-one-magnetic-material-exchange-coupled"><em>More than one magnetic material, exchange coupled</em></a>).</p>
+<p>Once we have run the simulation using:</p>
+<div class="highlight-python"><pre>nsim two_cubes.py</pre>
+</div>
+<p>we can analyse the results. For example, we can plot the magnetisation
+of the two materials against time:</p>
+<img alt="../_images/results.png" class="align-center" src="../_images/results.png" style="width: 696px; height: 470px;" />
+<p>The blue lines represent the (soft) permalloy and the black lines show
+the (hard) cobalt. Each thick line denotes the z-component of the corresponding material.</p>
+<p>This plot has been created with the following command:</p>
+<div class="highlight-python"><pre>ncol two_cubes 0 m_Co_0 m_Co_1 m_Co_2 m_Py_0 m_Py_1 m_Py_2 | xmgrace -nxy -</pre>
+</div>
+<p>We can further convert the field data into vtk files:</p>
+<div class="highlight-python"><pre>nmagpp --vtk=two_cubes.vtk two_cubes_dat.h5</pre>
+</div>
+<p>and visualise their content. We start with the initial configuration
+(Permalloy in blue on the left, Cobalt in black on the right, only 10
+percent of the actual magnetisation vectors on the mesh nodes are
+shown to improve the readability of the plots):</p>
+<p>Time T=0 ps:</p>
+<img alt="../_images/vis1.png" class="align-center" src="../_images/vis1.png" style="width: 756px; height: 669px;" />
+<p>Time T=1e-10s=0.1ns: Cobalt is already pointing up, i.e. in the
+direction of the anisotropy axis, while Permalloy has just started to
+rotate.</p>
+<img alt="../_images/vis2.png" class="align-center" src="../_images/vis2.png" style="width: 756px; height: 669px;" />
+<p>Time T=0.3ns: Cobalt has reached its final configuration (pointing up)
+and Permalloy is still rotating, but already pointing down (to
+minimise the interaction energy between the cubes to the
+demagnetisation stray fields).</p>
+<img alt="../_images/vis3.png" class="align-center" src="../_images/vis3.png" style="width: 756px; height: 669px;" />
+<p>Time T=1 ns: The final configuration has been reached.</p>
+<img alt="../_images/vis4.png" class="align-center" src="../_images/vis4.png" style="width: 756px; height: 669px;" />
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_larmor/doc.html" title="2.16. Example: Larmor precession"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_changing_space_time_field/doc.html" title="2.14. Applying a field that changes both in time and in space"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

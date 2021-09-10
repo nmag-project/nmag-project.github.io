@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Snowleopard - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Snowleopard/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Compiling-on-Mac-OS-X-Snow-Leopard">Compiling on Mac OS X Snow Leopard<a href="Snowleopard.html#Compiling-on-Mac-OS-X-Snow-Leopard" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Updating-the-OCaml-compiler-GSL-and-OCamlGSL">Updating the OCaml compiler, GSL and OCamlGSL<a href="Snowleopard.html#Updating-the-OCaml-compiler-GSL-and-OCamlGSL" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Compilation of Nmag on Mac OS X Snow Leopard requires to update the OCaml compiler to the latest version.<br />
+Indeed, some users reported problems with OCaml compiler 3.09.3, which does not seem to support the newest OS/architecture.<br />
+One thing you could try is to update to the latest version of OCaml. You'll see that this will require - in turn - to update to the latest versions of GSL and OCamlGSL. Here I explain how to do that.<br />
+Firstly, you should untar again Nmag to get a fresh copy of the nmag all-source directory.</p>
+
+
+<pre>
+tar xzvf nmag-0.1-all.tar.gz
+</pre>
+
+	<p>Then you should enter the newly created directory (named simply nmag-0.1) and get the latest versions of the three packages:</p>
+
+
+<pre>
+cd nmag-0.1
+cd pkgs
+wget http://caml.inria.fr/pub/distrib/ocaml-3.11/ocaml-3.11.1.tar.bz2
+wget ftp://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gsl/gsl-1.14.tar.gz
+wget http://oandrieu.nerim.net/ocaml/gsl/ocamlgsl-0.6.0.tar.gz
+cd ..
+</pre>
+
+	<p>Now edit the file nmag-0.1/Makefile with your favourite editor.<br />
+Search for the string "ocaml-3.09.3", you'll find just one occurrence. Change it to "ocaml-3.11.1".<br />
+Do the same for the other two strings "gsl-1.8.tar.gz" and "ocamlgsl-0.4.0.tar.gz". Replace them with "gsl-1.14.tar.gz" and "ocamlgsl-0.6.0.tar.gz", respectively.</p>
+
+
+	<h2 id="Patching-Nmag-to-work-with-OCaml-311">Patching Nmag to work with OCaml 3.11<a href="Snowleopard.html#Patching-Nmag-to-work-with-OCaml-311" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>The new version of the OCaml compiler introduces some incompatibilities in the camlp4 preprocessor (which is bad, I think, and is the reason why OCamlGSL didn't work anymore) and some incompatibilites in the implementation, which is acceptable, but breaks one small piece of our code.<br />
+The solution is the following. Download the file objsize.c using on the following link <a class="external" href="http://dl.dropbox.com/u/1820549/objsize.c">http://dl.dropbox.com/u/1820549/objsize.c</a><br />
+I now assume you downloaded it in your home directory. Then:</p>
+
+
+<pre>
+cd nmag-0.1 # we go into the directory where nmag was unpacked
+cd nsim/snippets
+mv objsize.c old-objsize.c
+mv ~/objsize.c .
+</pre>
+
+	<p>As you see you are basically replacing the file nmag-0.1/nsim/snippets/objsize.c with the one you just downloaded before.</p>
+
+
+	<h2 id="Patching-Petsc">Patching Petsc<a href="Snowleopard.html#Patching-Petsc" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>There are some more steps to do in order to get Nmag working on your Mac Snow Leopard:</p>
+
+
+<pre>
+cd nmag-0.1 # you should get inside the directory nmag-0.1
+make .deps_petsc_patch
+</pre>
+
+	<p>Your system will now spend some minutes compiling some libraries.<br />
+When it finishes you should do as follows:</p>
+
+
+<pre>
+cd lib/petsc/bmake/common
+mv rules.shared.basic old-rules.shared.basic
+wget http://dl.dropbox.com/u/1820549/rules.shared.basic
+</pre>
+
+	<p>This line will replace the file <code>bmake/common/rules.shared.basic</code> in the Petsc distribution.<br />
+After this you should be able to finally compile Nmag:</p>
+
+
+<pre>
+make
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Snowleopard?export=html&amp;version=2" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Snowleopard?export=txt&amp;version=2" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

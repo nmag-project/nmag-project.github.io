@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Salome as cad form mesh - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Salome_as_cad_form_mesh/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Using-Salome-as-a-CAD-tool-for-creating-complex-meshes">Using Salome as a CAD tool for creating complex meshes<a href="Salome_as_cad_form_mesh.html#Using-Salome-as-a-CAD-tool-for-creating-complex-meshes" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Here is a contribution from Hari Srinivas Gorripati. Hari uses Salome as a CAD (Computer-Aided Design) program to create complex 3D geometries. Salome creates the surface of the mesh. For complex geometries with many bodies and many surfaces, the surfaces have to be saved individually to separate STL files. These files are then loaded with Netgen to create individual meshes for each of them. The meshes are then merged and exported to the Neutral file format. Finally, Nmeshpp can be used to import the merged mesh and use it with Nmag.</p>
+
+
+	<p>Here is Hari's mail:</p>
+
+
+	<p>If this kind of reporting helps others solve problems, I found a work around how to generate more than one region using NETGEN. I applied this to your cube problem though your .geo file is the easiest way to go. Following are the steps for it:</p>
+
+
+	<ol>
+	<li>Create the required geometries/objects using Salome (or any other similar software) as you would want it to appear in the final simulation and export them as individual ascii-STL files (Exporting the objects built into a compound with groups didn't work for me here).</li>
+		<li>Open each exported geometry using NETGEN and generate the mesh. This allows assigning different mesh sizes for different regions. After the mesh was created save all those objects using "File->Save mesh (.vol)" </li>
+		<li>Final step is to open one of those files and and then chose "File -> Merge mesh" to merge all the individual files. This would just appear like the one created in Salome in the beginning.</li>
+	</ol>
+
+
+	<p>I think this procedure will be good for users who create complex geometries. I tried this procedure for ".brep" files. It didn't work for me.</p>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Salome_as_cad_form_mesh?export=html&amp;version=3" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Salome_as_cad_form_mesh?export=txt&amp;version=3" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

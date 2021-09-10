@@ -1,0 +1,620 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>8. Frequently Asked Questions &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="9. Useful tools" href="useful_tools.html" />
+    <link rel="prev" title="7. Files and file names" href="files_and_file_names.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="useful_tools.html" title="9. Useful tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="files_and_file_names.html" title="7. Files and file names"
+             accesskey="P">previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="frequently-asked-questions">
+<span id="id1"></span><h1>8. Frequently Asked Questions<a class="headerlink" href="faq.html#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="faq.html#what-is-the-difference-between-the-oommf-and-nmag-approach" id="id13">What is the difference between the OOMMF and nmag approach?</a></li>
+<li><a class="reference internal" href="faq.html#so-this-means-the-major-difference-is-cubes-vs-tetrahedra" id="id14">... So, this means the major difference is &#8220;cubes&#8221; vs. &#8220;tetrahedra&#8221;?</a></li>
+<li><a class="reference internal" href="faq.html#why-do-you-have-your-own-python-interpreter-nsim" id="id15">Why do you have your own Python interpreter (=<tt class="docutils literal"><span class="pre">nsim</span></tt>)?</a></li>
+<li><a class="reference internal" href="faq.html#what-is-nsim-i-thought-the-package-is-called-nmag" id="id16">What is nsim - I thought the package is called nmag?</a></li>
+<li><a class="reference internal" href="faq.html#how-fast-is-nmag-in-comparison-to-magpar" id="id17">How fast is nmag in comparison to magpar?</a></li>
+<li><a class="reference internal" href="faq.html#how-do-i-start-a-time-consuming-nmag-run-in-the-background" id="id18">How do I start a time-consuming nmag run in the background?</a></li>
+<li><a class="reference internal" href="faq.html#nmag-claims-to-support-mpi-so-can-i-run-simulation-jobs-on-multiple-processors" id="id19">nmag claims to support MPI. So, can I run simulation jobs on multiple processors?</a></li>
+<li><a class="reference internal" href="faq.html#how-should-i-cite-nmag" id="id20">How should I cite nmag?</a></li>
+<li><a class="reference internal" href="faq.html#why-can-you-not-use-the-step-as-a-unique-identifier" id="id21">Why can you not use the step as a unique identifier?</a></li>
+<li><a class="reference internal" href="faq.html#how-to-generate-a-mesh-with-more-than-one-region-using-gmsh" id="id22">How to generate a mesh with more than one region using GMSH?</a></li>
+<li><a class="reference internal" href="faq.html#can-i-run-more-than-one-simulation-in-one-directory" id="id23">Can I run more than one simulation in one directory?</a></li>
+<li><a class="reference internal" href="faq.html#can-i-save-data-to-an-arbitrary-directory" id="id24">Can I save data to an arbitrary directory?</a><ul>
+<li><a class="reference internal" href="faq.html#do-you-really-need-to-do-so" id="id25">Do you really need to do so?</a></li>
+<li><a class="reference internal" href="faq.html#how-to-save-data-to-a-different-directory" id="id26">How to save data to a different directory</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="faq.html#how-to-check-the-convergence-of-a-simulation" id="id27">How to check the convergence of a simulation</a></li>
+<li><a class="reference internal" href="faq.html#what-to-do-in-case-of-convergence-problems" id="id28">What to do in case of convergence problems</a></li>
+<li><a class="reference internal" href="faq.html#how-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh" id="id29">How to visualise the difference between two fields defined over the same mesh</a></li>
+<li><a class="reference internal" href="faq.html#how-to-re-sample-data-from-a-saved-h5-file" id="id30">How to re-sample data from a saved h5 file</a></li>
+<li><a class="reference internal" href="faq.html#notes-on-using-gmsh-to-create-a-family-of-related-meshes" id="id31">Notes on using GMSH to create a family of related meshes</a></li>
+</ul>
+</div>
+<div class="section" id="what-is-the-difference-between-the-oommf-and-nmag-approach">
+<span id="id2"></span><h2><a class="toc-backref" href="faq.html#id13">8.1. What is the difference between the OOMMF and nmag approach?</a><a class="headerlink" href="faq.html#what-is-the-difference-between-the-oommf-and-nmag-approach" title="Permalink to this headline">¶</a></h2>
+<p>There are several aspects. One important point is the calculation of
+the demagnetisation field as this is a computationally very expensive step.</p>
+<p><a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a> is based on discretising space into small cuboids (often called
+&#8216;finite differences&#8217;). One advantage of this method is that the demag
+field can be computed very efficiently (via fast Fourier
+transformation techniques). One disadvantage is that this methods
+works less well (i.e. less accurately) if the geometry shape does not
+align with a cartesian grid as the boundary then is represented as a
+staircase pattern.</p>
+<p>nmag&#8216;s finite elements discretise space into many small
+tetrahedra. The corresponding approach towards the computation of the
+demagnetisation field (which is the same as <a class="reference external" href="http://www.magpar.net/">Magpar</a>&#8216;s method) is based
+on the Fredkin and Koehler Hybrid Finite Element/Boundary Element
+method. The advantage of this method (over OOMMF&#8217;s approach) is that
+curved and spherical geometries can be spatially resolved much more
+accurately. However, this method of calculating the demagnetisation
+field is less efficient than OOMMF&#8217;s approach for thin films. (In
+particular: memory requirements for the boundary element method grow
+as the square of the number of surface points.) Note that for
+simulation of thin films, the hybrid Finite Element/Boundary Element
+(as used by nmag and <a class="reference external" href="http://www.magpar.net/">Magpar</a>) is likely to require a lot of memory
+(see <a class="reference internal" href="executables.html#memory-requirements-of-boundary-element-matrix"><em>Memory requirements of boundary element matrix</em></a>).</p>
+<p>There are other points that are related to the fundamentally different
+discretisation approach used to turn a field theory problem (with a
+conceptually infinite number of degrees of freedom) into a finite
+problem: OOMMF assumes the magnetisation in every cell to be constant
+(with jumps at boundaries), while Nmag assumes magnetisation to be
+continuous and vary linearly within cells (thus slightly violating the
+constraint of constant magnitude within a cell of non-constant
+magnetisation).</p>
+</div>
+<div class="section" id="so-this-means-the-major-difference-is-cubes-vs-tetrahedra">
+<span id="id3"></span><h2><a class="toc-backref" href="faq.html#id14">8.2. ... So, this means the major difference is &#8220;cubes&#8221; vs. &#8220;tetrahedra&#8221;?</a><a class="headerlink" href="faq.html#so-this-means-the-major-difference-is-cubes-vs-tetrahedra" title="Permalink to this headline">¶</a></h2>
+<p>No. Simplicial mesh discretisation is fundamentally different from
+finite-difference discretisation. With OOMMF, say, magnetisation
+degrees of freedom are associated with the centers(!) of the cells,
+while with nmag, they are associated with corners. This conceptual
+difference has many implications, e.g. for the question how to
+conceptually deal with the exchange interaction between different
+materials.</p>
+</div>
+<div class="section" id="why-do-you-have-your-own-python-interpreter-nsim">
+<span id="id4"></span><h2><a class="toc-backref" href="faq.html#id15">8.3. Why do you have your own Python interpreter (=<tt class="docutils literal"><span class="pre">nsim</span></tt>)?</a><a class="headerlink" href="faq.html#why-do-you-have-your-own-python-interpreter-nsim" title="Permalink to this headline">¶</a></h2>
+<p>In order to provide the ability to run code in a distributed
+environment (using MPI), we cannot use the standard Python
+executable. (Technically speaking, a program started under MPI control
+will receive extra MPI-related command line arguments which upset the
+standard Python interpreter.) It so happens that &#8211; by providing our
+own Python executable which is called <tt class="docutils literal"><span class="pre">nsim</span></tt> &#8211; we have easier
+access to the low-level library of nsim which is written in
+Objective Caml.</p>
+</div>
+<div class="section" id="what-is-nsim-i-thought-the-package-is-called-nmag">
+<span id="id5"></span><h2><a class="toc-backref" href="faq.html#id16">8.4. What is nsim - I thought the package is called nmag?</a><a class="headerlink" href="faq.html#what-is-nsim-i-thought-the-package-is-called-nmag" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="background.html#nsim-library"><em>The nsim library</em></a> is our general purpose multi-physics simulation
+environment. The corresponding executable is started through the <a class="reference internal" href="executables.html#nsim"><em>nsim</em></a>
+command. Nmag is a collection of scripts that provide micromagnetic
+functionality on top of nsim. For this reason, nsim is being mentioned
+a lot in the manual.</p>
+</div>
+<div class="section" id="how-fast-is-nmag-in-comparison-to-magpar">
+<span id="id6"></span><h2><a class="toc-backref" href="faq.html#id17">8.5. How fast is nmag in comparison to magpar?</a><a class="headerlink" href="faq.html#how-fast-is-nmag-in-comparison-to-magpar" title="Permalink to this headline">¶</a></h2>
+<p>Internally, some of the magpar and nmag core components are
+structurally very similar. In particular, the time integration routine
+is almost identical up to some philosophical issues such as how to
+keep the length of the magnetisation vector constant, and whether or
+not to use a symmetrical exchange matrix and a post-processing step
+rather than combining these into an asymmetrical matrix, etc. The
+actual wall clock time used will depend to a large degree on the
+requested accuracy of the calculations (see <a class="reference internal" href="example_tolerances/doc.html#example-tolerances"><em>example timestepper
+tolerances</em></a>).</p>
+<p>Given equivalent tolerance parameters, we have found (the
+single-process version of) nmag to be about as fast as magpar. The
+computation of an individual velocity dM/dt is very similar in nmag
+and magpar, and about equally efficient. However, we observe that,
+depending on the particular problem, subtle differences in the
+philosophies underlying time integration can lead to noticeable
+differences in the number of individual steps required to do some
+particular simulation, which can be up to about 25% of simulation time
+in either direction.</p>
+<p>Setup time is a different issue: nmag derives its flexibility from
+abstract approaches where magpar uses hard-coded compiled
+functions. Where magpar uses a hand-coded Jacobian, nmag employs the
+nsim core to symbolically compute the derivative of the equations of
+motion. There is a trade-off: the flexibility of being able to
+introduce another term into the equations of motion without having to
+manually adjust the code for the Jacobian comes at a price in
+execution time. Therefore, nmag&#8217;s setup time at present is far larger
+than magpar&#8217;s. This can be alleviated to a considerable degree by
+providing hard-coded &#8220;bypass routines&#8221; which can be used as
+alternatives to the symbolically founded methods for special
+situations that are frequently encountered (such as setting up a
+Laplace operator matrix). Conceptually, it is easy to add support for
+this but due to limited manpower, it has not happened yet.</p>
+<p>In short: once the setup stage is over, nmag is about as fast as
+magpar. Magpar&#8217;s setup time, however, is much smaller.
+Magpar is also more efficient in memory usage.</p>
+</div>
+<div class="section" id="how-do-i-start-a-time-consuming-nmag-run-in-the-background">
+<span id="id7"></span><h2><a class="toc-backref" href="faq.html#id18">8.6. How do I start a time-consuming nmag run in the background?</a><a class="headerlink" href="faq.html#how-do-i-start-a-time-consuming-nmag-run-in-the-background" title="Permalink to this headline">¶</a></h2>
+<p>While this is a Unix rather than a nmag issue, it comes up
+sufficiently often to address it here.</p>
+<p>Well-known techniques to run programs in the background are:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Using the &#8220;nohup&#8221; (no-hangup) command, as in:</p>
+<div class="highlight-python"><pre>nohup nsim sphere1.py &amp;</pre>
+</div>
+</li>
+<li><p class="first">Using the at-daemon for scheduling of command execution at
+given times:</p>
+<div class="highlight-python"><pre>at now
+warning: commands will be executed using /bin/sh
+at&gt; nsim example1.py
+at&gt; &lt;EOT&gt;
+job 2 at Fri Dec 14 12:08:00 2007</pre>
+</div>
+</li>
+<li><p class="first">Manual daemonization by using a parent process which forks &amp; exits,
+as in:</p>
+<div class="highlight-python"><pre>perl -e 'exit(0) if fork(); exec "nsim sphere1.py"'</pre>
+</div>
+<p>(But if you know Unix to that degree, you presumably would
+not have asked in the first place.)</p>
+</li>
+<li><p class="first">One of the most elegant ways to start a process in the background
+is by using the &#8220;screen&#8221; utility, which is installed on a number of
+Unix systems. With &#8220;screen&#8221;, it becomes possible to start a text
+terminal session in such a way that one can &#8220;detach&#8221; from it while
+keeping the session alive, and even log out and log in again much
+later and from a different machine, re-attaching the terminal
+session and continuing work from the point where it was left.</p>
+<p>While it is a good idea to read the documentation, most basic usage of
+&#8220;screen&#8221; requires the knowledge of three commands only:</p>
+<blockquote>
+<div><ul class="simple">
+<li>With &#8220;screen -R&#8221;, one can re-attach to a running session,
+automatically creating a new one if none was created before.</li>
+<li>Within a &#8220;screen&#8221; session, Control+a is a prefix keyboard command
+for controlling &#8220;screen&#8221;: Pressing Control-a and then Control-d
+will detach the session.</li>
+<li>Control-a ? will being up a help screen showing all &#8220;screen&#8221;
+keyboard commands.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="nmag-claims-to-support-mpi-so-can-i-run-simulation-jobs-on-multiple-processors">
+<span id="id8"></span><h2><a class="toc-backref" href="faq.html#id19">8.7. nmag claims to support MPI. So, can I run simulation jobs on multiple processors?</a><a class="headerlink" href="faq.html#nmag-claims-to-support-mpi-so-can-i-run-simulation-jobs-on-multiple-processors" title="Permalink to this headline">¶</a></h2>
+<p>Yes. See <a class="reference internal" href="example_mpi1/doc.html#example-parallel-execution-mpi"><em>Example: Parallel execution (MPI)</em></a>.</p>
+</div>
+<div class="section" id="how-should-i-cite-nmag">
+<span id="id9"></span><h2><a class="toc-backref" href="faq.html#id20">8.8. How should I cite nmag?</a><a class="headerlink" href="faq.html#how-should-i-cite-nmag" title="Permalink to this headline">¶</a></h2>
+<p>Please cite:</p>
+<ul class="simple">
+<li>Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, and Hans
+Fangohr.  <em>A Systematic Approach to Multiphysics Extensions of
+Finite-Element-Based Micromagnetic Simulations: Nmag</em>, in IEEE
+Transactions on Magnetics, <strong>43</strong>, 6, 2896-2898 (2007). (Available <a class="reference external" href="http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4202717">online</a>)</li>
+</ul>
+</div>
+<div class="section" id="why-can-you-not-use-the-step-as-a-unique-identifier">
+<span id="id10"></span><h2><a class="toc-backref" href="faq.html#id21">8.9. Why can you not use the step as a unique identifier?</a><a class="headerlink" href="faq.html#why-can-you-not-use-the-step-as-a-unique-identifier" title="Permalink to this headline">¶</a></h2>
+<p>There are two reasons. Firstly, nmag may be extended in future to
+support effective energy minimisation in which case the <tt class="docutils literal"><span class="pre">step</span></tt>
+becomes somewhat meaningless (although it could probably still be used
+as an identifier if we identify minimisation iterations with
+steps). Secondly (and more importantly), in nmag, the user can modify
+the magnetisation directly using <a class="reference internal" href="command_reference.html#set-m"><em>set_m</em></a> (either scripted or
+interactively). This will change the configuration of the system
+without increasing the step counter of the time integrator. For this
+reason, we have the <a class="reference internal" href="executables.html#unique-identifier-id"><em>unique identifier id</em></a>.</p>
+</div>
+<div class="section" id="how-to-generate-a-mesh-with-more-than-one-region-using-gmsh">
+<span id="id11"></span><h2><a class="toc-backref" href="faq.html#id22">8.10. How to generate a mesh with more than one region using GMSH?</a><a class="headerlink" href="faq.html#how-to-generate-a-mesh-with-more-than-one-region-using-gmsh" title="Permalink to this headline">¶</a></h2>
+<p>To assign different material properties to different objects, the mesher needs to assign different region number to different simplices of the mesh. The manual shows how to do this for netgen (see <a class="reference download internal" href="_downloads/two_cubes.geo"><tt class="xref download docutils literal"><span class="pre">two_cubes.geo</span></tt></a>) file in example <a class="reference internal" href="example_two_materials/doc.html#example-two-different-magnetic-materials"><em>Example: two different magnetic materials</em></a>).</p>
+<p>How does one define different regions using GMSH? User Xu Shu (Wuhan,
+China) kindly provides this solution:</p>
+<blockquote>
+<div>Within GMSH, one has to firstly &#8220;add physical groups&#8221; and choose the
+two detached volumes separately to add them into different groups,
+then choose &#8220;edit&#8221; to redefine the number of the two groups, thus you
+can get two physical objects as you want.</div></blockquote>
+</div>
+<div class="section" id="can-i-run-more-than-one-simulation-in-one-directory">
+<span id="id12"></span><h2><a class="toc-backref" href="faq.html#id23">8.11. Can I run more than one simulation in one directory?</a><a class="headerlink" href="faq.html#can-i-run-more-than-one-simulation-in-one-directory" title="Permalink to this headline">¶</a></h2>
+<p>If you want to run two (or more) simulations in the same directory,
+then this is fine as well as long as they have different <em>simulation names</em>.</p>
+<p>The simulation name is either the string given to the constructor of
+the simulation object, or &#8211; if no name is defined explicitly &#8211; the
+name of the python file that contains the simulation script (without
+the <tt class="docutils literal"><span class="pre">.py</span></tt> extension). See <a class="reference internal" href="files_and_file_names.html#file-names-for-data-files"><em>File names for data files</em></a> for a detailed
+example for this.</p>
+<p>Data and log files will all start with the simulation name, followed
+by some specific appended string and specific file extensions. It is
+thus safe to run simulations with different names in the same
+directory.</p>
+</div>
+<div class="section" id="can-i-save-data-to-an-arbitrary-directory">
+<h2><a class="toc-backref" href="faq.html#id24">8.12. Can I save data to an arbitrary directory?</a><a class="headerlink" href="faq.html#can-i-save-data-to-an-arbitrary-directory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="do-you-really-need-to-do-so">
+<h3><a class="toc-backref" href="faq.html#id25">8.12.1. Do you really need to do so?</a><a class="headerlink" href="faq.html#do-you-really-need-to-do-so" title="Permalink to this headline">¶</a></h3>
+<p>First, consider whether you really need to save data in a different
+directory. Remember that you can run many simulation with one single
+script just using a different simulation name, like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="s">&#39;one&#39;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="s">&#39;two&#39;</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>When you save the data for simulation <tt class="docutils literal"><span class="pre">one</span></tt> you get files like
+<tt class="docutils literal"><span class="pre">one_dat.h5</span></tt> and <tt class="docutils literal"><span class="pre">one_dat.ndt</span></tt>, while when dealing with simulation <tt class="docutils literal"><span class="pre">two</span></tt> you get <tt class="docutils literal"><span class="pre">two_dat.h5</span></tt> and <tt class="docutils literal"><span class="pre">two_dat.nd5</span></tt>. There is no interference
+between the two simulations (and in particular it is necessary to save thedata in different directories.)</p>
+</div>
+<div class="section" id="how-to-save-data-to-a-different-directory">
+<h3><a class="toc-backref" href="faq.html#id26">8.12.2. How to save data to a different directory</a><a class="headerlink" href="faq.html#how-to-save-data-to-a-different-directory" title="Permalink to this headline">¶</a></h3>
+<p>When you run a simulation script which saves data from a simulation,
+the files are saved by default in the current working directory.  In
+order to change this and save data into a directory called <tt class="docutils literal"><span class="pre">./mydir/</span></tt>
+you should start your script in the following way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">import</span> <span class="nn">nsim.features</span>
+<span class="n">fts</span> <span class="o">=</span> <span class="n">nsim</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">Features</span><span class="p">()</span>
+<span class="n">fts</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;etc&#39;</span><span class="p">,</span> <span class="s">&#39;savedir&#39;</span><span class="p">,</span> <span class="s">&#39;./mydir/&#39;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Alternatively, you can change the current working directory at the
+beginning of the file with ordinary Python code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">initial_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">&#39;./mydir&#39;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">initial_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the directory you want to write to does not exist then (in both the
+two example) you may have to create it first, with something like:</p>
+<blockquote>
+<div><p>the_dir = &#8216;./mydir&#8217;
+import os
+if not os.path.exists(the_dir):</p>
+<blockquote>
+<div>os.mkdir(the_dir)</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="how-to-check-the-convergence-of-a-simulation">
+<h2><a class="toc-backref" href="faq.html#id27">8.13. How to check the convergence of a simulation</a><a class="headerlink" href="faq.html#how-to-check-the-convergence-of-a-simulation" title="Permalink to this headline">¶</a></h2>
+<p>How long it takes to run a simulation? This depends very much on what
+you are simulating and under what conditions (applied field, current,
+etc). Sometimes, however, your simulation may not be ending as quickly as
+you expected and you may want to check what is happening. It may be,
+indeed, that the simulation is not converging, which means that it may
+actually never end. One thing you can do in such a case is to take a
+look at the file <tt class="docutils literal"><span class="pre">*_progress.txt</span></tt>, where <tt class="docutils literal"><span class="pre">*</span></tt> stands for the simulation
+name (given to the <tt class="docutils literal"><span class="pre">Simulation</span></tt> class when creating the simulation
+oject). For example, if you created your simulation object with a line
+such as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="s">&#39;one&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then you may be looking for a file with name <tt class="docutils literal"><span class="pre">one_progress.txt</span></tt>. If
+you used simply <tt class="docutils literal"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">nmag.Simulation()</span></tt> and your file is named
+<tt class="docutils literal"><span class="pre">two.py</span></tt> then you should look for a file with name
+<tt class="docutils literal"><span class="pre">two_progress.txt</span></tt>. This file contains statistics about the time
+integrator. You&#8217;ll first get the current time, step number, etc. Then
+you&#8217;ll get a list of rows each containing four columns, such as:</p>
+<div class="highlight-python"><pre>123 0.456 0.123 None</pre>
+</div>
+<p>Column 1 is the step reached, an integer number which always
+increases. The file shows convergence statistics for the last few
+steps (it doesn&#8217;t contain statistics for all the steps, since this
+would make it quickly very big). Column 2 contains the current value
+of max || dM/dt ||. Column 3 contains the stopping value of
+dM/dt. Convergence is reached when column 2 &lt; column 3 for at least
+two times. If the simulations is going well, then you should see that
+column 2 contains numbers which are not oscillating rapidly and are
+rather decreasing or increasing &#8220;smoothly&#8221;. This is what typically
+should happen, even if it can be that your simulation has really a
+bizarre dynamics which really oscillates in a frenetic way, so one
+should be careful when analysing the data. The fourth column contains
+an evaluation of the quality of the convergence according to what we
+just said. This number should be close to one when the convergence is
+smooth and close to zero when it is oscillating dramatically.</p>
+</div>
+<div class="section" id="what-to-do-in-case-of-convergence-problems">
+<h2><a class="toc-backref" href="faq.html#id28">8.14. What to do in case of convergence problems</a><a class="headerlink" href="faq.html#what-to-do-in-case-of-convergence-problems" title="Permalink to this headline">¶</a></h2>
+<p>If your simulation has really a convergence problem, you can do two
+things:</p>
+<ul class="simple">
+<li>improve the tolerances <tt class="docutils literal"><span class="pre">ts_abs_err</span></tt> and <tt class="docutils literal"><span class="pre">ts_rel_err</span></tt>
+(decrease these numbers) by using the method <tt class="docutils literal"><span class="pre">set_params</span></tt> of the
+<tt class="docutils literal"><span class="pre">Simulation</span></tt> object;</li>
+<li>use a <tt class="docutils literal"><span class="pre">do=[('next_stage',</span> <span class="pre">at('stage_time',SI(x,</span> <span class="pre">'s')))]</span></tt> as an
+argument to the <tt class="docutils literal"><span class="pre">hysteresis</span></tt> method. This way
+you impose a maximum time <tt class="docutils literal"><span class="pre">x</span></tt> to spend in the computation of a stage
+(you should make sure this makes sense in your case).</li>
+</ul>
+</div>
+<div class="section" id="how-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh">
+<h2><a class="toc-backref" href="faq.html#id29">8.15. How to visualise the difference between two fields defined over the same mesh</a><a class="headerlink" href="faq.html#how-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh" title="Permalink to this headline">¶</a></h2>
+<p>First save the data into two <strong>ASCII</strong> VTK files. For example:</p>
+<div class="highlight-python"><pre>nmagpp --vtk=m.vtk --vtkascii --fields=m simulation_name</pre>
+</div>
+<p>Note the option <tt class="docutils literal"><span class="pre">&quot;--vtkascii&quot;</span></tt> to force the creation of a ASCII file.
+Let&#8217;s say this command created the two files <tt class="docutils literal"><span class="pre">m-000000.vtk</span></tt> and <tt class="docutils literal"><span class="pre">m-000001.vtk</span></tt>.
+You can now use the library <tt class="docutils literal"><span class="pre">pyvtk</span></tt> to load the two files, compute the difference and save it back to a third file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">pyvtk</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="s">&quot;m-000000.vtk&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="s">&quot;m-000001.vtk&quot;</span><span class="p">)</span>
+<span class="n">va</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">point_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vectors</span>
+<span class="n">vb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">point_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vectors</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">va</span><span class="p">)):</span>
+    <span class="n">va</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">va</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vb</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+<span class="n">a</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s">&quot;difference.vtk&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Save this text to a file named <tt class="docutils literal"><span class="pre">diff.py</span></tt> and run it as:</p>
+<div class="highlight-python"><pre>python diff.py</pre>
+</div>
+<p>You&#8217;ll get a third file with name <tt class="docutils literal"><span class="pre">difference.vtk</span></tt> containing the difference of the two fields.</p>
+<p>If you are repeating this operation many times, it may become annoying to open again and again the <tt class="docutils literal"><span class="pre">diff.py</span></tt> file to change the names of the input files. You can then modify the script as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">pyvtk</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">va</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">point_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vectors</span>
+<span class="n">vb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">point_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vectors</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">va</span><span class="p">)):</span>
+    <span class="k">assert</span> <span class="n">a</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">va</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">va</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vb</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+<span class="n">a</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The name of the files are taken from the command line. You can then compute the difference using:</p>
+<div class="highlight-python"><pre>python diff.py a.vtk b.vtk a_minus_b.vtk</pre>
+</div>
+<p>Notice that in the last version of the script we also added the line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">assert</span> <span class="n">a</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>which does just check that the two files are using the same set of points (i.e. the same mesh).</p>
+</div>
+<div class="section" id="how-to-re-sample-data-from-a-saved-h5-file">
+<h2><a class="toc-backref" href="faq.html#id30">8.16. How to re-sample data from a saved h5 file</a><a class="headerlink" href="faq.html#how-to-re-sample-data-from-a-saved-h5-file" title="Permalink to this headline">¶</a></h2>
+<p>(Available in Nmag-0.2.0)</p>
+<p>You can load an h5 file like this</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ocaml</span>
+<span class="kn">from</span> <span class="nn">nmag.h5probe</span> <span class="kn">import</span> <span class="n">Fields</span>
+<span class="n">handler</span> <span class="o">=</span> <span class="n">Fields</span><span class="p">(</span><span class="s">&quot;infile.h5&quot;</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">set_field_data</span><span class="p">(</span><span class="s">&quot;m&quot;</span><span class="p">,</span> <span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And probe one of its fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c"># In mesh units (typically is nanometres)</span>
+<span class="n">value</span> <span class="o">=</span> <span class="n">ocaml</span><span class="o">.</span><span class="n">probe_field</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s">&quot;m_Py&quot;</span><span class="p">,</span> <span class="n">position</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This way you can create two arrays: <tt class="docutils literal"><span class="pre">rs</span></tt> containing an array of points and <tt class="docutils literal"><span class="pre">vs</span></tt> containing the corresponding values.
+You can then use pyvtk to generate a VTK file from these:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pyvtk</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">PointData</span><span class="p">(</span><span class="n">pyvtk</span><span class="o">.</span><span class="n">Vectors</span><span class="p">(</span><span class="n">vs</span><span class="p">))</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s">&quot;outfile.vtk&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is a full example, which probes the magnetisation in the outer skin of a cylinder, in sections which are not equally spaced.
+Notice the usage of the function <tt class="docutils literal"><span class="pre">float_set</span></tt> to specify where the sampling should be denser (originally, here is where a domain wall was).
+The script should be used as <tt class="docutils literal"><span class="pre">nsim</span> <span class="pre">probe.py</span> <span class="pre">infile.h5</span> <span class="pre">outfile.vtk</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">pyvtk</span>
+
+<span class="kn">import</span> <span class="nn">ocaml</span>
+<span class="kn">from</span> <span class="nn">nmag.h5probe</span> <span class="kn">import</span> <span class="n">Fields</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">float_set</span>
+
+<span class="c"># First we probe the field in the required points</span>
+<span class="n">handler</span> <span class="o">=</span> <span class="n">Fields</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">set_field_data</span><span class="p">(</span><span class="s">&quot;m&quot;</span><span class="p">,</span> <span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">float_set</span><span class="p">([</span><span class="o">-</span><span class="mf">150.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">145.0</span><span class="p">,</span> <span class="p">[],</span> <span class="o">-</span><span class="mf">15.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">12.5</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">50.0</span><span class="p">])</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="n">float_set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">R2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">4.9</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">)</span>
+
+<span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+  <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">R</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">R</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)]</span>
+    <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">R2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">R2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)])</span>
+    <span class="n">vs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocaml</span><span class="o">.</span><span class="n">probe_field</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s">&quot;m_Py&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># Now we output the values to a VTK file</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">PointData</span><span class="p">(</span><span class="n">pyvtk</span><span class="o">.</span><span class="n">Vectors</span><span class="p">(</span><span class="n">vs</span><span class="p">))</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pyvtk</span><span class="o">.</span><span class="n">VtkData</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="notes-on-using-gmsh-to-create-a-family-of-related-meshes">
+<h2><a class="toc-backref" href="faq.html#id31">8.17. Notes on using GMSH to create a family of related meshes</a><a class="headerlink" href="faq.html#notes-on-using-gmsh-to-create-a-family-of-related-meshes" title="Permalink to this headline">¶</a></h2>
+<p>If you want to create many meshes using Gmsh, you may first generate a
+mesh manually.  Then you can create a Python script which uses this
+mesh as a template to quickly create a mesh for a different set of
+parameters.  Below is such a script which shows how to do so. The mesh
+file (geo) has been enclosed between quotes <tt class="docutils literal"><span class="pre">&quot;&quot;&quot;</span></tt> and some of the
+values for the points coordinates have been substituted with strings
+that the Python script substitutes with real values.</p>
+<p>Note that we use <tt class="docutils literal"><span class="pre">Mesh.CharacteristicLengthFactor</span> <span class="pre">=</span> <span class="pre">5.0;</span></tt> to control
+the discretisation of the mesh. We also use <tt class="docutils literal"><span class="pre">Physical</span> <span class="pre">Volume(1)</span> <span class="pre">=</span>
+<span class="pre">{1};</span></tt> to make sure that the mesh region is labeled starting from
+region number 1:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mesh</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">cl1 = 1;</span>
+<span class="s">Point(1) = {$x2$, 0, 0, cl1};</span>
+<span class="s">Point(2) = {$x2$, $x2$, 0, cl1};</span>
+<span class="s">Point(3) = {0, $x2$, 0, cl1};</span>
+<span class="s">Point(4) = {0, $x1$, 0, cl1};</span>
+<span class="s">Point(5) = {$x1$, 0, 0, cl1};</span>
+<span class="s">Point(6) = {$x0$, $x0$, 0, cl1};</span>
+<span class="s">Point(7) = {$x0$, $x1$, 0, cl1};</span>
+<span class="s">Point(8) = {$x1$, $x0$, 0, cl1};</span>
+<span class="s">Point(9) = {$x2$, 0, $y1$, cl1};</span>
+<span class="s">Point(10) = {$x1$, 0, $y1$, cl1};</span>
+<span class="s">Point(14) = {$x1$, $x0$, $y1$, cl1};</span>
+<span class="s">Point(18) = {$x0$, $x0$, $y1$, cl1};</span>
+<span class="s">Point(19) = {$x0$, $x1$, $y1$, cl1};</span>
+<span class="s">Point(23) = {0, $x1$, $y1$, cl1};</span>
+<span class="s">Point(27) = {0, $x2$, $y1$, cl1};</span>
+<span class="s">Point(31) = {$x2$, $x2$, $y1$, cl1};</span>
+<span class="s">Line(1) = {1, 5};</span>
+<span class="s">Line(2) = {5, 8};</span>
+<span class="s">Circle(3) = {8, 6, 7};</span>
+<span class="s">Line(4) = {7, 4};</span>
+<span class="s">Line(5) = {4, 3};</span>
+<span class="s">Line(6) = {3, 2};</span>
+<span class="s">Line(7) = {2, 1};</span>
+<span class="s">Line(11) = {9, 10};</span>
+<span class="s">Line(12) = {10, 14};</span>
+<span class="s">Circle(13) = {14, 18, 19};</span>
+<span class="s">Line(14) = {19, 23};</span>
+<span class="s">Line(15) = {23, 27};</span>
+<span class="s">Line(16) = {27, 31};</span>
+<span class="s">Line(17) = {31, 9};</span>
+<span class="s">Line(19) = {1, 9};</span>
+<span class="s">Line(20) = {5, 10};</span>
+<span class="s">Line(24) = {8, 14};</span>
+<span class="s">Line(28) = {7, 19};</span>
+<span class="s">Line(32) = {4, 23};</span>
+<span class="s">Line(36) = {3, 27};</span>
+<span class="s">Line(40) = {2, 31};</span>
+<span class="s">Line Loop(9) = {1, 2, 3, 4, 5, 6, 7};</span>
+<span class="s">Plane Surface(9) = {9};</span>
+<span class="s">Line Loop(21) = {1, 20, -11, -19};</span>
+<span class="s">Ruled Surface(21) = {21};</span>
+<span class="s">Line Loop(25) = {2, 24, -12, -20};</span>
+<span class="s">Ruled Surface(25) = {25};</span>
+<span class="s">Line Loop(29) = {3, 28, -13, -24};</span>
+<span class="s">Ruled Surface(29) = {29};</span>
+<span class="s">Line Loop(33) = {4, 32, -14, -28};</span>
+<span class="s">Ruled Surface(33) = {33};</span>
+<span class="s">Line Loop(37) = {5, 36, -15, -32};</span>
+<span class="s">Ruled Surface(37) = {37};</span>
+<span class="s">Line Loop(41) = {6, 40, -16, -36};</span>
+<span class="s">Ruled Surface(41) = {41};</span>
+<span class="s">Line Loop(45) = {7, 19, -17, -40};</span>
+<span class="s">Ruled Surface(45) = {45};</span>
+<span class="s">Line Loop(46) = {11, 12, 13, 14, 15, 16, 17};</span>
+<span class="s">Plane Surface(46) = {46};</span>
+<span class="s">Surface Loop(1) = {9, 46, 21, 25, 29, 33, 37, 41, 45};</span>
+
+<span class="s">Volume(1) = {1};</span>
+
+<span class="s">Physical Volume(1) = {1};</span>
+
+<span class="s">Mesh.CharacteristicLengthFactor = $discret$;</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">create_mesh</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">inner_size</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+                <span class="n">curvature</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+                <span class="n">thickness</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
+                <span class="n">discretisation</span><span class="o">=</span><span class="mf">2.5</span><span class="p">):</span>
+  <span class="k">global</span> <span class="n">mesh</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">inner_size</span>
+  <span class="n">variables</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&quot;x0&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">curvature</span><span class="p">),</span>
+               <span class="p">(</span><span class="s">&quot;x1&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span>
+               <span class="p">(</span><span class="s">&quot;x2&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">width</span><span class="p">),</span>
+               <span class="p">(</span><span class="s">&quot;y1&quot;</span><span class="p">,</span> <span class="n">thickness</span><span class="p">),</span>
+               <span class="p">(</span><span class="s">&quot;discret&quot;</span><span class="p">,</span> <span class="n">discretisation</span><span class="p">)]</span>
+  <span class="k">for</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">variable_value</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;$</span><span class="si">%s</span><span class="s">$&quot;</span> <span class="o">%</span> <span class="n">variable_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">variable_value</span><span class="p">))</span>
+
+  <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+  <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+  <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">create_mesh</span><span class="p">(</span><span class="s">&quot;dots.geo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="useful_tools.html" title="9. Useful tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="files_and_file_names.html" title="7. Files and file names"
+             >previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

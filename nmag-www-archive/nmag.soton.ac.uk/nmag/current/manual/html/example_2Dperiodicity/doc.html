@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.18. Example: 2D periodicity &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.19. Example: Spin-waves in periodic system" href="../example_periodic_spinwaves/doc.html" />
+    <link rel="prev" title="2.17. Example: 1D periodicity" href="../example_1Dperiodicity/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_periodic_spinwaves/doc.html" title="2.19. Example: Spin-waves in periodic system"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_1Dperiodicity/doc.html" title="2.17. Example: 1D periodicity"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-2d-periodicity">
+<span id="id1"></span><h1>2.18. Example: 2D periodicity<a class="headerlink" href="doc.html#example-2d-periodicity" title="Permalink to this headline">¶</a></h1>
+<p>This example is another application of the macro-geometry feature,
+where we now deal with a 2D &#8220;thin film&#8221; system. The unit cell is a
+<tt class="docutils literal"><span class="pre">30x10x10</span> <span class="pre">nm^3</span></tt> prism</p>
+<img alt="../_images/mesh1.png" class="align-center" src="../_images/mesh1.png" style="width: 559px; height: 290px;" />
+<p>where we take 10 copies in x- and 40 copies in y-direction to create
+the macro geometry.</p>
+<p>The script <a class="reference download internal" href="../_downloads/no_periodic.py"><tt class="xref download docutils literal"><span class="pre">no_periodic.py</span></tt></a> simulates behaviour of
+just the unit cell of size 30x10x10 nm^3 (without any periodic
+copies):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">)</span>
+                      <span class="p">)</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;prism.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;no-periodic&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+
+<span class="c"># loop over the applied field</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span><span class="mf">5e-12</span><span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>and the relaxation curves are obtained via:</p>
+<div class="highlight-python"><pre>set term postscript enhanced color
+set out 'no_periodic.ps'
+set xlabel 'time (s)'
+set ylabel 'M / Ms'
+plot 'plot_no_periodic.dat' u 1:2 ti 'Mx' w lp, \
+     'plot_no_periodic.dat' u 1:3 ti 'My' w lp, \
+     'plot_no_periodic.dat' u 1:4 ti $
+</pre>
+</div>
+<p>which creates the following plot:</p>
+<img alt="../_images/no_periodic.png" class="align-center" src="../_images/no_periodic.png" style="width: 750px; height: 525px;" />
+<p>From this plot we can see that with using only the unit cell the
+magnetisation aligns along the x-axis at equilibrium.</p>
+<p>We now move to the macro geometry of a thin film with dimensions 400x300x10nm^3 which is realised in <a class="reference download internal" href="../_downloads/periodic2.py"><tt class="xref download docutils literal"><span class="pre">periodic2.py</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">)</span>
+                      <span class="p">)</span>
+
+<span class="c"># size of the simulation cell, plus extra spacing </span>
+<span class="n">x_lattice</span> <span class="o">=</span> <span class="mf">30.01</span>  <span class="c"># the spacing is 0.01 to avoid exchange coupling</span>
+<span class="n">y_lattice</span> <span class="o">=</span> <span class="mf">10.01</span>  <span class="c"># between repeated copies of the simualtion cell</span>
+<span class="n">z_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+
+<span class="c"># list to store the lattice points where the periodic</span>
+<span class="c"># copies of the simulation cell will be placed </span>
+<span class="n">lattice_points</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">19</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+        <span class="n">lattice_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xi</span><span class="o">*</span><span class="n">x_lattice</span><span class="p">,</span><span class="n">yi</span><span class="o">*</span><span class="n">y_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">z_lattice</span><span class="p">])</span>
+
+<span class="c"># create data structure pbc for this macro geometry</span>
+<span class="n">pbc</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">SetLatticePoints</span><span class="p">(</span><span class="n">vectorlist</span><span class="o">=</span><span class="n">lattice_points</span><span class="p">,</span> <span class="n">scalefactor</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c">#create simulation object, passing macro geometry data structure</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">periodic_bc</span><span class="o">=</span><span class="n">pbc</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;prism.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;repeated-prism-2D&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+
+<span class="c"># loop over the applied field</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span><span class="mf">5e-12</span><span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>As in the previous example, we first define the three unit vectors of
+the lattice, again slightly larger than the dimension of the unit cell
+to avoid overlapping (and thus to eleminate any exchange coupling
+across the interfaces for this demonstration of the demagnetisation effects):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x_lattice</span> <span class="o">=</span> <span class="mf">30.01</span>  <span class="c"># the spacing is 0.01</span>
+<span class="n">y_lattice</span> <span class="o">=</span> <span class="mf">10.01</span>  <span class="c"># the spacing is 0.01</span>
+<span class="n">z_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p>Then we define where the copies will be placed:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">19</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+        <span class="n">lattice_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xi</span><span class="o">*</span><span class="n">x_lattice</span><span class="p">,</span><span class="n">yi</span><span class="o">*</span><span class="n">y_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">z_lattice</span><span class="p">])</span>
+
+<span class="c"># copies of the system along the x-axis</span>
+<span class="n">pbc</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">SetLatticePoints</span><span class="p">(</span><span class="n">vectorlist</span><span class="o">=</span><span class="n">lattice_points</span><span class="p">,</span> <span class="n">scalefactor</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The simulation cell is (always) the one at the (0,0,0) lattice
+point. The for loops therefore place 4 copies of the simulation cell
+in the negative x direction [i.e. (-4,0,0), (-3,0,0), (-2,0,0), and
+(-1,0,0)] and 5 in the positive the x direction [i.e. (1,0,0),
+(2,0,0), (3,0,0), (4,0,0), (5,0,0)]. The translation vector (0,0,0)
+corresponds to the actual simulation cell.</p>
+<p>Similarly, the inner for loop places 20 copies along the positive
+y-axis and 19 along the negative one.</p>
+<p>We set the same initial configuration as before, with a uniform
+magnetisation along [1,1,1], and let the system evolve towards the
+equilibrium.</p>
+<p>The outcome is shown in the following figure:</p>
+<img alt="../_images/periodic2.png" class="align-center" src="../_images/periodic2.png" style="width: 750px; height: 525px;" />
+<p>where we notice that the final configuration is now with the
+magnetisation aligned along the (negative) y axis, and not along the x
+axis as before. The alignment along the y-direction is expected, as
+now the macro geometry has a total size of 300.09 nm times 400.39 nm
+(30 nm x 10 copies plus spacings along the x direction times 10 nm x
+40 copies plus spacings along the y direction) times 10nm (no periodic
+copies along the z direction), so the longest side now is along the y
+direction. The demagnetisation energy of the macro geometry drives the
+alignment of the magnetisation with the y-direction.</p>
+<p>Other usage examples include this study <a class="footnote-reference" href="doc.html#bordignonetal" id="id2">[1]</a> of an array of interacting triangular rings.</p>
+<table class="docutils footnote" frame="void" id="bordignonetal" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id2">[1]</a></td><td>Giuliano Bordignon, Thomas Fischbacher, Matteo Franchin, Jurgen P. Zimmermann, Peter A. J. de Groot, Hans Fangohr, <em>Numerical studies of demagnetizing effects in triangular ring arrays</em>, Journal of Applied Physics <strong>103</strong> 07D932 (2008), online at <a class="reference external" href="http://eprints.soton.ac.uk/50995/">http://eprints.soton.ac.uk/50995/</a></td></tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_periodic_spinwaves/doc.html" title="2.19. Example: Spin-waves in periodic system"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_1Dperiodicity/doc.html" title="2.17. Example: 1D periodicity"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

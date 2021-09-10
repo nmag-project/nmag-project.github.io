@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.2. Example 2: Computing the time development of a system &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.3. Example: Simple hysteresis loop" href="../example_hysteresis_ellipsoid/doc.html" />
+    <link rel="prev" title="2.1. Example: Demag field in uniformly magnetised sphere" href="../example1/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_hysteresis_ellipsoid/doc.html" title="2.3. Example: Simple hysteresis loop"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example1/doc.html" title="2.1. Example: Demag field in uniformly magnetised sphere"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-2-computing-the-time-development-of-a-system">
+<span id="example-2"></span><h1>2.2. Example 2: Computing the time development of a system<a class="headerlink" href="doc.html#example-2-computing-the-time-development-of-a-system" title="Permalink to this headline">¶</a></h1>
+<p>This example computes the time development of the magnetisation in a
+bar with (x,y,z) dimensions 30 nm x 30 nm x 100 nm. The initial
+magnetisation is pointing in the [1,0,1] direction, i.e. 45 degrees
+away from the x axis in the direction of the (long) z-axis. We first
+show the simulation code and then discuss it in more detail.</p>
+<div class="section" id="mesh-generation">
+<span id="id1"></span><h2>2.2.1. Mesh generation<a class="headerlink" href="doc.html#mesh-generation" title="Permalink to this headline">¶</a></h2>
+<p>While it is down to the mesh generation software (see also <a class="reference internal" href="../finite_element_mesh_generation.html#finite-element-mesh-generation"><em>Finite element mesh generation</em></a>) to explain how to generate finite element
+meshes, we briefly summarize the steps necessary to create a mesh for
+this example in <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>, and how to convert it into an <tt class="docutils literal"><span class="pre">nmesh</span></tt> mesh.</p>
+<ol class="arabic">
+<li><p class="first">The finite element method requires the domain of interest to be
+broken down into small regions. Such a subdivision of space is
+known as a mesh or grid. We use <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> to create this mesh.
+Netgen reads a <a class="reference download internal" href="../_downloads/bar30_30_100.geo"><tt class="xref download docutils literal"><span class="pre">geometry</span> <span class="pre">file</span></tt></a> describing the
+three-dimensional structure. To create the mesh used here,
+we can start Netgen and load the geometry file by using the menu:
+<tt class="docutils literal"><span class="pre">File-&gt;</span> <span class="pre">Load</span> <span class="pre">Geometry</span></tt>. We then tell Netgen that we like the edge
+length to be shorter than 3 by going to <tt class="docutils literal"><span class="pre">Mesh-&gt;Meshing</span> <span class="pre">Options-&gt;Mesh</span> <span class="pre">Size</span></tt>
+and enter <tt class="docutils literal"><span class="pre">3.0</span></tt> in the <tt class="docutils literal"><span class="pre">max</span> <span class="pre">mesh-size</span></tt> box. Then a click on the
+<tt class="docutils literal"><span class="pre">Generate</span> <span class="pre">Mesh</span></tt> button will generate the mesh. Finally, using
+<tt class="docutils literal"><span class="pre">File-&gt;Export</span></tt> will save the mesh as a &#8220;<em>neutral</em>&#8221; file
+(this is the default) under the name <tt class="docutils literal"><span class="pre">bar30_30_100.neutral</span></tt>.
+(We provide a <a class="reference download internal" href="http://nmag.soton.ac.uk/nmag/0.2/manual/html/_downloads/bar30_30_100.neutral.gz"><tt class="xref download docutils literal"><span class="pre">gzipped</span> <span class="pre">version</span> <span class="pre">of</span> <span class="pre">this</span> <span class="pre">file</span></tt></a>
+for completeness.)</p>
+</li>
+<li><p class="first">This neutral file needs to be converted into a nmesh file. We do
+this using the command:</p>
+<div class="highlight-python"><pre>$ nmeshimport --netgen bar30_30_100.neutral bar30_30_100.nmesh.h5</pre>
+</div>
+<p>By providing the <tt class="docutils literal"><span class="pre">.h5</span></tt> extension, we tell nmeshimport to write a
+compressed mesh file which is significantly smaller than an ascii
+file (see <a class="reference internal" href="../finite_element_mesh_generation.html#mesh-file-size"><em>mesh file size</em></a>).</p>
+</li>
+</ol>
+<p>The generated mesh looks like this:</p>
+<img alt="../_images/bar30_30_100.png" class="align-center" src="../_images/bar30_30_100.png" style="width: 973px; height: 605px;" />
+<p>We can examine the mesh using <a class="reference internal" href="../executables.html#nmeshpp"><em>nmeshpp</em></a> to obtain information about
+mesh quality, the statistical distribution of edge lengths, the
+overall number of points and elements etc.</p>
+<p>If you like to script the mesh generation starting from a Netgen geometry file and ending with the nmesh file, you could use (for the example above), the following shell commands:</p>
+<div class="highlight-python"><pre>netgen -geofile=bar30_30_100.geo -meshfiletype="Neutral Format" -meshfile=bar30_30_100.neutral -batchmode
+nmeshimport --netgen bar30_30_100.neutral bar30_30_100.nmesh.h5</pre>
+</div>
+</div>
+<div class="section" id="the-simulation">
+<span id="id2"></span><h2>2.2.2. The simulation<a class="headerlink" href="doc.html#the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Having obtained the mesh file <a class="reference download internal" href="../_downloads/bar30_30_100.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">bar30_30_100.nmesh.h5</span></tt></a>, we can use the
+program <a class="reference download internal" href="../_downloads/bar30_30_100.py"><tt class="xref download docutils literal"><span class="pre">bar30_30_100.py</span></tt></a>
+to run the simulation:</p>
+<blockquote>
+<div><pre class="literal-block">
+import nmag
+from nmag import SI
+
+mat_Py = nmag.MagMaterial(name=&#8221;Py&#8221;,
+                          Ms=SI(0.86e6,&#8221;A/m&#8221;),
+                          exchange_coupling=SI(13.0e-12, &#8220;J/m&#8221;),
+                          llg_damping=0.5)
+
+sim = nmag.Simulation(&#8220;bar&#8221;)
+
+sim.load_mesh(&#8220;bar30_30_100.nmesh.h5&#8221;,
+              [(&#8220;Py&#8221;, mat_Py)],
+              unit_length=SI(1e-9,&#8221;m&#8221;))
+
+sim.set_m([1,0,1])
+
+dt = SI(5e-12, &#8220;s&#8221;) 
+
+for i in range(0, 61):
+    sim.advance_time(dt*i)                  #compute time development
+
+    if i % 10 == 0:                         #every 10 loop iterations, 
+        sim.save_data(fields=&#8217;all&#8217;)         #save averages and all
+                                            #fields spatially resolved
+    else:
+        sim.save_data()                     #otherwise just save averages
+
+
+</pre>
+</div></blockquote>
+<p>As in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: demag field in uniformly magnetised sphere</em></a>, we start
+by importing nmag and creating the material object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We set the <tt class="docutils literal"><span class="pre">llg_damping</span></tt> parameter to 0.5. As this is a
+dimensionless parameter, we can pass a number. Alternatively, we may
+give it as <tt class="docutils literal"><span class="pre">SI(0.5)</span></tt>. (Note that in this example, we give the
+appropriate physical value for the saturisation magnetisation of
+PermAlloy.)</p>
+<p>The next line creates the simulation object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we provide a name for the simulation, which is <tt class="docutils literal"><span class="pre">bar</span></tt>. This
+will be used as the stem of the name of any data files that are being
+written. If this name is not specified (as in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: demag field in
+uniformly magnetised sphere</em></a>), it defaults to the name of the file
+that contains the script (but without the <tt class="docutils literal"><span class="pre">.py</span></tt> extension).</p>
+<p>Next, we load the mesh file, and set the initial (normalised)
+magnetisation to point in the <tt class="docutils literal"><span class="pre">[1,0,1]</span></tt> direction, i.e. to have
+equal magnitude in the x- and z-direction and 0 in the
+y-direction.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;bar30_30_100.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This vector will automatically be normalised within nmag, so that
+<tt class="docutils literal"><span class="pre">[1,0,1]</span></tt> is equivalent to the normalised vector
+<tt class="docutils literal"><span class="pre">[0.70710678,0,0.70710678]</span></tt>.</p>
+<p>In this example, we would like to study a dynamic process and will ask
+nmag to compute the time development over a certain amount of time
+<tt class="docutils literal"><span class="pre">dt</span></tt>. The line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dt</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">5e-12</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>simply creates a <a class="reference internal" href="../background.html#si-object"><em>SI object</em></a> which represents our timescale.</p>
+<p>We then have a Python <tt class="docutils literal"><span class="pre">for</span></tt>-loop in which <tt class="docutils literal"><span class="pre">i</span></tt> will take integer
+values ranging from 0 to 60 for subsequent iterations. All indented
+lines are the body of the for-loop. (In the Python programming
+language, scoping is expressed through indentation rather than braces
+or other types of parentheses. Text editors such as Emacs come with
+built-in support for properly indenting Python code [by pressing the
+<tt class="docutils literal"><span class="pre">Tab</span></tt> key on a line to be indented].)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">61</span><span class="p">):</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">advance_time</span><span class="p">(</span><span class="n">dt</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In each iteration, we first call <tt class="docutils literal"><span class="pre">sim.advance_time(i*dt)</span></tt> which
+instructs nmag to carry on time integration up to the time
+<tt class="docutils literal"><span class="pre">i*dt</span></tt>.</p>
+<p>The call to <a class="reference internal" href="../command_reference.html#save-data"><em>save_data</em></a> will save the average data into the
+<tt class="docutils literal"><span class="pre">bar_dat.ndt</span></tt> file.</p>
+<p>The last four lines contain an <tt class="docutils literal"><span class="pre">if</span></tt> statement which is used to save
+spatially resolved data every ten time steps only, and averaged data
+every time step. The percent operator <tt class="docutils literal"><span class="pre">%</span></tt> computes <tt class="docutils literal"><span class="pre">i</span></tt> modulo
+10. This will be 0 when <tt class="docutils literal"><span class="pre">i</span></tt> takes values 0, 10, 20, 30, ... In this
+case, we call:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which will save the (spatial) averages of all <a class="reference internal" href="../background.html#field"><em>fields</em></a> (going into the
+<tt class="docutils literal"><span class="pre">bar_dat.ndt</span></tt> file), <em>and</em> the spatially resolved data for all
+fields (that are saved to <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt>).</p>
+<p>If <tt class="docutils literal"><span class="pre">i</span></tt> is not an integer multiple of 10, then the command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>is called, which only saves spatially averaged data.</p>
+</div>
+<div class="section" id="analysing-the-data">
+<span id="id3"></span><h2>2.2.3. Analysing the data<a class="headerlink" href="doc.html#analysing-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="time-dependent-averages">
+<span id="id4"></span><h3>2.2.3.1. Time dependent averages<a class="headerlink" href="doc.html#time-dependent-averages" title="Permalink to this headline">¶</a></h3>
+<p>We first plot the average magnetisation vector against time. To
+see what data is available, we call <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> with just the name of the
+simulation (which here is <tt class="docutils literal"><span class="pre">bar</span></tt>):</p>
+<div class="highlight-python"><pre>$ ncol bar
+ 0:         #time           #&lt;s&gt;              0
+ 1:            id             &lt;&gt;              1
+ 2:          step             &lt;&gt;              0
+ 3:    stage_time            &lt;s&gt;              0
+ 4:    stage_step             &lt;&gt;              0
+ 5:         stage             &lt;&gt;              0
+ 6:    E_total_Py      &lt;kg/ms^2&gt;  -0.2603465789714
+ 7:           phi            &lt;A&gt;  0.0002507410390772
+ 8:      E_ext_Py      &lt;kg/ms^2&gt;              0
+ 9:     H_demag_0          &lt;A/m&gt;  -263661.6680783
+10:     H_demag_1          &lt;A/m&gt;  -8.218106743355
+11:     H_demag_2          &lt;A/m&gt;  -77027.641984
+12:     dmdt_Py_0         &lt;A/ms&gt;  -8.250904652583e+15
+13:     dmdt_Py_1         &lt;A/ms&gt;  2.333344983225e+16
+14:     dmdt_Py_2         &lt;A/ms&gt;  8.250904652583e+15
+15:   H_anis_Py_0          &lt;A/m&gt;              0
+16:   H_anis_Py_1          &lt;A/m&gt;              0
+17:   H_anis_Py_2          &lt;A/m&gt;              0
+18:        m_Py_0             &lt;&gt;  0.7071067811865
+19:        m_Py_1             &lt;&gt;              0
+20:        m_Py_2             &lt;&gt;  0.7071067811865
+21:        M_Py_0          &lt;A/m&gt;  608111.8318204
+22:        M_Py_1          &lt;A/m&gt;              0
+23:        M_Py_2          &lt;A/m&gt;  608111.8318204
+24:     E_anis_Py      &lt;kg/ms^2&gt;              0
+25:     E_exch_Py      &lt;kg/ms^2&gt;  5.046530179037e-17
+26:           rho        &lt;A/m^2&gt;  0.03469702141876
+27:       H_ext_0          &lt;A/m&gt;              0
+28:       H_ext_1          &lt;A/m&gt;              0
+29:       H_ext_2          &lt;A/m&gt;              0
+30:  H_total_Py_0          &lt;A/m&gt;  -263661.6680783
+31:  H_total_Py_1          &lt;A/m&gt;  -8.218106743352
+32:  H_total_Py_2          &lt;A/m&gt;  -77027.641984
+33:    E_demag_Py      &lt;kg/ms^2&gt;  -0.2603465789714
+34:   H_exch_Py_0          &lt;A/m&gt;  3.301942533099e-11
+35:   H_exch_Py_1          &lt;A/m&gt;              0
+36:   H_exch_Py_2          &lt;A/m&gt;  3.301942533099e-11
+37: maxangle_m_Py          &lt;deg&gt;              0
+38:     localtime             &lt;&gt;  2007/08/15-11:16:19
+39:      unixtime            &lt;s&gt;   1187172979.6</pre>
+</div>
+<p>The meaning of the various entries is discussed in detail in section
+<a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a>. Here, we simply note that the column indices (given by the
+number at the beginning of every line) we are most interested in are:</p>
+<ul class="simple">
+<li>0 for the <tt class="docutils literal"><span class="pre">time</span></tt>,</li>
+<li>21 for <tt class="docutils literal"><span class="pre">M_Py_0</span></tt> which is the x-component of the magnetisation of
+the Py material,</li>
+<li>22 for <tt class="docutils literal"><span class="pre">M_Py_1</span></tt> which is the y-component of the magnetisation of
+the Py material, and</li>
+<li>23 for <tt class="docutils literal"><span class="pre">M_Py_2</span></tt> which is the z-component of the magnetisation of
+the Py material,</li>
+</ul>
+<p>We can use <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> to extract this data into a file <tt class="docutils literal"><span class="pre">data_M.dat</span></tt> which
+has the time for each time step in the first column and the x, y and z
+component of the magnetisation in columns 2, 3 and 4, respectively:</p>
+<div class="highlight-python"><pre>$ ncol bar 0 21 22 23 &gt; data_M.txt</pre>
+</div>
+<p>This creates a text file <a class="reference download internal" href="../_downloads/data_M.txt"><tt class="xref download docutils literal"><span class="pre">data_M.txt</span></tt></a> that
+can be read by other applications to create a plot.</p>
+<p>Note, however, that the order of the entries in the ndt file is not
+guaranteed, i.e. the numbers corresponding to fields may change with
+different versions of the software, or different simulations (for
+example, the user may add extra fields). Therefore, the recommended
+approach is to directly specify the names of the columns that are to be
+extracted (i.e. <tt class="docutils literal"><span class="pre">time</span> <span class="pre">M_Py_0</span> <span class="pre">M_Py_1</span> <span class="pre">M_Py_2</span></tt>):</p>
+<div class="highlight-python"><pre>$ ncol bar time M_Py_0 M_Py_1 M_Py_2 &gt; data_M.txt</pre>
+</div>
+<p>We use the <a class="reference external" href="http://plasma-gate.weizmann.ac.il/Grace/">xmgrace</a> command:</p>
+<div class="highlight-python"><pre>xmgrace -nxy data_M.txt</pre>
+</div>
+<p>to create the following plot (manually adding the legend and axis labels):</p>
+<img alt="../_images/data_M.png" class="align-center" src="../_images/data_M.png" style="width: 789px; height: 437px;" />
+</div>
+<div class="section" id="comparison-with-oommf-and-magpar">
+<span id="id5"></span><h3>2.2.3.2. Comparison with OOMMF and Magpar<a class="headerlink" href="doc.html#comparison-with-oommf-and-magpar" title="Permalink to this headline">¶</a></h3>
+<p>We have carried out the same simulation with <a class="reference external" href="http://www.magpar.net/">Magpar</a> and <a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a>. The
+following plot shows the corresponding OOMMF-curves (as spheres)
+together with nmag&#8216;s results. (The Magpar curve, which is not shown
+here, follows the nmag data very closely.)</p>
+<img alt="../_images/data_M_OOMMF.png" class="align-center" src="../_images/data_M_OOMMF.png" style="width: 789px; height: 437px;" />
+</div>
+<div class="section" id="spatially-resolved-fields">
+<span id="id6"></span><h3>2.2.3.3. Spatially resolved fields<a class="headerlink" href="doc.html#spatially-resolved-fields" title="Permalink to this headline">¶</a></h3>
+<p>The command <tt class="docutils literal"><span class="pre">sim.save_data(fields='all')</span></tt> saves all <a class="reference internal" href="../background.html#field"><em>fields</em></a> into the
+file <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt> (as explained, the filename is composed of the name
+of the simulation [here <tt class="docutils literal"><span class="pre">bar</span></tt>] and the extension <tt class="docutils literal"><span class="pre">_dat.h5</span></tt>). The
+code <tt class="docutils literal"><span class="pre">bar30_30_100.py</span></tt> above calls the <a class="reference internal" href="../command_reference.html#save-data"><em>save_data</em></a> command every 10
+iterations. As every <tt class="docutils literal"><span class="pre">dt</span></tt> corresponds to 0.5 picoseconds, the
+data hence is saved every 5 picoseconds.</p>
+<p>We can confirm this by using the <a class="reference internal" href="../executables.html#nmagpp"><em>nmagpp</em></a> command:</p>
+<div class="highlight-python"><pre>$ nmagpp --idlist bar</pre>
+</div>
+<p>which produces the following output:</p>
+<div class="highlight-python"><pre> id   stage   step      time  fields
+ 0-&gt;    1      0         0 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+10-&gt;    1    312     5e-11 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+20-&gt;    1    495     1e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+30-&gt;    1    603   1.5e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+40-&gt;    1    678     2e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+50-&gt;    1    726   2.5e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+60-&gt;    1    762     3e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho</pre>
+</div>
+<p>The first column is a <a class="reference internal" href="../executables.html#unique-identifier-id"><em>unique identifier id</em></a>  for a configuration of the
+system. We can use the <tt class="docutils literal"><span class="pre">--range</span></tt> argument to select entries for
+further processing. The <tt class="docutils literal"><span class="pre">stage</span></tt> is only relevant for calculations of
+hysteresis curves (see <a class="reference internal" href="../example_hysteresis_ellipsoid/doc.html#simple-hysteresis-example"><em>Example: Simple hysteresis loop</em></a>). The <tt class="docutils literal"><span class="pre">step</span></tt> is the
+time-stepper iteration counter for this calculation. The time is given
+in seconds (<tt class="docutils literal"><span class="pre">&lt;s&gt;</span></tt>). (Note the 5 pico-second interval between
+entries.) The stage, step and time data is provided for
+convenience. What follows is a list of fields that have been saved for
+each of these configurations.</p>
+<p>We convert the first saved time step into a vtk file
+with base name <tt class="docutils literal"><span class="pre">bar_initial.vtk</span></tt> using</p>
+<div class="highlight-python"><pre>$ nmagpp --range 0 --vtk bar_initial.vtk bar</pre>
+</div>
+<p>and we also convert the last saved time step at 300 picoseconds to a
+vtk file with base name <tt class="docutils literal"><span class="pre">bar_final.vtk</span></tt> using:</p>
+<div class="highlight-python"><pre>$ nmagpp --range 60 --vtk bar_final.vtk bar</pre>
+</div>
+<p>The actual file names that are created by these two commands are
+<tt class="docutils literal"><span class="pre">bar_initial-000000.vtk</span></tt> and <tt class="docutils literal"><span class="pre">bar_final-000060.vtk</span></tt>. The appended number
+is the <tt class="docutils literal"><span class="pre">id</span></tt> of the saved configuration. This is useful if one wants to create vtk files for all saved configurations. For example:</p>
+<div class="highlight-python"><pre>$ nmagpp --vtk bar.vtk bar</pre>
+</div>
+<p>will create the files:</p>
+<div class="highlight-python"><pre>bar-000000.vtk
+bar-000010.vtk
+bar-000020.vtk
+bar-000030.vtk
+bar-000040.vtk
+bar-000050.vtk
+bar-000060.vtk</pre>
+</div>
+<p>Using <a class="reference internal" href="../useful_tools.html#mayavi"><em>MayaVi</em></a>, we can display this data in a variety of ways. Remember
+that all field values are shown in SI units by default (see <a class="reference internal" href="../executables.html#nmagpp"><em>nmagpp</em></a>),
+and positions are as provided in the mesh file. In this case,
+positions are expressed in nanometers (this comes from the
+<tt class="docutils literal"><span class="pre">unit_length=SI(1e-9,&quot;m&quot;)</span></tt> expression in the <tt class="docutils literal"><span class="pre">sim.load_mesh()</span></tt>
+command.</p>
+<p>This is the initial configuration with magnetisation pointing in the
+[1,0,1] direction:</p>
+<img alt="../_images/bar_initial_M.png" class="align-center" src="../_images/bar_initial_M.png" style="width: 1039px; height: 682px;" />
+<p>The &#8220;final&#8221; configuration shows that the magnetisation aligns along
+the z-direction. The coloured surface shows the x-component of the
+magnetisation (and the colorbar provides the scale). It can be seen
+that the magnetisation at position z=100 nm goes into a flower state
+to minimise the overall energy. (Note that, strictly speaking, this
+system is not yet in a meta-stable state after 300 ps &#8211; but already
+quite close.):</p>
+<img alt="../_images/bar_final_M.png" class="align-center" src="../_images/bar_final_M.png" style="width: 1039px; height: 682px;" />
+<p>Because we have saved all fields (not just the magnetisation), we can
+also study other properties. For example, the following image shows
+the demagnetisation field as vectors (and the legend refers to the
+magnitude of the vectors), as well as the magnetic scalar potential
+(as a stack of isosurfaces). Because the demagnetisation field is the
+(negative) gradient of the scalar potential, the vectors are
+perpendicular on the isosurfaces:</p>
+<img alt="../_images/bar_final_demag.png" class="align-center" src="../_images/bar_final_demag.png" style="width: 1039px; height: 682px;" />
+</div>
+</div>
+<div class="section" id="higher-level-functions">
+<span id="id7"></span><h2>2.2.4. Higher level functions<a class="headerlink" href="doc.html#higher-level-functions" title="Permalink to this headline">¶</a></h2>
+<p>We now have seen an overview over the fundamental commands used to set
+up a micromagnetic simulation and demonstrate how to advance the
+configuration of the system through time. In principle, this is all
+one would need to know to compute hysteresis loops and carry out most
+micromagnetic computations. However, there are more advanced functions
+that simplify and automatise the most frequent tasks, such as
+computing a hysteresis loop.</p>
+</div>
+<div class="section" id="relaxing-the-system">
+<span id="id8"></span><h2>2.2.5. &#8220;Relaxing&#8221; the system<a class="headerlink" href="doc.html#relaxing-the-system" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command takes the current magnetisation configuration of a
+simulation and computes the time development until the torque on each
+mesh site is smaller than a certain threshold. This is useful for this
+particular example as we do not know for how long we need to integrate
+the system until it stops in a local energy minimum configuration. We
+can adjust the code of this example to make use of the <tt class="docutils literal"><span class="pre">relax</span></tt>
+command (<a class="reference download internal" href="../_downloads/bar_relax.py"><tt class="xref download docutils literal"><span class="pre">modified</span> <span class="pre">source</span> <span class="pre">code</span></tt></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                           <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                           <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                           <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="s">&quot;bar_relax&quot;</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;bar30_30_100.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+                  <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>(Note the additions to the <tt class="docutils literal"><span class="pre">import</span></tt> statement!)</p>
+<p>The particular <tt class="docutils literal"><span class="pre">relax</span></tt> command employed here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span><span class="mi">5</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+                  <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>works as follows:</p>
+<p>The argument <tt class="docutils literal"><span class="pre">save</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">]</span></tt> tells <tt class="docutils literal"><span class="pre">relax</span></tt> to save data according to
+the instructions given in the form of a python list (i.e. enclosed by
+square brackets). The first relax instruction is this tuple:</p>
+<div class="highlight-python"><pre>('averages', every('time',5*ps)</pre>
+</div>
+<p>and means that the <em>averages</em> should be saved <em>every 5 picoseconds</em>.
+The syntax used here breaks down into the following parts:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'averages'</span></tt> is just the keyword (a string) to say that the
+average data should be saved.</li>
+<li><tt class="docutils literal"><span class="pre">every(...)</span></tt> is a special object which takes two parameters. They are here:<ul>
+<li><tt class="docutils literal"><span class="pre">'time'</span></tt> to indicate that something should be done every time a certain
+amount of simulated time has passed, and</li>
+<li><tt class="docutils literal"><span class="pre">5*ps</span></tt> which is the amount of time after which the data
+should be saved again. This has to be a <a class="reference internal" href="../background.html#si-object"><em>SI object</em></a>, which we here
+obtain by multiplying a number (<tt class="docutils literal"><span class="pre">5</span></tt>) with the SI object <tt class="docutils literal"><span class="pre">ps</span></tt> which
+has been defined earlier in our example program to represent a pico-second.</li>
+<li>We can provide further keywords to the <tt class="docutils literal"><span class="pre">every</span></tt> object (for example
+to save the data every <tt class="docutils literal"><span class="pre">10</span></tt> iteration steps we can use <tt class="docutils literal"><span class="pre">every('step',</span> <span class="pre">10)</span></tt>).</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p>Internally, the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command uses the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command, so the documentation of
+<a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> should be consulted for a more detailed explanation of parameters.</p>
+<p>The second relax instruction is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>which means that the <em>fields</em> should be saved <em>at convergence</em>,
+i.e. when the relaxation process has finished and the magnetisation
+has converged to its (meta)stable configuration:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'fields'</span></tt> is a string that indicates that we would like to save
+all the defined fields.</li>
+<li><tt class="docutils literal"><span class="pre">at('convergence')</span></tt> is a special object that indicates that this
+should happen exactly when the relaxation process has converged.</li>
+</ul>
+</div></blockquote>
+<p>After running this program, we can use the <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> tool to look at
+the averages saved:</p>
+<div class="highlight-python"><pre>$ ncol bar_relax step time</pre>
+</div>
+<p>gives output which starts like this:</p>
+<div class="highlight-python"><pre>  0              0
+ 82          5e-12
+120          1e-11
+146        1.5e-11
+176          2e-11
+201        2.5e-11
+227          3e-11
+248        3.5e-11</pre>
+</div>
+<p>Here, we see the iterations on the left and the simulated time (in
+seconds) on the right. As requested, there is one data entry
+(i.e. line) every 5 picoseconds.</p>
+<p>Note that it may happen that the system saves the data not exactly at
+the requested time, i.e.:</p>
+<div class="highlight-python"><pre>532        6.5e-11
+580  7.047908066945e-11
+620        7.5e-11</pre>
+</div>
+<p>The middle line shows that the data has been saved when the simulated
+time was approximately 7.05e-11 seconds whereas we requested 7e-11
+seconds. Such small deviations are tolerated by the system to improve
+performance <a class="footnote-reference" href="doc.html#timeintegrator" id="id9">[1]</a>.</p>
+<p>From the data saved, we can obtain the following plot:</p>
+<img alt="../_images/bar_relax_data_M.png" class="align-center" src="../_images/bar_relax_data_M.png" style="width: 789px; height: 437px;" />
+<p>In summary, the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> function is useful to obtain a meta-stable
+configuration of the system. In particular, it will carry out the time
+integration until the remaining torque at any point in the system has
+dropped below a certain threshold.</p>
+<table class="docutils footnote" frame="void" id="timeintegrator" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id9">[1]</a></td><td>The time integrator (here, <a class="reference external" href="http://www.llnl.gov/CASC/sundials/">Sundials</a> CVODE) would have to do an
+extra step to get to the requested time. If the current time is
+very close to the requested time, it will simply report this value.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="relaxing-the-system-faster">
+<span id="id10"></span><h2>2.2.6. &#8220;Relaxing&#8221; the system faster<a class="headerlink" href="doc.html#relaxing-the-system-faster" title="Permalink to this headline">¶</a></h2>
+<p>If we are only interested in the final (meta-stable) configuration of
+a run, we can switch off the precession term in the Laundau Lifshitz
+and Gilbert equation. The MagMaterial definition in the following
+example shows how to do this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="n">mat_Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                           <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                           <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                           <span class="n">llg_damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                           <span class="n">do_precession</span><span class="o">=</span><span class="bp">False</span> <span class="p">)</span>
+
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="s">&quot;bar_relax2&quot;</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;bar30_30_100.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;Py&quot;</span><span class="p">,</span> <span class="n">mat_Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+                  <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The new option is <tt class="docutils literal"><span class="pre">do_precession=False</span></tt> in the constructor of the
+PermAlloy material <tt class="docutils literal"><span class="pre">mat_Py</span></tt>. As a result, there will be no
+precession term in the equation of motion:</p>
+<img alt="../_images/bar_relax2_data_M.png" class="align-center" src="../_images/bar_relax2_data_M.png" style="width: 789px; height: 437px;" />
+<p>While the time-development of the system happens at the same time
+scale as for the system with the precession term (see <a class="reference internal" href="doc.html#relaxing-the-system">&#8220;Relaxing&#8221; the
+system</a>), the computation of the system without the precession is
+significantly faster (for this example, we needed about 3500
+iterations with the precession term and 1500 without it, and the
+computation time scales similarly).</p>
+<p>Note, that the &#8216;&#8217;dynamics&#8217;&#8217; shown here are of course artificial and
+only used to obtain a meta-stable physical configuration more
+efficiently!</p>
+</div>
+<div class="section" id="decreasing-execution-time">
+<span id="id11"></span><h2>2.2.7. Decreasing execution time<a class="headerlink" href="doc.html#decreasing-execution-time" title="Permalink to this headline">¶</a></h2>
+<p>Note that the execution time can generally be reduced significantly by
+decreasing the tolerances for the time integrator. In short, one has
+to use the <a class="reference internal" href="../command_reference.html#set-params"><em>set_params</em></a> function (after <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> has been called).
+Decreasing the requested accuracy will of course make the simulation
+results less accurate but this is often acceptable. An example of how
+to use the <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> function and detailed discussion of the
+micromagnetic example shown in this section for a variety of tolerance
+values is given in the section <a class="reference internal" href="../example_tolerances/doc.html#example-tolerances"><em>Example timestepper tolerances</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_hysteresis_ellipsoid/doc.html" title="2.3. Example: Simple hysteresis loop"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example1/doc.html" title="2.1. Example: Demag field in uniformly magnetised sphere"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

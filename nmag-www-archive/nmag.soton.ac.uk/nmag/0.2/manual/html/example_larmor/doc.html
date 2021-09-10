@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.16. Example: Larmor precession &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.17. Example: 1D periodicity" href="../example_1Dperiodicity/doc.html" />
+    <link rel="prev" title="2.15. Example: two different magnetic materials" href="../example_two_materials/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_1Dperiodicity/doc.html" title="2.17. Example: 1D periodicity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_two_materials/doc.html" title="2.15. Example: two different magnetic materials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-larmor-precession">
+<h1>2.16. Example: Larmor precession<a class="headerlink" href="doc.html#example-larmor-precession" title="Permalink to this headline">¶</a></h1>
+<p>This example shows how to derive the period of the Larmor precession
+for the magnetisation and compare the result from simulation to the
+analytical solution. It is inspired by an example from the <a class="reference external" href="http://www.magpar.net/">magpar</a>
+documentation
+(<a class="reference external" href="http://magnet.atp.tuwien.ac.at/scholz/magpar/doc/html/examples.html#sphere_larmor">http://magnet.atp.tuwien.ac.at/scholz/magpar/doc/html/examples.html#sphere_larmor</a>).</p>
+<p>We us the <a class="reference download internal" href="../_downloads/larmor.py"><tt class="xref download docutils literal"><span class="pre">larmor.py</span></tt></a> script:</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span><span class="p">,</span> <span class="n">si</span>
+
+
+<span class="c">#create simulation object and switch off</span>
+<span class="c">#the computation of the demagnetising field</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">do_demag</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+
+<span class="c"># define magnetic material so that Js = mu0*Ms = 1 T</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span><span class="p">,</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">llg_damping</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+                      <span class="p">)</span>
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;sphere1.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&quot;sphere&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span>
+             <span class="p">)</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># set external field</span>
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">1e6</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)</span>  <span class="c"># ps corresponds to one picosecond</span>
+
+<span class="c"># let the magnetisation precess around the direction of the applied field</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">ps</span><span class="p">))],</span>
+               <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="o">*</span><span class="n">ps</span><span class="p">))])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We turn off computation of the demagnetising field:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">do_demag</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and set the damping term in the LLG equation to zero:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">llg_damping</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We set saturation magnetisation to Js = 1 T (see <a class="reference internal" href="../background.html#library-of-useful-si-constants"><em>Library of useful si constants</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Ms</span><span class="o">=</span><span class="mf">1.0</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span>
+</pre></div>
+</div>
+<p>We use a sphere as the magnetic object and, starting from a uniform
+magnetic configuration along the [1,1,1] direction:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>To compute the time development in the presence of a static field pointing in the z-direction, we &#8216;&#8217;abuse&#8217;&#8217; the hysteresis command (because this way we can conveniently save the data at equidistant time intervals). To do this, we need to find the sequence of applied fields (here it is only one, of course):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span> <span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+                      <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+                      <span class="n">units</span><span class="o">=</span><span class="mf">1e6</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+                     <span class="p">)</span>
+</pre></div>
+</div>
+<p>and then use the hysteresis command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">ps</span><span class="p">))],</span>
+               <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="o">*</span><span class="n">ps</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command will save the averages (which is what we need
+to for the fit below) every 0.1 pico seconds. Once we reach the time
+of 300 pico seconds, the method will exit.</p>
+<p>The dynamics of the magnetisation is driven only by the
+Zeeman effect, with a torque:</p>
+<div class="math">
+<p><img src="../_images/math/1fc433fd895d1c064d3e076c668c3cc189d463dd.png" alt="{\mathbf T} = \mu_0 {\mathbf m} \times {\mathbf H}_{\rm ext}" /></p>
+</div><p>acting on the magnetisation m which is orthogonal to both m and H;
+thus causing the magnetisation to precess around the applied field
+direction. The frequency of the precession, called f_Larmor, is given
+by:</p>
+<div class="math">
+<p><img src="../_images/math/6dc55b60c0614b76d334cde802c6d49f3c735ba4.png" alt="f_{\rm Larmor} = \frac{\gamma}{2\pi} \cdot \mu_0 \left|{\mathbf H}_{\rm ext}\right|" /></p>
+</div><p>where the parameter gamma, called gyromagnetic ratio, is taken to
+have the following value (see <a class="footnote-reference" href="doc.html#llggamma" id="id1">[1]</a> ):</p>
+<div class="math">
+<p><img src="../_images/math/78434a947f21707feaafbb858f7d173048b02fa8.png" alt="\gamma = \frac{g \cdot e}{2m_e} \approx 1.7588 \times10^{11}\,{\rm T}^{-1}{\rm s}^{-1}" /></p>
+</div><p>so that f_Larmor = 35.176 GHz and the period T = 1/f_Larmor =
+0.0284284 ns.</p>
+<p>We save the average magnetisation every 0.1 ps in order to have a
+sufficient number of points to compute the period T.</p>
+<p>We execute the script as usual:</p>
+<div class="highlight-python"><pre>$ nsim larmor.py</pre>
+</div>
+<p>and extract the (spatially averaged) magnetisation data for all save time steps:</p>
+<div class="highlight-python"><pre>$ ncol larmor time m_Py_0 m_Py_1 m_Py_2 &gt; data.txt</pre>
+</div>
+<p>Using <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>, we extract the value of the Larmor period T from the x-component of the magnetisation:</p>
+<div class="highlight-python"><pre>$ gnuplot</pre>
+</div>
+<p>and the following command plots the x component of the magnetisation
+as a function of the simulation time, together with a fit for a
+function <tt class="docutils literal"><span class="pre">f(x)</span></tt> (where <tt class="docutils literal"><span class="pre">x</span></tt> represents time):</p>
+<div class="highlight-python"><pre>gnuplot&gt; f(x) = A*sin(2*pi*x/B + C) + D
+gnuplot&gt; B = 30
+gnuplot&gt; fit f(x) "data.txt" u  ($1/1e-12):2 via A,B,C,D
+gnuplot&gt; plot "data.txt" u ($1/1e-12):2, f(x)</pre>
+</div>
+<p>The result is the following image:</p>
+<img alt="../_images/larmor_plot.png" class="align-center" src="../_images/larmor_plot.png" style="width: 800px; height: 600px;" />
+<p>The values for B in the fit, which corresponds to the unknown period
+T, is initially set to 30 in order to help <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> fit the curve.
+Such fit on T gives the value 28.4293; this value
+corresponds to 0.0284293 ns when rescaled by the 10e12 factor used for
+the plotting, and shows a difference starting from the 5th digit when
+compared to the analytical solution of 0.0284284 ns.</p>
+<table class="docutils footnote" frame="void" id="llggamma" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id1">[1]</a></td><td>See the OOMMF manual, and in Werner Scholz thesis, after (3.7), llg_gamma_G = 2.210173e5 m/(As).</td></tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_1Dperiodicity/doc.html" title="2.17. Example: 1D periodicity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_two_materials/doc.html" title="2.15. Example: two different magnetic materials"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

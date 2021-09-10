@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.5. Example: Hysteresis loop for thin disk" href="../example_hysteresis_disk/doc.html" />
+    <link rel="prev" title="2.3. Example: Simple hysteresis loop" href="../example_hysteresis_ellipsoid/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_hysteresis_disk/doc.html" title="2.5. Example: Hysteresis loop for thin disk"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_hysteresis_ellipsoid/doc.html" title="2.3. Example: Simple hysteresis loop"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-hysteresis-loop-for-stoner-wohlfarth-particle">
+<span id="stoner-wohlfarth-example"></span><h1>2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle<a class="headerlink" href="doc.html#example-hysteresis-loop-for-stoner-wohlfarth-particle" title="Permalink to this headline">¶</a></h1>
+<p>This example is very similar to <a class="reference internal" href="../example_hysteresis_ellipsoid/doc.html#simple-hysteresis-example"><em>Example: Simple hysteresis loop</em></a> but
+computes the hysteresis loop of a smaller ellipsoidal magnetic
+object. This allows to compare the results with the analytical
+solution given by the Stoner-Wohlfarth model.  We use an ellipsoid
+whose x,y,z semi-axes have lengths 9 nm, 3 nm and 3 nm,
+respectively. (The mesh is contained in <a class="reference download internal" href="../_downloads/ellipsoid.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">ellipsoid.nmesh.h5</span></tt></a> and produced with
+<a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> from <a class="reference download internal" href="../_downloads/ellipsoid1.geo"><tt class="xref download docutils literal"><span class="pre">ellipsoid.geo</span></tt></a>):</p>
+<img alt="../_images/ellipsoid_mesh.png" class="align-center" src="../_images/ellipsoid_mesh.png" style="width: 488px; height: 424px;" />
+<p>To compute the hysteresis loop for the ellipsoid, we use the
+script <a class="reference download internal" href="../_downloads/ellipsoid1.py"><tt class="xref download docutils literal"><span class="pre">ellipsoid.py</span></tt></a>:</p>
+<pre class="literal-block">
+import nmag
+from nmag import SI, at
+
+#create simulation object
+sim = nmag.Simulation()
+
+# define magnetic material
+Py = nmag.MagMaterial(name=&#8221;Py&#8221;,
+                      Ms=SI(1e6,&#8221;A/m&#8221;),
+                      exchange_coupling=SI(13.0e-12, &#8220;J/m&#8221;))
+
+# load mesh: the mesh dimensions are scaled by 0.5 nm
+sim.load_mesh(&#8220;ellipsoid.nmesh.h5&#8221;,
+              [(&#8220;ellipsoid&#8221;, Py)],
+              unit_length=SI(1e-9,&#8221;m&#8221;))
+
+# set initial magnetisation
+sim.set_m([1.,1.,0.])
+
+Hs = nmag.vector_set(direction=[1.,1.,0.],
+                     norm_list=[1.0, 0.995, [], -1.0,
+                                -0.995, -0.990, [], 1.0],
+                     units=1e6*SI(&#8216;A/m&#8217;))
+
+# loop over the applied fields Hs
+sim.hysteresis(Hs, save=[(&#8216;averages&#8217;, at(&#8216;convergence&#8217;))])
+
+
+</pre>
+<p>We apply external magnetic fields in [110] direction (i.e. 45 degrees
+between the x and the y-axis) to this system, with strengths in the
+range of 1000 kA/m down to -1000 kA/m in steps of <tt class="docutils literal"><span class="pre">5</span> <span class="pre">kA/m</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">save</span></tt> parameter is used to tell the hysteresis command what
+data to save, and how often. Here, we are only interested in saving
+the spatially averaged magnetisation values for every stage (i.e.
+meta-stable equilibrium before the applied field is changed).</p>
+<div class="section" id="plotting-the-hysteresis-loop">
+<span id="id1"></span><h2>2.4.1. Plotting the hysteresis loop<a class="headerlink" href="doc.html#plotting-the-hysteresis-loop" title="Permalink to this headline">¶</a></h2>
+<p>To extract the data needed for plotting the hysteresis loop
+we proceed as explained in the previous
+example <a class="reference internal" href="../example_hysteresis_ellipsoid/doc.html#simple-hysteresis-example"><em>Example: Simple hysteresis loop</em></a>.
+We use the <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> command and extract the data into a text file
+named <a class="reference download internal" href="../_downloads/plot2.dat"><tt class="xref download docutils literal"><span class="pre">plot.dat</span></tt></a>:</p>
+<div class="highlight-python"><pre>$ ncol ellipsoid H_ext_0 H_ext_1 H_ext_2 m_Py_0 m_Py_1 m_Py_2 &gt; plot.dat</pre>
+</div>
+<p>We then use <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> to plot the loop:</p>
+<div class="highlight-python"><pre>$ gnuplot make_plot.gnu</pre>
+</div>
+<p>The gnuplot script <a class="reference download internal" href="../_downloads/make_plot2.gnu"><tt class="xref download docutils literal"><span class="pre">make_plot.gnu</span></tt></a> is:</p>
+<div class="highlight-python"><pre>set term postscript eps enhanced color
+set out 'hysteresis.eps'
+set xlabel 'Applied field (kA/m)'
+set ylabel 'M / Ms'
+versor_x = 1/sqrt(2)
+versor_y = 1/sqrt(2)
+versor_z = 0.0
+scalar_prod(x1,x2,x3) = x1*versor_x + x2*versor_y + x3*versor_z
+
+set mxtics 5            # minor tics and grid
+set ytics 1
+set mytics 5
+set grid xtics ytics mxtics mytics lt -1 lw 0.5, lt 0
+plot [-1050:1050] [-1.2:1.2] \
+  'plot.dat' u (scalar_prod($1,$2,$3)/1000):(scalar_prod($4,$5,$6)) t 'Stoner-Wohlfarth' w lp 4
+
+</pre>
+</div>
+<p>Note that within the gnuplot file, we project the magnetisation data
+in the <tt class="docutils literal"><span class="pre">[1,1,0]</span></tt> direction because the applied field was acting
+in this direction. We obtain this hysteresis loop:</p>
+<img alt="../_images/hysteresis1.png" class="align-center" src="../_images/hysteresis1.png" style="width: 718px; height: 508px;" />
+<p>The coercive field, which is located somewhere between 165 and 170
+kA/m, can now be compared with the analytically known result for this
+particular system. To compute it, we need the demagnetizing factors
+Nx, Ny, Nz of the particle along the main axes. Since we deal with a
+prolate ellipsoid where two of the axes have the same dimension (y and
+z in this case), it is sufficient to compute the factor along the
+longest axis (x axis). The other two are easily derived from the
+relation Nx + Ny + Nz = 1.  The expression to compute Nx is</p>
+<div class="math">
+<p><img src="../_images/math/eeb9670c74eb574bb351dab2163cda5573abfabb.png" alt="N_x = \frac{1}{m^2-1} \cdot \left[ \frac{m}{2\sqrt{m^2-1}} \cdot \ln\left( \frac{m+\sqrt{m^2-1}}{m-\sqrt{m^2-1}} \right) - 1 \right]" /></p>
+</div><p>where we call the length of the x semi-axis <tt class="docutils literal"><span class="pre">a</span></tt>, the length of the y
+(or z) semi-axis <tt class="docutils literal"><span class="pre">c</span></tt>, and take <tt class="docutils literal"><span class="pre">m</span></tt> to be the ratio
+<tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">a/c</span></tt>. Here, the value of Nx is therefore 0.1087, so we have
+Ny = Nz = 0.4456. With these values the shape anisotropy is easily
+computed according to the expression:</p>
+<div class="math">
+<p><img src="../_images/math/464c9a50062ec44f76d8966cdeb3121b925ebf6e.png" alt="H_a = M_s \cdot \Delta N = M_s \cdot \left(N_z-N_x\right)" /></p>
+</div><p>This gives Ha = 337 kA/m in the case of Ms = 1000 kA/m.  The final
+step is to compute the coercive field hc using this analytical
+(Stoner-Wohlfarth) result:</p>
+<div class="math">
+<p><img src="../_images/math/31f87efdabf5943ef4b42427eb3e139f318e99aa.png" alt="h_c = \frac{H_c}{H_a} = \sin \theta_0 \cdot \cos \theta_0" /></p>
+</div><p>Here, theta_0 is the angle between the easy-axis of the particle
+(x-axis in our case) and the direction of the applied
+field. Substituting theta_0 = 45 (degrees) in the formula, we obtain
+hc = 0.5, that is Hc = 0.5 * Ha = 168 kA/m.  As we have seen before,
+the simulated hysteresis loop gives a value between 165 and 170 kA/m,
+which is in agreement with the analytical solution.</p>
+<p>Note that this simulation is relatively slow due to a number of
+constraints: to get good Stoner-Wolfarth behaviour, we need to
+describe the shape of the ellipsoid well, and thus need a small
+edgelength when we generate the mesh. We further need uniform
+behaviour of the magnetisation, which limits the overall size of the
+ellipsoid. A general property of micromagnetic simulations is that the
+associated differential equations get stiffer if the edge lengths (or
+more generally: distances between neighbouring degrees of freedom)
+become smaller. Stiffer systems of differential equations are harder
+to intergrate, and thus take more time.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_hysteresis_disk/doc.html" title="2.5. Example: Hysteresis loop for thin disk"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_hysteresis_ellipsoid/doc.html" title="2.3. Example: Simple hysteresis loop"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

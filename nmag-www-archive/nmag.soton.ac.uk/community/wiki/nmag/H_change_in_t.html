@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - H change in t - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="H_change_in_t/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="User-query-Can-I-have-an-applied-field-changing-both-in-time-and-in-space">User query: Can I have an applied field changing both in time and in space?<a href="H_change_in_t.html#User-query-Can-I-have-an-applied-field-changing-both-in-time-and-in-space" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>You can simulate an applied field which both changes in space and time: this may be useful to mimic the effect of a write head on the magnetic grains of an hard disk while the head is moving.<br />
+The way we do this is by changing the applied field every delta_t picoseconds. This means that the applied field won't change continuously in time: it will be piecewise constant in time (but, in general, it can be non uniform in space).<br />
+You can do something like that:</p>
+
+
+<pre><code class="python CodeRay"><span class="no"> 1</span> import math
+<span class="no"> 2</span> 
+<span class="no"> 3</span> def set_H(sim):
+<span class="no"> 4</span>   width = 10.0        # nm
+<span class="no"> 5</span>   v = 100.0           # nm/ns == m/s
+<span class="no"> 6</span>   H_amplitude = 0.5e6 # A/m
+<span class="no"> 7</span> 
+<span class="no"> 8</span>   t = float(sim.time/SI(1e-9, 's')) # get the time in ns
+<span class="no"> 9</span>   center = (v*t, 0, 0) # center of the applied field region
+<span class="no"><strong>10</strong></span>   def H(r):
+<span class="no">11</span>     x, y, z = [ri/1e-9 - ci for ri, ci in zip(r, center)] 
+<span class="no">12</span>     factor = H_amplitude*math.exp(-(x*x + y*y + z*z)/(width*width))
+<span class="no">13</span>     return [factor, factor, factor]
+<span class="no">14</span> 
+<span class="no">15</span>   sim.set_H_ext(H, unit=SI('A/m'))
+<span class="no">16</span> 
+<span class="no">17</span> sim.relax(do=[(set_H, every('time', SI(50e-12, 's'))),
+<span class="no">18</span>               ('exit', at('time', SI(1000e-12, 's')))])
+</code></pre>
+
+	<p>The function set_H is called every 50 ps and does the following: it sets a new field from the function H(r).<br />
+This function sets a field which directed along the direction [1, 1, 1] and almost vanishes outside a sphere with radius ~ 30.0 nm.<br />
+The center of this sphere moves along the direction [1, 0, 0] with velocity 100 nm/ns, thus simulating the motion of a write head in a hard disk.<br />
+Obviously the piece of code is not complete, it shows only the technique in order to have a field changing in time and space.<br />
+For a complete example see the next section.</p>
+
+
+	<h2 id="Complete-example-simple-moving-write-head-example">Complete example: simple moving write-head example<a href="H_change_in_t.html#Complete-example-simple-moving-write-head-example" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Here is a simulation of five cubes made of cobalt and a write-head which moves on the top of the cubes and applies a time-varying field in order to change their magnetisation. At the beginning the magnetisation of all the cubes is pointing in the [0, 0, 1] direction. After the write-head has passed over the cubes, the magnetisation of cube 1, 3 and 5 are switched in the opposite direction, while cube 2 and 4 have unchanged magnetisation.<br />
+This is possible because the write-head field, which is space-dependent (being intense only inside a sphere of radius 15-20 nm), changes also in time. It indeed translates in space, but also change in intensity, being directed in the [0, 0, -1] direction when the sphere is at the center of cube 1, 3 and 5 and in the [0, 0, 1] direction when the center of the sphere is in cube 2 and 4.</p>
+
+
+	<p>Here is the geo file used to generate the mesh (Netgen):</p>
+
+
+<pre>
+algebraic3d
+
+# cubes
+solid cube1 = orthobrick (    0, 0, 0;  20.0, 20.0, 20.0) -maxh = 2;
+solid cube2 = orthobrick ( 30.0, 0, 0;  50.0, 20.0, 20.0) -maxh = 2;
+solid cube3 = orthobrick ( 60.0, 0, 0;  80.0, 20.0, 20.0) -maxh = 2;
+solid cube4 = orthobrick ( 90.0, 0, 0; 110.0, 20.0, 20.0) -maxh = 2;
+solid cube5 = orthobrick (120.0, 0, 0; 140.0, 20.0, 20.0) -maxh = 2;
+
+tlo cube1;
+tlo cube2;
+tlo cube3;
+tlo cube4;
+tlo cube5;
+</pre>
+
+	<p>And here is the full listing of the example:</p>
+
+
+<pre><code class="python CodeRay"><span class="no"> 1</span> from nmag.common import *
+<span class="no"> 2</span> import math
+<span class="no"> 3</span> 
+<span class="no"> 4</span> # Define magnetic material (data from OOMMF materials file)
+<span class="no"> 5</span> mat_Co = MagMaterial(name="Co",
+<span class="no"> 6</span>                      Ms=SI(1400e3, "A/m"),
+<span class="no"> 7</span>                      exchange_coupling=SI(30e-12, "J/m"),
+<span class="no"> 8</span>                      anisotropy=uniaxial_anisotropy(axis=[0, 0, 1],
+<span class="no"> 9</span>                                                     K1=SI(520e3, "J/m^3")))
+<span class="no"><strong>10</strong></span> sim = Simulation()
+<span class="no">11</span> sim.load_mesh("cubes.nmesh.h5",
+<span class="no">12</span>               [('cube1', mat_Co), ('cube2', mat_Co), ('cube3', mat_Co),
+<span class="no">13</span>                ('cube4', mat_Co), ('cube5', mat_Co)],
+<span class="no">14</span>               unit_length=SI(1e-9, 'm'))
+<span class="no">15</span> 
+<span class="no">16</span> sim.set_m([0, 0, 1])
+<span class="no">17</span> 
+<span class="no">18</span> sim.relax(save=[('fields', at('convergence'))])
+<span class="no">19</span> 
+<span class="no"><strong>20</strong></span> t0 = [sim.time]
+<span class="no">21</span> 
+<span class="no">22</span> def set_H(sim):
+<span class="no">23</span>     t = float((sim.time - t0[0])/SI(1e-9, 's'))  # get time in ns
+<span class="no">24</span>     width = 10.0                                 # nm
+<span class="no">25</span>     v = 25.0                                     # nm/ns = m/s
+<span class="no">26</span>     H_amplitude = 4.0e6*math.sin(math.pi*t)      # A/m
+<span class="no">27</span>     center = (v*t, 20, 10)
+<span class="no">28</span>     print "CENTER IN", center
+<span class="no">29</span>     def H(r):
+<span class="no"><strong>30</strong></span>         x, y, z = [ri/1e-9 - ci for ri, ci in zip(r, center)]
+<span class="no">31</span>         factor = H_amplitude*math.exp(-(x*x + y*y + z*z)/(width*width))
+<span class="no">32</span>         return [0, 0, -factor]
+<span class="no">33</span> 
+<span class="no">34</span>     sim.set_H_ext(H, unit=SI('A/m'))
+<span class="no">35</span> 
+<span class="no">36</span> set_H(sim)
+<span class="no">37</span> 
+<span class="no">38</span> sim.set_params(stopping_dm_dt=0*degrees_per_ns)
+<span class="no">39</span> 
+<span class="no"><strong>40</strong></span> sim.relax(save=[('fields', every('time', SI(200e-12, 's'), first=t0[0]))],
+<span class="no">41</span>           do=[(set_H, every('time', SI(50e-12, 's'), first=t0[0])),
+<span class="no">42</span>               ('exit', at('time', SI(6000e-12, 's')))])
+</code></pre>
+
+	<p>Here is the magnetisation at the beginning of the simulation, after the first relax command (whose purpose is just to find the zero field magnetisation configuration):<br />
+<img src="http://dl.dropbox.com/u/1820549/before.png" alt="" /></p>
+
+
+	<p>and here is the magnetisation after the write-head has passed over the cubes:<br />
+<img src="http://dl.dropbox.com/u/1820549/after.png" alt="" /></p>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/H_change_in_t?export=html&amp;version=7" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/H_change_in_t?export=txt&amp;version=7" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

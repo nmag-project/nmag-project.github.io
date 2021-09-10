@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.25. Example: Calculation of dispersion curves &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.26. Example: Timestepper tolerances" href="../example_tolerances/doc.html" />
+    <link rel="prev" title="2.24. Compression of the Boundary Element Matrix using HLib" href="../example_phi_BEM_hlib/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_tolerances/doc.html" title="2.26. Example: Timestepper tolerances"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_phi_BEM_hlib/doc.html" title="2.24. Compression of the Boundary Element Matrix using HLib"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-calculation-of-dispersion-curves">
+<h1>2.25. Example: Calculation of dispersion curves<a class="headerlink" href="doc.html#example-calculation-of-dispersion-curves" title="Permalink to this headline">¶</a></h1>
+<p>Nmag can be used to study the propagation of spin waves and to calculate
+dispersion curves. Here we consider a simulation script which shows how
+to do that. In particular, we study a long cylindrical wire made of Permalloy.
+We assume the magnetisation in the wire is relaxed along one axial direction
+(i.e. there are no domain walls inside the wire). One side of the wire is &#8220;perturbed&#8221; at time t=0 by a pulsed magnetic field. The spin waves generated
+on this side propagate towards the other. We want to study the propagation
+of spin waves and obtain the dispersion relation, i.e. a relation between the
+wave vector and the frequency of the spin-waves which propagate in the
+considered media.
+To calculate the dispersion relation we use the method developed
+by V. Kruglyak, M. Dvornik and O. Dmytriiev</p>
+<p>In order to carry out such a numerical experiment, we first need to calculate
+the relaxed equilibrium magnetisation, i.e. the one which we perturb with
+the application of a pulsed field. Consequently, the simulation is split into
+two parts:</p>
+<ul class="simple">
+<li>In <strong>part I</strong>, the system is relaxed to obtain the initial magnetisation
+configuration for zero applied field. Such a state is then saved into a file
+to be used in part II;</li>
+<li>In <strong>part II</strong>, the magnetisation obtained in part I is loaded and used as
+the initial magnetisation configuration. A pulsed external magnetic field
+localised on one side of the wire is applied. The Landau-Lifshitz-Gilbert
+equation is integrated in time to compute the dynamical reaction to the
+applied stimulus. The configuration of the magnetisation is saved frequently
+to file, so that it can be studied and processed later.</li>
+</ul>
+<p>The two parts are two simulations of the same system under different
+conditions.
+If we then decide to write two separate files for the two parts we end up
+duplicating the fragment of code which defines the materials and load
+the mesh. For this reason we split the simulation in three files:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;thesystem.py&quot;</span></tt>: defines the material which composes the nanowire and
+loads the mesh;</li>
+<li><tt class="docutils literal"><span class="pre">&quot;relaxation.py&quot;</span></tt>: uses &#8220;thesystem.py&#8221; to setup the system and performs a
+relaxation with zero applied field. It saves the final magnetisation
+configuration to a file &#8220;m0.h5&#8221;;</li>
+<li><tt class="docutils literal"><span class="pre">&quot;dynamics.py&quot;</span></tt>: uses &#8220;thesystem.py&#8221; to setup the system, loads the initial
+magnetisation configuration from the file &#8220;m0.h5&#8221; (produced by
+&#8220;relaxation.py&#8221;). It then applies a localised pulse of the applied magnetic
+field on one side of the wire and compute the dynamical response of the system
+saving the result to files.</li>
+</ul>
+<p>Consequently, in order to run the full simulation the user will have to type
+two commands on the shell, one for each part of the simulation:</p>
+<div class="highlight-python"><pre>$ nsim relaxation.py
+$ nsim dynamics.py</pre>
+</div>
+<p>(there is no need to type <tt class="docutils literal"><span class="pre">nsim</span> <span class="pre">thesystem.py</span></tt> as this file is implicitly
+&#8220;included&#8221; by the other two). In the next sections we will go through the
+three files which make up the numerical experiment.</p>
+<div class="section" id="the-system-thesystem-py">
+<h2>2.25.1. The system: <tt class="docutils literal"><span class="pre">thesystem.py</span></tt><a class="headerlink" href="doc.html#the-system-thesystem-py" title="Permalink to this headline">¶</a></h2>
+<p>The system under investigation is a cylindrical nanopillar of radius r=3 nm
+and length l=600 nm. The mesh file <tt class="docutils literal"><span class="pre">cylinder.nmesh.h5</span></tt> is obtained (using
+<a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>). (The figure shows a cylinder that is 100nm long.)</p>
+<div class="figure align-center">
+<img alt="magnonics-1" src="../_images/cylinder.png" />
+</div>
+<p>The geometry file given to <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>
+<a class="reference download internal" href="../_downloads/cylinder.geo"><tt class="xref download docutils literal"><span class="pre">cylinder.geo</span></tt></a>
+is shown below:</p>
+<div class="highlight-python"><pre>    algebraic3d
+    solid nanopillar = cylinder (-300.0, 0, 0; 300.0, 0, 0; 3.0)
+                       and plane (-300.0, 0, 0; -1, 0, 0)
+                       and plane ( 300.0, 0, 0;  1, 0, 0)
+                       -maxh=1.0;
+    tlo nanopillar;
+</pre>
+</div>
+<p>The cylinder is made of Permalloy and as specified in the file
+<a class="reference download internal" href="../_downloads/thesystem.py"><tt class="xref download docutils literal"><span class="pre">thesystem.py</span></tt></a> shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># In this file we define the material parameters and geometry of the system</span>
+<span class="c"># so that we can use it in two simulations: first during the relaxation,</span>
+<span class="c"># then during the dynamics</span>
+
+<span class="kn">from</span> <span class="nn">nmag.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">nm</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">)</span>    <span class="c"># define nm as &quot;nanometre&quot;</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)</span>   <span class="c"># define ps as &quot;picosecond&quot;</span>
+
+<span class="n">m0_filename</span> <span class="o">=</span> <span class="s">&quot;m0.h5&quot;</span> <span class="c"># the file containing the equilibrium magnetisation</span>
+
+<span class="c"># A function which sets up the simulation with given name and damping</span>
+<span class="k">def</span> <span class="nf">simulate_nanowire</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+  <span class="n">permalloy</span> <span class="o">=</span> <span class="n">MagMaterial</span><span class="p">(</span><span class="s">&#39;Py&#39;</span><span class="p">,</span>
+                          <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">),</span>
+                          <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13e-12</span><span class="p">,</span> <span class="s">&#39;J/m&#39;</span><span class="p">),</span>
+                          <span class="n">llg_damping</span><span class="o">=</span><span class="n">damping</span><span class="p">)</span>
+
+  <span class="n">s</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+  <span class="n">s</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;cylinder.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;nanopillar&#39;</span><span class="p">,</span> <span class="n">permalloy</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">nm</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>The file defines a few entities which are used in both the two parts of the
+simulations: <tt class="docutils literal"><span class="pre">nm</span></tt> is just an abbreviation for nanometer and similarly
+<tt class="docutils literal"><span class="pre">ps</span></tt> is an abbreviation for picosecond. <tt class="docutils literal"><span class="pre">m0_filename</span></tt> is the name of the
+file where the relaxed magnetisation will be saved (in part I) and loaded
+(in part II). Finally, the function <tt class="docutils literal"><span class="pre">simulate_nanowire</span></tt> deals with the
+portion of the setup which is common to both part I and part II.
+In particular, it defines a new material <tt class="docutils literal"><span class="pre">permalloy</span></tt>, creates a new
+simulation object <tt class="docutils literal"><span class="pre">s</span></tt>, load the mesh and associates to it the material
+<tt class="docutils literal"><span class="pre">permalloy</span></tt>. Such setup procedure is very similar to what has been
+encountered so far in the manual, the only element of novelty is that here
+we do it inside a function and return the created simulation object
+as a result of the function. The file defined here is not supposed
+to be run by itself, but rather to be used in part I and II.</p>
+</div>
+<div class="section" id="part-i-relaxation-py">
+<h2>2.25.2. Part I: <tt class="docutils literal"><span class="pre">relaxation.py</span></tt><a class="headerlink" href="doc.html#part-i-relaxation-py" title="Permalink to this headline">¶</a></h2>
+<p>The source for the file
+<a class="reference download internal" href="../_downloads/relaxation.py"><tt class="xref download docutils literal"><span class="pre">relaxation.py</span></tt></a>
+is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># This script is used to compute the equilibrium configuration for the</span>
+<span class="c"># magnetisation, which is then used in the second part of the simulation,</span>
+<span class="c"># where the dynamics is actually studied.</span>
+
+<span class="kn">from</span> <span class="nn">thesystem</span> <span class="kn">import</span> <span class="n">simulate_nanowire</span><span class="p">,</span> <span class="n">m0_filename</span><span class="p">,</span> <span class="n">ps</span>
+<span class="kn">from</span> <span class="nn">nmag.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">simulate_nanowire</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;relaxation&#39;</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="c"># NOTE the high damping!</span>
+<span class="n">s</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">s</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">ps</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+<span class="n">s</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="n">m0_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first two lines are used to import entities defined elsewhere.
+In particular, the first line in:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">thesystem</span> <span class="kn">import</span> <span class="n">simulate_nanowire</span><span class="p">,</span> <span class="n">m0_filename</span><span class="p">,</span> <span class="n">ps</span>
+<span class="kn">from</span> <span class="nn">nmag.common</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>tells to Python to load the file <tt class="docutils literal"><span class="pre">thesystem.py</span></tt> and &#8220;extract&#8221; from it the
+entities <tt class="docutils literal"><span class="pre">simulate_nanowire</span></tt>, <tt class="docutils literal"><span class="pre">m0_filename</span></tt>, <tt class="docutils literal"><span class="pre">ps</span></tt>. The second line
+does a similar thing and extracts all the quantities defined in the Nmag
+module <tt class="docutils literal"><span class="pre">nmag.common</span></tt>. This module defines some entities which are commonly
+used in simulations (such as <tt class="docutils literal"><span class="pre">every</span></tt>, <tt class="docutils literal"><span class="pre">at</span></tt>, <tt class="docutils literal"><span class="pre">SI</span></tt>, etc).
+The simulation is then set up using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">simulate_nanowire</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;relaxation&#39;</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="c"># NOTE the high damping!</span>
+</pre></div>
+</div>
+<p>This line invokes the function <tt class="docutils literal"><span class="pre">simulate_nanowire</span></tt>, which does load the mesh
+and associate the material to it. The function returns the simulation object
+which is stored inside the variable <tt class="docutils literal"><span class="pre">s</span></tt> and is used in the following lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">s</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">ps</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+<span class="n">s</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="n">m0_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we set the magnetisation along the axis of the nanopillar,
+we then relax the system to find the equilibrium magnetisation.
+We finally save such a configuration in the file <tt class="docutils literal"><span class="pre">m0_filename</span></tt>, i.e. with
+the name specified in <tt class="docutils literal"><span class="pre">thesystem.py</span></tt>.</p>
+</div>
+<div class="section" id="part-ii-dynamics-py">
+<h2>2.25.3. Part II: <tt class="docutils literal"><span class="pre">dynamics.py</span></tt><a class="headerlink" href="doc.html#part-ii-dynamics-py" title="Permalink to this headline">¶</a></h2>
+<p>The source for the file <a class="reference download internal" href="../_downloads/dynamics.py"><tt class="xref download docutils literal"><span class="pre">dynamics.py</span></tt></a>
+is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">thesystem</span> <span class="kn">import</span> <span class="n">simulate_nanowire</span><span class="p">,</span> <span class="n">m0_filename</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">nm</span>
+<span class="kn">from</span> <span class="nn">nmag.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># Details about the pulse</span>
+<span class="n">pulse_boundary</span> <span class="o">=</span> <span class="o">-</span><span class="mf">300.0e-9</span> <span class="o">+</span> <span class="mf">0.5e-9</span> <span class="c"># float in nm</span>
+<span class="n">pulse_direction</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">pulse_amplitude</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e5</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+<span class="n">pulse_duration</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ps</span>
+
+<span class="c"># Function which sets the magnetisation to zero</span>
+<span class="k">def</span> <span class="nf">switch_off_pulse</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">pulse_amplitude</span><span class="p">)</span>
+
+<span class="c"># Function which sets the pulse as a function of time/space</span>
+<span class="k">def</span> <span class="nf">switch_on_pulse</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">H_ext</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pulse_boundary</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">pulse_direction</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">(</span><span class="n">H_ext</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">pulse_amplitude</span><span class="p">)</span>
+
+<span class="c"># Here we run the simulation: do=[....] is used to set the pulse</span>
+<span class="c">#   save=[...] is used to save the data.</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">simulate_nanowire</span><span class="p">(</span><span class="s">&#39;dynamics&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="n">m0_filename</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">ps</span><span class="p">))],</span>
+        <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="n">switch_on_pulse</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">switch_off_pulse</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">pulse_duration</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="o">*</span><span class="n">ps</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The simulation starts again importing a few entities from the file
+<tt class="docutils literal"><span class="pre">thesystem.py</span></tt>. In particular, the function <tt class="docutils literal"><span class="pre">simulate_nanowire</span></tt> is used
+to setup the system similarly to what was done for the relaxation.
+The next few lines define some variables which are used to define the
+geometry and duration of the magnetic field pulse:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Details about the pulse</span>
+<span class="n">pulse_boundary</span> <span class="o">=</span> <span class="o">-</span><span class="mf">300.0e-9</span> <span class="o">+</span> <span class="mf">0.5e-9</span> <span class="c"># float in nm</span>
+<span class="n">pulse_direction</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">pulse_amplitude</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e5</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+<span class="n">pulse_duration</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ps</span>
+</pre></div>
+</div>
+<p>In this example the pulse is obtained by switching on the applied field
+(from (0, 0, 0) to (0, <tt class="docutils literal"><span class="pre">pulse_amplitude</span></tt>, 0)) in the region of the wire
+where x &lt; <tt class="docutils literal"><span class="pre">pulse_boundary</span></tt>, which corresponds in this case to a layer
+of 0.5 nm thickness on one side of the cylinder.
+The pulse is switched on at t=0 and switched off at <tt class="docutils literal"><span class="pre">pulse_duration</span></tt>.
+We now examine the code and explain how all this is coded in the script.
+We start explaining the last few lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Here we run the simulation: do=[....] is used to set the pulse</span>
+<span class="c">#   save=[...] is used to save the data.</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">simulate_nanowire</span><span class="p">(</span><span class="s">&#39;dynamics&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">load_m_from_h5file</span><span class="p">(</span><span class="n">m0_filename</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">ps</span><span class="p">))],</span>
+        <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="n">set_pulse</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">set_to_zero</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">pulse_duration</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="o">*</span><span class="n">ps</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>Here we use the <tt class="docutils literal"><span class="pre">simulate_nanowire</span></tt> function which we defined in the file
+<tt class="docutils literal"><span class="pre">thesystem.py</span></tt> to setup the system and the materials.
+We then set the initial magnetisation configuration from the file saved
+in part I and carry out the time integration by calling the <tt class="docutils literal"><span class="pre">relax</span></tt> method
+of the simulation object <tt class="docutils literal"><span class="pre">s</span></tt>. The pulse is switched on and switched off
+by the instruction passed in the <tt class="docutils literal"><span class="pre">do=[...]</span></tt> argument. In particular,
+the argument <tt class="docutils literal"><span class="pre">do</span></tt> accepts a list of pairs
+(things to be done, at a given time). The code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="n">switch_on_pulse</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">ps</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">switch_off_pulse</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">pulse_duration</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="o">*</span><span class="n">ps</span><span class="p">))]</span>
+</pre></div>
+</div>
+<p>specifies that:</p>
+<ul class="simple">
+<li>the function <tt class="docutils literal"><span class="pre">switch_on_pulse</span></tt> should be executed at time t=0 ps;</li>
+<li>the function <tt class="docutils literal"><span class="pre">switch_off_pulse</span></tt> should be executed at time
+t= <tt class="docutils literal"><span class="pre">pulse_duration</span></tt>;</li>
+<li>the simulation should terminate at time t=200 ps.</li>
+</ul>
+<p>At the same time the argument <tt class="docutils literal"><span class="pre">save=[('fields',</span> <span class="pre">every('time',</span> <span class="pre">0.5*ps))]</span></tt>
+of the relax method saves the field every 0.5 ps.</p>
+<p>Let&#8217;s now see how the pulse is actually switched on and off.
+To switch off the pulse we provide the function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Function which sets the magnetisation to zero</span>
+<span class="k">def</span> <span class="nf">switch_off_pulse</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="n">pulse_amplitude</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The function gets the simulation object, <tt class="docutils literal"><span class="pre">sim</span></tt>, as an argument
+and uses it together with the method <tt class="docutils literal"><span class="pre">set_H_ext</span></tt> to set the applied
+magnetic field to zero everywhere.
+The function to set up the simulation is a little bit more complicated:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Function which sets the pulse as a function of time/space</span>
+<span class="k">def</span> <span class="nf">switch_on_pulse</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">H_ext</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pulse_boundary</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">pulse_direction</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">(</span><span class="n">H_ext</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">pulse_amplitude</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Indeed, being the pulse localised (and hence non-uniform) in space,
+we need to define a function to be given to <tt class="docutils literal"><span class="pre">set_H_ext</span></tt>.
+The function checks whether the x component in the given point is lower
+than <tt class="docutils literal"><span class="pre">pulse_amplitude</span></tt> and sets the applied field to a value differt
+from zero only if that is really the case.</p>
+</div>
+<div class="section" id="postprocessing-the-data">
+<span id="id1"></span><h2>2.25.4. Postprocessing the data<a class="headerlink" href="doc.html#postprocessing-the-data" title="Permalink to this headline">¶</a></h2>
+<p>Once the simulations are finished, the data (i.e. the values of the
+magnetisation saved every 0.5 ps) can be extracted from the file
+<tt class="docutils literal"><span class="pre">dynamics_dat.h5</span></tt> and postprocessed.
+We use the <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> command for this. <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> can perform
+several postprocessing tasks (detailed documentation can be obtained
+by typing <tt class="docutils literal"><span class="pre">nmagprobe</span> <span class="pre">--help</span></tt>).
+In this context it is used to probe the magnetisation along the axis
+of the cylinder at regular intervals of time.
+The values extracted are then Fourier transformed.
+The command we use is the following:</p>
+<div class="highlight-python"><pre>nmagprobe --verbose dynamics_dat.h5 --field=m_Py \
+  --time=0,100e-12,101 --space=-300,300,201/0/0 --ref-time=0.0 \
+  --scalar-mode=component,1 --out=real-space.dat \
+  --ft-axes=0,1 --ft-out=norm --ft-out=rec-space.dat</pre>
+</div>
+<p>Here we extract data for the magnetisation (option <tt class="docutils literal"><span class="pre">--field=m_Py</span></tt>)
+from the file <tt class="docutils literal"><span class="pre">dynamics_dat.h5</span></tt>.</p>
+<ul class="simple">
+<li>We probe the field over a cubic lattice in space and time.
+The lattice is four dimensional and consists of the points
+(t, x, y, z) with t=0, 1 ps, 2 ps, ..., 100 ps (101 values),
+x=-300 nm, -297 nm, -294 nm, ..., 300 nm (201 values)
+and y=z=0.
+The lattice is fully determined by the options <tt class="docutils literal"><span class="pre">--time</span></tt> and <tt class="docutils literal"><span class="pre">--space</span></tt>.
+In particular, the option <tt class="docutils literal"><span class="pre">--time=0,100e-12,101</span></tt> states that the lattice
+consists of 101 equispaced values going from 0 to 100e-12 s.
+The option <tt class="docutils literal"><span class="pre">--space</span></tt> accepts a similar expressions for each spatial
+coordinate separated by <tt class="docutils literal"><span class="pre">/</span></tt>;</li>
+<li><tt class="docutils literal"><span class="pre">--ref-time=0.0</span></tt> tells to <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> that after extracting
+the values for the field, m(t, x, y, z), it should compute the difference
+with respect to the given time,
+i.e. dm(t, x, y, z) = m(t, x, y, z) - m(0, x, y, z).
+We add this option to <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> because we are interested in the variation
+of the magnetisation with respect to the equilibrium configuration (t=0)
+rather than on its &#8220;absolute&#8221; value;</li>
+<li><tt class="docutils literal"><span class="pre">--scalar-mode=component,1</span></tt> induces <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> to extract the y
+component of dm and to use it as a scalar when writing the output
+and when doing the fourier transform (to extract the x component one
+should use <tt class="docutils literal"><span class="pre">--scalar-mode=component,0</span></tt>); We could also write
+<tt class="docutils literal"><span class="pre">--scalar-mode=component,y</span></tt> and <tt class="docutils literal"><span class="pre">--scalar-mode=component,x</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">--out=real-space.dat</span></tt> induces <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> to save to file the data
+selected by the options discussed so far. In particular, the file
+<tt class="docutils literal"><span class="pre">real-space.dat</span></tt> will be filled with the values of the y-component
+of dm(t, x, y, z) along the selected lattice. That will be a text file
+which can be inspected with a text editor and used within plotting programs
+such as <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>;</li>
+<li><tt class="docutils literal"><span class="pre">--ft-axes=0,1</span></tt> specifies that the selected data should be Fourier
+transformed along the axis 0 (time) and 1 (x-space). This can also
+be written as <tt class="docutils literal"><span class="pre">--ft-axes=t,x</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">--ft-out=norm</span></tt> induces <tt class="docutils literal"><span class="pre">nmagprobe</span></tt> to compute the norm of the complex
+numbers coming from the Fourier-transform. These are the values which
+are finally saved to file;</li>
+<li><tt class="docutils literal"><span class="pre">--ft-out=rec-space.dat</span></tt> specifies the output file for the
+Fourier-transformed data.</li>
+</ul>
+<p>The command creates two files: <tt class="docutils literal"><span class="pre">real-space.dat</span></tt>, containing the y component
+of the magnetisation variation as a function of time and space,
+and <tt class="docutils literal"><span class="pre">rec-space.dat</span></tt>, containing the Fourier transform of such a quantity.</p>
+<p>To plot the data in the two files we use the <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> script
+<a class="reference download internal" href="../_downloads/plot.gnp"><tt class="xref download docutils literal"><span class="pre">plot.gnp</span></tt></a>:</p>
+<div class="highlight-python"><pre>set term png
+set pm3d map
+
+set out "real-space.png"
+set title "y component of magnetisation variation"
+set xlabel "position in axis (nm)"
+set ylabel "time (ps)"
+splot [] [0:] [-0.001:0.001] 'real-space.dat' u ($2):($1/1e-12):5 t ""
+
+set out "rec-space.png"
+set title "Fourier transform"
+set xlabel "k (1/nm)"
+set ylabel "omega (GHz)"
+splot [] [0:] [0:1.7e-8] 'rec-space.dat' u (-$2):($1/(2*pi*1e9)):5 t ""
+
+
+
+
+</pre>
+</div>
+<p>Here is the result after running the script with Gnuplot.</p>
+<div class="figure align-center">
+<img alt="magnonics-1" src="../_images/real-space.png" />
+</div>
+<div class="figure align-center">
+<img alt="magnonics-2" src="../_images/rec-space.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_tolerances/doc.html" title="2.26. Example: Timestepper tolerances"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_phi_BEM_hlib/doc.html" title="2.24. Compression of the Boundary Element Matrix using HLib"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

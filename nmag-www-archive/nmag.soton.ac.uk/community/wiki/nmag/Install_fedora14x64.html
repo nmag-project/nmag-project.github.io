@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Install fedora14x64 - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Install_fedora14x64/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="How-to-install-Nmag-01-beta-6481-on-Fedora-14-64-bit">How to install Nmag 0.1 beta (6481) on Fedora 14 (64 bit)<a href="Install_fedora14x64.html#How-to-install-Nmag-01-beta-6481-on-Fedora-14-64-bit" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Wagner de Oliveira da Rosa explains how he installed Nmag on Fedora 14. Note that newer versions should not require this hack.<br />
+Here is his mail:</p>
+
+
+	<p>How to install nmag on Fedora 14 - 64 bits using the method A (compiling all from the source):</p>
+
+
+	<p>1 - Download the nmag source file from the developers webpage nmag-0.1-all.tar.gz<br />
+2 - Install all the libraries and compilers needed like gawk, gcc, gfortran, readline, blas, lapack, etc (see the instruction manual)<br />
+3 - To compile the code from the source, you need to locate the library libutil.so using the follow command in terminal:</p>
+
+
+<pre>
+$ locate libutil.so
+</pre>
+
+	<p>This search it will produce a result like this:</p>
+
+
+<pre>
+/lib64/libutil.so.1
+/usr/lib64/libutil.so 
+</pre>
+
+	<p>4 - Once located the <code>libutil.so</code> path, now we should go into the nmag main directory (where you untarred the files) and create a link to this file as shown below:</p>
+
+
+<pre>
+cd nmag-0.1 # directory where you untarred nmag
+cd lib
+ln -s /usr/lib64/libutil.so # you should replace with whatever you got from your system (from the locate command)
+</pre>
+
+	<p>5 - Then, after all, do as follows:</p>
+
+
+<pre>
+cd .. # go back to the nmag main directory
+make
+</pre>
+
+	<p>6 - From now, nmag should compile without any problems. However, before you get set and start any simulation, you should proceed as follows. Find the file <code>ldflags.bash</code>, under the directory <code>nmag-0.1/nsim/bin/</code> (<code>nmag-0.1</code> is the main nmag directory). Open it using your preferred text editor and append this line to the end of the file</p>
+
+
+<pre>
+export LD_PRELOAD=/usr/lib64/libz.so
+</pre>
+
+	<p>where <code>/usr/lib64/libz.so</code> should be replaced with the correct path to the <code>libz.so</code> library in your system (you can use <code>locate libz.so</code> to determine this, as done in step 3).</p>
+
+
+	<p>7 - Now that you will force to load the lib.so the nmag should be ready to use. You can try it by typing in terminal:</p>
+
+
+<pre>
+$ nsim
+&gt;&gt;&gt;
+</pre>
+
+	<p>If you got this the nmag and nsim were successfully compiled and they are ready to use.</p>
+
+
+	<p>Have a nice simulation!!!</p>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Install_fedora14x64?export=html&amp;version=3" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Install_fedora14x64?export=txt&amp;version=3" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

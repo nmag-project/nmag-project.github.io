@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.13. Restart example &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.14. Applying a field that changes both in time and in space" href="../example_changing_space_time_field/doc.html" />
+    <link rel="prev" title="2.12. Example: Arbitrary Anisotropy" href="../example_user_anis/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_changing_space_time_field/doc.html" title="2.14. Applying a field that changes both in time and in space"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_user_anis/doc.html" title="2.12. Example: Arbitrary Anisotropy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="restart-example">
+<span id="id1"></span><h1>2.13. Restart example<a class="headerlink" href="doc.html#restart-example" title="Permalink to this headline">¶</a></h1>
+<p>Micromagnetic simulations can last for many hours or even many days.
+It is then important to be able to save periodically the state
+of the simulation, in such a way that, if a hardware failure
+or a power cut occurs, the simulation can be restarted
+exactly at the point where its state was last saved.
+In this example we show how an nmag script can be modified
+to be &#8220;restartable&#8221;. The only thing the user needs to do
+is to periodically save the state of the simulation in what we call
+a &#8220;restart file&#8221;. The simulation can then be restarted
+using the appropriate command line option.</p>
+<p>The restart feature applies only to the <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> method.</p>
+<div class="section" id="saving-the-state-of-the-simulation">
+<span id="id2"></span><h2>2.13.1. Saving the state of the simulation<a class="headerlink" href="doc.html#saving-the-state-of-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>We re-consider the cubic anisotropy example
+(<a class="reference internal" href="../example_cubic_anis/doc.html#cubic-anisotropy-simulation-script"><em>Cubic anisotropy simulation script</em></a>)
+and replace the last line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)),</span>
+                         <span class="p">(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The first two lines reproduce the default behaviour:
+the fields and their averages are saved at the end of each stage.
+The third line specifies that the restart file should be saved
+at the end of each stage and also every 1000 steps.</p>
+<p>For convenience the modified script <a class="reference download internal" href="../_downloads/cube_restartable.py"><tt class="xref download docutils literal"><span class="pre">cube_restartable.py</span></tt></a> is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">si</span>
+
+<span class="c"># Create the simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># Define the magnetic material (data from OOMMF materials file)</span>
+<span class="n">Fe</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Fe&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1700e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">21e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">cubic_anisotropy</span><span class="p">(</span><span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">axis2</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">48e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+
+<span class="c"># Load the mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;cube.nmesh&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;cube&quot;</span><span class="p">,</span> <span class="n">Fe</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set the initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># Launch the hysteresis loop</span>
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">19</span><span class="p">,</span> <span class="mf">19.1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">50</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">0.001</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)),</span>
+                         <span class="p">(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_end&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="starting-and-restarting-the-simulation">
+<span id="id3"></span><h2>2.13.2. Starting and restarting the simulation<a class="headerlink" href="doc.html#starting-and-restarting-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>We will now demonstrate how the discussed nmag script can be
+restarted. To do that, we will have to interrupt it artificially. We
+start the simulation in the usual way:</p>
+<div class="highlight-python"><pre>$ nsim cube_restartable.py</pre>
+</div>
+<p>We interrupt the execution after the hysteresis loop has started and
+several stages have been computed. Do this by pressing simultaneously
+the keys CTRL and C (in the same terminal window where nsim was
+started), thus simulating what could have been the result of a power
+cut.  We then use the command:</p>
+<div class="highlight-python"><pre>$ ncol cube_restartable stage step time</pre>
+</div>
+<p>to see at what point of the hysteresis loop the simulation was interrupted.
+We obtain (for this particular interruption):</p>
+<div class="highlight-python"><pre> 1            330  3.320127110062e-11
+ 2            480  5.042492488627e-10
+ 3            640  9.926580643272e-10
+ 4            805  1.464971830453e-09
+ 5            980  1.927649646634e-09
+ 6           1150  2.406521613682e-09
+ 7           1340  2.882400372552e-09
+ 8           1515  3.371522550051e-09
+ 9           1705  3.863380029345e-09
+10           1920  4.365560120394e-09
+11           2095  4.893234441813e-09
+12           2295  5.436617525896e-09
+13           2480  5.997866344586e-09
+14           2680  6.570733097131e-09
+15           2890  7.172534305054e-09
+16           3100  7.803577637245e-09
+17           3315  8.462827284047e-09</pre>
+</div>
+<p>The simulation was interrupted at the seventeenth stage.
+We now try to run the simulation again with the command:</p>
+<div class="highlight-python"><pre>$ nsim cube_restartable.py</pre>
+</div>
+<p>obtaining the following output:</p>
+<div class="highlight-python"><pre>&lt;snip&gt;
+NmagUserError: Error: Found old file ./cube_restartable_dat.ndt -- cannot proceed.
+To start a simulation script with old data files present you either need
+to use '--clean' (and then the old files will be deleted), or use '--restart'
+in which case the run will be continued.</pre>
+</div>
+<p>nsim suggests the possible alternatives. We can start the simulation from scratch with the command (but this will override any data from the previous run):</p>
+<div class="highlight-python"><pre>$ nsim cube_restartable.py --clean</pre>
+</div>
+<p>or we can continue from the configuration which was last saved:</p>
+<div class="highlight-python"><pre>$ nsim cube_restartable.py --restart</pre>
+</div>
+<p>Here we choose the second possibility.
+After the simulation has finished we issue again
+the command <tt class="docutils literal"><span class="pre">ncol</span> <span class="pre">cube_restartable</span> <span class="pre">stage</span> <span class="pre">step</span> <span class="pre">time</span></tt>, obtaining
+the following output:</p>
+<div class="highlight-python"><pre>    1            330  3.320127110062e-11
+    2            480  5.042492488627e-10
+    3            640  9.926580643272e-10
+    4            805  1.464971830453e-09
+    5            980  1.927649646634e-09
+    6           1150  2.406521613682e-09
+    7           1340  2.882400372552e-09
+    8           1515  3.371522550051e-09
+    9           1705  3.863380029345e-09
+   10           1920  4.365560120394e-09
+   11           2095  4.893234441813e-09
+   12           2295  5.436617525896e-09
+   13           2480  5.997866344586e-09
+   14           2680  6.570733097131e-09
+   15           2890  7.172534305054e-09
+   16           3100  7.803577637245e-09
+   17           3315  8.462827284047e-09
+stage           step          #time
+   &lt;&gt;             &lt;&gt;           #&lt;s&gt;
+   18           3715  8.519843629989e-09
+   19           3975  9.300878866142e-09
+   ...</pre>
+</div>
+<p>The two lines between stage 17 and 18 stand as a reminder that the
+simulation was restarted at that point. (They need to be removed
+manually from the <tt class="docutils literal"><span class="pre">cube_restartable_dat.ndt</span></tt> file, before <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> can
+work in the usual way on the ndt file.)</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_changing_space_time_field/doc.html" title="2.14. Applying a field that changes both in time and in space"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_user_anis/doc.html" title="2.12. Example: Arbitrary Anisotropy"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

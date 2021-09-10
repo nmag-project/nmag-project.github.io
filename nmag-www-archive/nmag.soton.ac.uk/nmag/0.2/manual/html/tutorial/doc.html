@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>11. Mini tutorial micromagnetic modelling &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="next" title="12. Acknowledgements" href="../acknowledgements.html" />
+    <link rel="prev" title="10. Contact" href="../contact.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../acknowledgements.html" title="12. Acknowledgements"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../contact.html" title="10. Contact"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="mini-tutorial-micromagnetic-modelling">
+<span id="id1"></span><h1>11. Mini tutorial micromagnetic modelling<a class="headerlink" href="doc.html#mini-tutorial-micromagnetic-modelling" title="Permalink to this headline">¶</a></h1>
+<p>This section is intended for researchers who are just beginning to
+explore micromagnetic modelling. It is assumed that you have some
+knowledge on micromagnetics. We advise to read this whole section, and
+then to look the <a class="reference internal" href="../guided_tour.html#guided-tour"><em>Guided Tour</em></a> examples (or to explore other
+<a class="reference internal" href="doc.html#micromagnetic-packages"><em>Micromagnetic packages</em></a> at that point).</p>
+<div class="section" id="introduction-micromagnetic-modelling">
+<span id="id2"></span><h2>11.1. Introduction micromagnetic modelling<a class="headerlink" href="doc.html#introduction-micromagnetic-modelling" title="Permalink to this headline">¶</a></h2>
+<p>To carry out micromagnetic simulations, a set of partial differential
+equations have to be solved repeatedly. In order to be able to do
+this, the simulated geometry has to be spatially discretised. The two
+methods that are most widely spread in micromagnetic modelling are the
+so-called finite difference (FD) method and the finite element (FE)
+method. With either the FD or the FE method, we need to integrate the
+Landau-Lifshitz and Gilbert equation numerically over time (this is a
+coupled set of ordinary differential equations). All these
+calculations are carried out by the <a class="reference internal" href="doc.html#micromagnetic-packages"><em>Micromagnetic packages</em></a> and the
+user does not have to worry about these.</p>
+<p>The finite difference method subdivides space into many small
+cuboids. Sometimes the name <em>cell</em> is used to describe one of these
+cuboids. (Warning: in finite difference simulations, the simulated
+geometry is typically enclosed by a (big) cuboid which is also
+referred to as <em>simulation cell</em>. Usually (!) it is clear from the
+context which is meant.)  Typically, all simulation cells in one
+finite difference simulation have the same geometry. A typical size
+for such a cell could be a cube of dimensions 3nm by 3nm by 3nm.</p>
+<p>Let&#8217;s assume we would like to simulate a sphere. The following picture</p>
+<img alt="../_images/fd.png" class="align-center" src="../_images/fd.png" style="width: 200px; height: 180px;" />
+<p>shows an approximation of the shape of the sphere by cubes. This is
+the finite difference approach. For clarity, we have chosen rather
+large cubes to resolve the sphere &#8211; in an actual simulation one would
+typically use a much smaller cell size in order to resolve geometry
+better.</p>
+<p>On the other hand, the finite element method (typically) subdivides
+space into many small tetrahedra. The tetrahedra are sometimes
+referred to as the (finite element) mesh elements. Typically, the
+geometry of these tetrahedra does vary throughout the simulated
+region. This allows to combine the tetrahedra to approximate
+complicated geometries.</p>
+<p>Using tetrahedra, the a discretised sphere looks like this:</p>
+<img alt="../_images/fe.png" class="align-center" src="../_images/fe.png" style="width: 200px; height: 186px;" />
+<p>The spherical shape is approximated better than with the finite
+differences.</p>
+<p>The first step in setting up a micromagnetic simulation is to describe
+the geometry. In the case of finite difference calculations, it will
+depend on the package you use (currently there is only <a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a> freely
+available) how to tell the package what geometry you would like to
+use, and how small your simulation cells should be.</p>
+<p>In the case of finite element calculations, you need to create a
+finite element mesh (see <a class="reference internal" href="../finite_element_mesh_generation.html#finite-element-mesh-generation"><em>Finite element mesh generation</em></a>).</p>
+</div>
+<div class="section" id="what-is-better-finite-differences-or-finite-elements">
+<span id="id3"></span><h2>11.2. What is better: finite differences or finite elements?<a class="headerlink" href="doc.html#what-is-better-finite-differences-or-finite-elements" title="Permalink to this headline">¶</a></h2>
+<p>This depends on what you want to simulate. Here are some points to consider.</p>
+<ul>
+<li><p class="first">Finite difference simulations are best when the geometry you
+simulate is of rectangular shape (i.e. a cube, a beam, a geometry
+composed of such objects, a T profile, etc). In these situations,
+the finite element discretisation of the geometry will not yield any
+advantage. (Assuming that the finite difference grid is aligned with
+the edges in the geometry.)</p>
+</li>
+<li><p class="first">Finite difference simulations need generally less computer memory
+(RAM). This is in particular the case if you simulate geometries
+with a big surface (such as thin films). See <a class="reference internal" href="../executables.html#memory-requirements-of-boundary-element-matrix"><em>Memory requirements of boundary element matrix</em></a> for a description of the memory
+requirements of the hybrid finite element/boundary element simulations (both
+Nmag and <a class="reference external" href="http://www.magpar.net/">Magpar</a> are in this category).</p>
+<p>If this turns out to be a problem for you, we suggest to read the section
+<a class="reference internal" href="../example_phi_BEM_hlib/doc.html#compression-of-the-boundary-element-matrix-using-hlib"><em>Compression of the Boundary Element Matrix using HLib</em></a>.</p>
+</li>
+<li><p class="first">Finite element simulations are best suited to describe geometries
+with some amount of curvature, or angles other than 90 degrees. For
+such simulations, there is an error associated with the staircase
+discretisation that finite difference approaches have to use. This
+error is very much reduced when using finite elements.</p>
+<p>(We state for completeness that there are techniques to reduce the
+staircase effect in finite difference simulations but these are
+currently not available in open source micromagnetic simulation
+code.)</p>
+</li>
+<li><p class="first">For finite element simulations, the user has to create a finite
+element mesh. This requires some practice (mostly to get used to a
+meshing package), and in practice will take a significant amount of
+the time required to set up a finite element simulation.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="what-size-of-the-cells-fd-and-tetrahedra-fe-should-i-choose">
+<span id="id4"></span><h2>11.3. What size of the cells (FD) and tetrahedra (FE) should I choose?<a class="headerlink" href="doc.html#what-size-of-the-cells-fd-and-tetrahedra-fe-should-i-choose" title="Permalink to this headline">¶</a></h2>
+<p>There are several things to consider:</p>
+<ul class="simple">
+<li>the smaller the cells or tetrahedra, the more accurate the
+simulation results.</li>
+<li>the smaller the cells or tetrahedra, the more cells and tetrahedra
+are required to describe a geometry. Memory requirements and
+execution time increase with the number of cells and tetrahedra. In
+practice this will limit the size of the system that can be
+simulated.</li>
+</ul>
+<ul>
+<li><p class="first">the discretisation length (this is the edge length of the cells or
+the tetrahedra) should be <em>much smaller than the exchange
+length</em>. The reason for this is that in the derivation of the
+micromagnetic (Brown&#8217;s) equations, one assumes that the
+magnetisation changes little in space (there is a Taylor expansion
+for the exchange interaction). Therefore, we need to choose a
+discretisation length so that the direction of the magnetisation
+vectors varies little from one site (cell center in FD, node of
+tetrahedron in FE) to the next. The difference of the magnetisation
+vector is sometimes referred to as the &#8216;spin angle&#8217;: a spin angle of
+0 degrees, means that the magnetisation at neighbouring sites points
+in the same direction, whereas a spin angle of 180 degrees would mean
+that they point in exactly opposite directions.</p>
+<p>How much variation is acceptable, i.e. how big is the spin angle
+allowed to be? It depends on the accuracy required. Some general
+guidelines from M. Donahue [in email to H. Fangohr on 26 March
+2002 referring to OOMMF] which we fully endorse :</p>
+<p><tt class="docutils literal"><span class="pre">[Begin</span> <span class="pre">quote</span> <span class="pre">M.</span> <span class="pre">Donahue]</span></tt></p>
+<ul class="simple">
+<li>if the spin angle is approaching 180 degrees, then the results are
+completely bogus.</li>
+<li>over 90 degrees the results are highly questionable.</li>
+<li>Under 30 degrees the results are probably reliable.</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">[end</span> <span class="pre">quote]</span></tt></p>
+<p>It is <em>absolutely vital</em> that the spin angle does not become
+excessive if the simulation results are to be trusted. (It is
+probably the most common error in micromagnetics: one would like to
+simulate a large geometry, thus one has to choose the discretisation
+length large to get any results within reasonable time. However, the
+results are often completely useless if the spin angle becomes too
+large).</p>
+<p>Because this is such an important issue, OOMMF &#8211; for example &#8211;
+provides <tt class="docutils literal"><span class="pre">Max</span> <span class="pre">Spin</span> <span class="pre">Ang</span></tt> data in its <tt class="docutils literal"><span class="pre">odt</span></tt> data table file (for
+the current configuration, the last stage, and the overall
+run). Nmag has a columns <tt class="docutils literal"><span class="pre">maxangle_m_X</span></tt> in the <a class="reference internal" href="../files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> file that
+provide this information (where <tt class="docutils literal"><span class="pre">X</span></tt> is the name of the magnetic
+material).</p>
+<p>You will probably find that often a discretisation length of half
+the <a class="reference internal" href="doc.html#exchange-length"><em>Exchange length</em></a> or even about the <a class="reference internal" href="doc.html#exchange-length"><em>Exchange length</em></a> is
+chosen. If the spin angle stays sufficiently low during the whole
+simulation (including intermediate non-equilibrium configurations),
+then this may be acceptable.</p>
+<p>The ultimate test (recommended by &#8211; among others &#8211; M. Donahue and the
+nmag team) is the following:</p>
+</li>
+<li><p class="first">cell size dependence test</p>
+<p>The best way to check whether the cell size has been chosen small
+enough, is to perform a series of simulations with increasing cell
+size. Suppose we are simulating Permalloy (Ni80Fe20 with Ms=8e5 A/m,
+A=1.3e-11) and the <a class="reference internal" href="doc.html#exchange-length"><em>Exchange length</em></a> l<sub>1</sub> is about 5nm. Suppose further
+we would like to use a cell size of 5nm for our simulations.</p>
+<p>We should then carry out the same simulation with smaller cell
+sizes, for example, 4nm, 3nm, 2nm, 1nm. Now we need to study
+(typically plot) some (scalar) entity of the simulation (such as
+the coercive field, or the remanence magnetisation) as a function of
+the cell size.</p>
+<p>Ideally, this entity should converge towards a constant value when
+we reduce the simulation cell size below a critical cell size. This
+critical cell size is the maximum cell size that should be used to
+carry out the simulations.</p>
+<p>Be aware that (i) it is often nearly impossible to carry out these
+simulations at smaller cell sizes [because of a lack of
+computational power] and (ii) this method is not 100% fool proof
+[the observed entity may appear to converge towards a constant but
+actually start changing again if the cell size is reduced even
+further].</p>
+<p>One should therefore treat the suggestions made above as advise on
+good practice, but never solely rely on this. Critical examination
+of the validity of simulation results is a fundamental part of any
+simulation work.</p>
+</li>
+</ul>
+<p>In summary, it is vital to keep the maximum spin angle small to obtain
+accurate results. One should always (!) check the value of the spin
+angle in the data files. One should also carry out a series of
+simulations where the spin angle is reduced from one simulation to the
+next while keeping all other parameters and the geometry the
+same. This should reveal any changes in the results that depend on the
+discretisation length.</p>
+<div class="section" id="exchange-length">
+<span id="id5"></span><h3>11.3.1. Exchange length<a class="headerlink" href="doc.html#exchange-length" title="Permalink to this headline">¶</a></h3>
+<p>There is sometimes confusion about what equation should be used to
+compute the exchange length. In this document, we refer to this
+equation for soft materials (where the demagnetisation energy is
+driving domain wall formation)</p>
+<div class="math">
+<p><img src="../_images/math/c37f718c6a2eacb2fe536e432165a068206ac236.png" alt="l_\mathrm{1} = \sqrt{\frac{2A}{\mu_0 M^2_\mathrm{s}}}" /></p>
+</div><p>and this equation for hard materials (with uniaxial pinning) where the
+crystal anisotropy governs domain wall lengths</p>
+<div class="math">
+<p><img src="../_images/math/073c279e5444ee9e1c6864e26c9eeae78c2f18ab.png" alt="l_2 = \sqrt{\frac{A}{K_1}}" /></p>
+</div><p>If in doubt which of the two equations is the right one, compute both
+l<sub>1</sub> and l<sub>2</sub> and choose the minimum length as the relevant exchange
+length for this system.</p>
+</div>
+<div class="section" id="further-reading">
+<span id="id6"></span><h3>11.3.2. Further reading<a class="headerlink" href="doc.html#further-reading" title="Permalink to this headline">¶</a></h3>
+<p>Micheal Donahue and co-workers have published a couple of papers on
+the effect of cell size on vortex mobility:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://math.nist.gov/~MDonahue/publications.html#Donahue199606A">M. J. Donahue and R. D. McMichael, Physica B, 233, 272-278 (1997)</a></li>
+<li><a class="reference external" href="http://math.nist.gov/~MDonahue/publications.html#Donahue20030528">M. J. Donahue and D. G. Porter, Physica B, 343, 177-183 (2004)</a></li>
+</ul>
+</div></blockquote>
+<p>and one which included a section on discretisation-induced Neel wall
+collapse</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://math.nist.gov/~MDonahue/publications.html#Donahue199710">M. J. Donahue, Journal of Applied Physics, 83, 6491-6493 (1998)</a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="micromagnetic-packages">
+<span id="id7"></span><h2>11.4. Micromagnetic packages<a class="headerlink" href="doc.html#micromagnetic-packages" title="Permalink to this headline">¶</a></h2>
+<p>The following micromagnetic simulation packages are freely available on the internet:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a> (finite differences)</li>
+<li><a class="reference external" href="http://www.magpar.net/">Magpar</a> (finite elements)</li>
+<li><a class="reference external" href="../../../../../index.html">nmag</a> (finite elements)</li>
+</ul>
+</div></blockquote>
+<p>These are general purpose packages. Some other (and partly closed
+source/commercial packages) are listed at
+<a class="reference external" href="http://math.nist.gov/oommf/otherlinks.html">http://math.nist.gov/oommf/otherlinks.html</a>.</p>
+</div>
+<div class="section" id="summary">
+<span id="id8"></span><h2>11.5. Summary<a class="headerlink" href="doc.html#summary" title="Permalink to this headline">¶</a></h2>
+<p>The most important points in short:</p>
+<blockquote>
+<div><ul class="simple">
+<li>choose a small discretisation length so that the spin angle stays
+well below 30 degrees.</li>
+<li>if you want to simulate thin films (or other geometries with a lot
+of surface [nodes]), with finite elements, consider how much memory
+you would need for the boundary element matrix (best to do this
+before you start creating the mesh).</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../acknowledgements.html" title="12. Acknowledgements"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../contact.html" title="10. Contact"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

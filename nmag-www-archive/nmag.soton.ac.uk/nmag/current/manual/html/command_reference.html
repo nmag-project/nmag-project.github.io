@@ -1,0 +1,1849 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Command reference &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="5. Finite element mesh generation" href="finite_element_mesh_generation.html" />
+    <link rel="prev" title="3. Background" href="background.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="finite_element_mesh_generation.html" title="5. Finite element mesh generation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="background.html" title="3. Background"
+             accesskey="P">previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="command-reference">
+<span id="id1"></span><h1>4. Command reference<a class="headerlink" href="command_reference.html#command-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="magmaterial">
+<span id="id2"></span><h2>4.1. MagMaterial<a class="headerlink" href="command_reference.html#magmaterial" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">MagMaterial</span></tt></dd>
+<dt>Class constructor information:</dt>
+<dd><div class="first last highlight-python"><pre>(self,
+name,
+Ms=SI(0.86e6, "A/m"),
+llg_damping=SI(0.5),
+llg_gamma_G=SI(2.210173e5, "m/A s"),
+exchange_coupling=SI(1.3e-11, "J/m"),
+anisotropy=None,
+anisotropy_order=None,
+do_precession=True)</pre>
+</div>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the material. This will be used in the names of
+material dependent fields and subfields. Must be alphanumeric
+(i.e. contain only the characters 0-9_a-zA-Z)
+Examples: <tt class="docutils literal"><span class="pre">'Py'</span></tt>, <tt class="docutils literal"><span class="pre">'Fe_1'</span></tt>,  <tt class="docutils literal"><span class="pre">'Fe_2'</span></tt></p>
+</dd>
+<dt><cite>Ms</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">The saturation magnetisation of the material (in Ampere per
+meter).</p>
+<p class="last">Example (and default (PermAlloy) value): <tt class="docutils literal"><span class="pre">SI(0.86e6,&quot;A/m&quot;)</span></tt></p>
+</dd>
+<dt><cite>llg_gamma_G</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">The constant in front of the precession term in the LLG equation:</p>
+<blockquote>
+<div><p>dM/dt = -llg_gamma_G * M x H + llg_damping * M x dM/dt</p>
+</div></blockquote>
+<p>It is often called gyromagnetic ratio, even if usually, in physics,
+the gyromagnetic ratio of a particle is the ratio between its magnetic
+dipole moment and its angular momentum (and has units A*s/kg).
+It is then an improper nomenclature, but it occurs frequently in the
+literature.</p>
+<p class="last">Example (and default value): <tt class="docutils literal"><span class="pre">SI(2.210173e5,</span> <span class="pre">&quot;m/A</span> <span class="pre">s&quot;)</span></tt>.</p>
+</dd>
+<dt><cite>llg_damping</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">The damping parameter (often called alpha). Optimum damping
+for 1.0, realistic values are of the order of 0.01. The
+default value (as in OOMMF) is 0.5.</p>
+<p class="last">Example (and default value): <tt class="docutils literal"><span class="pre">SI(0.5,&quot;&quot;)</span></tt></p>
+</dd>
+<dt><cite>exchange_coupling</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">The coupling strength for the exchange interaction in Joule
+per meter.</p>
+<p class="last">Example (and default value): <tt class="docutils literal"><span class="pre">SI(1.3e-11,</span> <span class="pre">&quot;J/m&quot;)</span></tt></p>
+</dd>
+<dt><cite>anisotropy</cite> <span class="classifier-delimiter">:</span> <span class="classifier">PredefinedAnisotropy Object  or function(vector) -&gt; SI Object</span></dt>
+<dd><p class="first">Either a predefined anisotropy (such as returned by
+<a class="reference internal" href="command_reference.html#uniaxial-anisotropy">uniaxial_anisotropy</a> or <a class="reference internal" href="command_reference.html#cubic-anisotropy">cubic_anisotropy</a>), or a custom
+function (which must be polynomial in the components of <tt class="docutils literal"><span class="pre">m</span></tt>)
+<tt class="docutils literal"><span class="pre">a(m)</span></tt> that computes anisotropy energy density
+as a function of the (normalised) magnetisation direction <tt class="docutils literal"><span class="pre">m</span></tt>.</p>
+<p>If you specify a custom anisotropy function, you also
+need to pass the order of the polynomial in the <tt class="docutils literal"><span class="pre">anisotropy_order</span></tt>
+parameter.</p>
+<p class="last">Default value is <tt class="xref docutils literal"><span class="pre">None</span></tt>, that is, no anisotropy term
+is used.</p>
+</dd>
+<dt><cite>anisotropy_order</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first">If a custom polynomial anisotropy function <tt class="docutils literal"><span class="pre">a(m)</span></tt> is specified, the order
+of the polynomial must be given in this parameter. This is not required
+for pre-defined <a class="reference internal" href="command_reference.html#uniaxial-anisotropy">uniaxial_anisotropy</a> or <a class="reference internal" href="command_reference.html#cubic-anisotropy">cubic_anisotropy</a> anisotropy
+functions.</p>
+<p class="last">Default value is <tt class="xref docutils literal"><span class="pre">None</span></tt>.</p>
+</dd>
+<dt><cite>do_precession</cite> <span class="classifier-delimiter">:</span> <span class="classifier">True or False</span></dt>
+<dd><p class="first last">Boolean that can switch off the precessional term in the LLG
+equation. This is useful to improve convergence speed
+when studying metastable configurations.</p>
+</dd>
+<dt><cite>properties</cite>: list of strings (default: [&#8220;magnetic&#8221;,&#8221;material&#8221;])</dt>
+<dd><p class="first">A list of additional properties this material will be associated with.
+Normally, users do not have to change this, but it is used internally
+when setting up discretized operators.</p>
+<p class="last">Example (and default value): <tt class="xref docutils literal"><span class="pre">True</span></tt></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="uniaxial-anisotropy">
+<span id="id3"></span><h3>4.1.1. uniaxial_anisotropy<a class="headerlink" href="command_reference.html#uniaxial-anisotropy" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">uniaxial_anisotropy</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(axis,</span> <span class="pre">K1,</span> <span class="pre">K2=0)</span></tt></dd>
+</dl>
+<p>Returns a predefined anisotropy modelling an uniaxial anisotropy energy density term:</p>
+<div class="highlight-python"><pre>E_anis = - K1 * &lt;axis, m&gt;^2 - K2 * &lt;axis, m&gt;^4</pre>
+</div>
+<p>(where <cite>m</cite> is the (normalised) magnetization.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>axis</cite> <span class="classifier-delimiter">:</span> <span class="classifier">vector (=list)</span></dt>
+<dd><p class="first last">Easy axis (or hard axis, if K1 &lt; 0; will be normalised).</p>
+</dd>
+<dt><cite>K1</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first last">Second-order phenomenological anisotropy constant (as used in the equation above).</p>
+</dd>
+<dt><cite>K2</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Fourth-order phenomenological anisotropy constant (as used in the equation above).</p>
+<p class="last">Default value is <tt class="docutils literal"><span class="pre">0</span></tt>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cubic-anisotropy">
+<span id="id4"></span><h3>4.1.2. cubic_anisotropy<a class="headerlink" href="command_reference.html#cubic-anisotropy" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">cubic_anisotropy</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(axis1,</span> <span class="pre">axis2,</span> <span class="pre">K1,</span> <span class="pre">K2=0,</span> <span class="pre">K3=0)</span></tt></dd>
+</dl>
+<p>Returns a predefined anisotropy modelling a cubic anisotropy energy density term:</p>
+<div class="highlight-python"><pre>E_anis = K1 * (&lt;axis1,m&gt;^2 &lt;axis2,m&gt;^2 + &lt;axis1,m&gt;^2 &lt;axis3,m&gt;^2 + &lt;axis2,m&gt;^2 &lt;axis3,m&gt;^2)
+       + K2 * (&lt;axis1,m&gt;^2 &lt;axis2,m&gt;^2 &lt;axis3,m&gt;^2)
+       + K3 * (&lt;axis1,m&gt;^4 &lt;axis2,m&gt;^4 + &lt;axis1,m&gt;^4 &lt;axis3,m&gt;^4 + &lt;axis2,m&gt;^4 &lt;axis3,m&gt;^4)</pre>
+</div>
+<p>(where <cite>m</cite> is the (normalised) magnetisation.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>axis1</cite> <span class="classifier-delimiter">:</span> <span class="classifier">vector (=list)</span></dt>
+<dd><p class="first last">First cubic anisotropy axis (will be normalised).</p>
+</dd>
+<dt><cite>axis2</cite> <span class="classifier-delimiter">:</span> <span class="classifier">vector (=list)</span></dt>
+<dd><p class="first last">Second cubic anisotropy axis (will be orthonormalised with regards to <cite>axis1</cite>).</p>
+</dd>
+<dt><cite>K1</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first last">Fourth-order phenomenological anisotropy constant (as used in the equation above).</p>
+</dd>
+<dt><cite>K2</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Sixth-order phenomenological anisotropy constant (as used in the equation above).</p>
+<p class="last">Default value is <tt class="docutils literal"><span class="pre">0</span></tt>.</p>
+</dd>
+<dt><cite>K3</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Eigth-order phenomenological anisotropy constant (as used in the equation above).</p>
+<p class="last">Default value is <tt class="docutils literal"><span class="pre">0</span></tt>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="simulation">
+<span id="id5"></span><h2>4.2. Simulation<a class="headerlink" href="command_reference.html#simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation</span></tt></dd>
+<dt>Class constructor information:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">name=None,</span> <span class="pre">phi_BEM=None,</span> <span class="pre">periodic_bc=None,</span> <span class="pre">do_demag=True,</span> <span class="pre">do_anisotropy_jacobian=False,</span> <span class="pre">temperature=None,</span> <span class="pre">thermal_delta_t=None,</span> <span class="pre">user_seed_T=0,</span> <span class="pre">timestepper_max_order=2,</span> <span class="pre">timestepper_krylov_max=300,</span> <span class="pre">ksp_tolerances={},</span> <span class="pre">adjust_tolerances=False,</span> <span class="pre">use_pvode=True,</span> <span class="pre">lam_debugfile=None)</span></tt></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first">Name of the simulation object; this is used e.g. for prefixing
+filenames created by nmag.</p>
+<p class="last">Default value is the name of the current script (sans extension).</p>
+</dd>
+<dt><cite>do_demag</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Pass <tt class="xref docutils literal"><span class="pre">False</span></tt> to disable the demagnetisation field.</p>
+</dd>
+<dt><cite>do_anisotropy_jacobian</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first">Pass <tt class="xref docutils literal"><span class="pre">True</span></tt> to enable the inclusion of derivatives from the
+anisotropy into the Jacobian. (Complicated anisotropy terms may blow
+up memory requirements for the Jacobian.)</p>
+<p class="last">Default value is <tt class="xref docutils literal"><span class="pre">True</span></tt>.</p>
+</dd>
+<dt><cite>temperature</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Simulated temperature (unless equal to None, stochastic thermal
+fluctuations will be enabled).</p>
+<p class="last">Currently not supported (since July 2008)</p>
+</dd>
+<dt><cite>thermal_delta_t</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Time step to use when stochastic thermal fluctuations are enabled.</p>
+<p class="last">Currently not supported (since July 2008)</p>
+</dd>
+<dt><cite>timestepper_max_order</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first">Maximum order for the time integrator (we use the BDF method).</p>
+<p class="last">Default value is 2.</p>
+</dd>
+<dt><cite>timestepper_krylov_max</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first">Maximum dimension of the Krylov subspace to be used in the time
+integrator.</p>
+<p class="last">Default (recommended) value is 300.</p>
+</dd>
+<dt><cite>ksp_tolerances</cite>: dictionary</dt>
+<dd><p class="first">Keys to this dictionary are:
+DBC.rtol DBC.atol DBC.dtol DBC.maxits
+NBC.rtol NBC.atol NBC.dtol NBC.maxits</p>
+<p class="last">Values are the petsc KSP-solver tolerances for the Dirichlet and
+von Neumann Laplace solvers used internally to compute the magnetic
+scalar potential from magnetic charge density.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="advance-time">
+<span id="id6"></span><h3>4.2.1. advance_time<a class="headerlink" href="command_reference.html#advance-time" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.advance_time</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">target_time,</span> <span class="pre">max_it=-1,</span> <span class="pre">exact_tstop=None)</span></tt></dd>
+</dl>
+<p>This method carries out the time integration of the
+Landau-Lifshitz and Gilbert equation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>target_time</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first last">The simulation will run until this time is reached. If the target_time is
+zero, this will simply update all fields.</p>
+</dd>
+<dt><cite>max_it</cite> <span class="classifier-delimiter">:</span> <span class="classifier">integer</span></dt>
+<dd><p class="first last">The maximum number of iterations (steps) to be carried out
+in this time integration call. If set to <tt class="docutils literal"><span class="pre">-1</span></tt>, then there is no limit.</p>
+</dd>
+<dt><cite>exact_tstop</cite> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">When exact_tstop is True, the time integration is advanced exactly
+up to the given target_time. When False, the time integration ends
+&#8220;close&#8221; to the target_time. The latter option can result in better
+performance, since the time integrator is free to choose time
+steps which are as wide as possible. When exact_tstop is not
+given, or is None, the default value for this option will be used.
+The default value can be set using the method set_params, which
+should hence be used to control the behaviour of the hysteresis
+and relax methods.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield">
+<span id="id7"></span><h3>4.2.2. get_subfield<a class="headerlink" href="command_reference.html#get-subfield" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.get_subfield</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">subfieldname,</span> <span class="pre">units=None)</span></tt></dd>
+</dl>
+<p>Given a subfieldname, this will return a numpy-array
+containing all the data (one element for each site).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield, for example <tt class="docutils literal"><span class="pre">m_Py</span></tt> or <tt class="docutils literal"><span class="pre">H_demag</span></tt>.</p>
+</dd>
+</dl>
+<p><cite>units</cite> : SI object</p>
+<blockquote>
+<div><p>Optional parameter. If it is provided, then the entity is
+expressed in these units. If it is not provided, then the
+correct SI dimensions for this subfield are looked up, and
+<a class="reference internal" href="background.html#si-object"><em>SI-value</em></a>s are returned.</p>
+<p>If you would like to see simulation units in the output,
+then use <tt class="docutils literal"><span class="pre">SI(1)</span></tt>.</p>
+<p>In short: if you omit the second parameter, you will
+obtain SI values.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><cite>data</cite> : numpy-array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield-positions">
+<span id="id8"></span><h3>4.2.3. get_subfield_positions<a class="headerlink" href="command_reference.html#get-subfield-positions" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.get_subfield_positions</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">subfieldname,</span> <span class="pre">pos_units=SI(1,['m',1.0]))</span></tt></dd>
+</dl>
+<p>This function provides the positions of the sites for data
+obtained with <a class="reference internal" href="command_reference.html#get-subfield">get_subfield</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield, for example <tt class="docutils literal"><span class="pre">m_Py</span></tt> or <tt class="docutils literal"><span class="pre">H_demag</span></tt>.</p>
+</dd>
+<dt><cite>pos_units</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first">Specifies the physical dimension in which positions are to be expressed.
+Default is <tt class="docutils literal"><span class="pre">SI(1,'m')</span></tt>, which means to return site positions in meters.</p>
+<p class="last">To obtain site positions in nanometers, use <tt class="docutils literal"><span class="pre">SI(1e-9,'m')</span></tt>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>pos</cite> <span class="classifier-delimiter">:</span> <span class="classifier">numpy-array</span></dt>
+<dd><p class="first last">Array containing a position (i.e. 3 floating point
+numbers) for every site.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield-sites">
+<span id="id9"></span><h3>4.2.4. get_subfield_sites<a class="headerlink" href="command_reference.html#get-subfield-sites" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.get_subfield_sites</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">subfieldname)</span></tt></dd>
+</dl>
+<p>This function provides the node indices of the sites for data
+obtained with <a class="reference internal" href="command_reference.html#get-subfield">get_subfield</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield, for example <tt class="docutils literal"><span class="pre">m_Py</span></tt> or <tt class="docutils literal"><span class="pre">H_demag</span></tt>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>data</cite> <span class="classifier-delimiter">:</span> <span class="classifier">numpy-array</span></dt>
+<dd><p class="first last">Array containing a list of integers for every site. The
+integers within each list are node indices of the
+mesh. There will be only one integer per site in first
+order basis function calculations (which is the usual case
+in micromagnetics)</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield-average">
+<span id="id10"></span><h3>4.2.5. get_subfield_average<a class="headerlink" href="command_reference.html#get-subfield-average" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.get_subfield_average</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">field_name,</span> <span class="pre">subfield_name=None)</span></tt></dd>
+</dl>
+<p>the average of the subfield <tt class="docutils literal"><span class="pre">subfield_name</span></tt> of
+the field <tt class="docutils literal"><span class="pre">fieldname</span></tt> as an SI object (or a list of [list
+of [list of [...]]] SI objects in the field is a vector, 2nd rank tensor etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>field_name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">name of the field</p>
+</dd>
+<dt><cite>subfield_name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">name of the subfield</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>See also <a class="reference internal" href="command_reference.html#get-subfield-average-siv">get_subfield_average_siv</a>.</p>
+</div>
+<div class="section" id="get-subfield-average-siv">
+<span id="id11"></span><h3>4.2.6. get_subfield_average_siv<a class="headerlink" href="command_reference.html#get-subfield-average-siv" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.get_subfield_average_siv</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">field_name,</span> <span class="pre">subfield_name=None)</span></tt></dd>
+</dl>
+<p>the average of the subfield <tt class="docutils literal"><span class="pre">subfield_name</span></tt> of
+the field <tt class="docutils literal"><span class="pre">fieldname</span></tt> as a single floating point number (or
+a list if it is a vector, or a list of list for matrices etc).</p>
+<p>The number is expressed in SI units (hence the suffix _siv
+which stands for si value).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>field_name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">name of the field</p>
+</dd>
+<dt><cite>subfield_name</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">name of the subfield</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ave_M</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_subfield_average_siv</span><span class="p">(</span><span class="s">&quot;M&quot;</span><span class="p">,</span><span class="s">&quot;Py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will obtain the average magnetisation of the subfield M_Py of field M, for example
+<tt class="docutils literal"><span class="pre">ave_M</span> <span class="pre">=</span> <span class="pre">[100000.00,0.,0.]</span></tt></p>
+</div>
+<div class="section" id="probe-subfield">
+<span id="id12"></span><h3>4.2.7. probe_subfield<a class="headerlink" href="command_reference.html#probe-subfield" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.probe_subfield</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">subfieldname,</span> <span class="pre">pos,</span> <span class="pre">unit=None)</span></tt></dd>
+</dl>
+<p>ven subfield name and position (SI object), return data (as SI object).</p>
+<p>Note that <tt class="docutils literal"><span class="pre">get_subfield_siv</span></tt> has the same functionality but
+takes a list of floats for the position (instead of an SI
+object) and returns (a list of) float(s) which is just the
+<a class="reference internal" href="background.html#si-object"><em>SI-value</em></a> of that physical entity.</p>
+<p>If the subfield is not defined at that part of space, <tt class="xref docutils literal"><span class="pre">None</span></tt>
+is returned.</p>
+<p>If the subfield does generally not exist, then a <tt class="docutils literal"><span class="pre">KeyError</span></tt> exception
+is thrown.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield</p>
+</dd>
+<dt><cite>pos</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI object</span></dt>
+<dd><p class="first last">The position for which the data should be returned</p>
+</dd>
+<dt><cite>unit</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI object</span></dt>
+<dd><p class="first">If you request the value for a subfield of a field that is
+part of nmag (i.e. fields M, m, H_demag, etc), then you do
+not need to provide this object.</p>
+<p>If you request data of any other (multi-physics) fields,
+then this function needs to know the SI dimensions of that
+field (for the correct conversion from simulation units to
+SI units).</p>
+<p class="last">If incorrect dimensions are provided, the returned data is
+likely to be wrongly scaled.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>data</cite> <span class="classifier-delimiter">:</span> <span class="classifier">[list [of list[ of ...]]] SI objects</span></dt>
+<dd><p class="first last">The returned object is an SI object for scalar subfields,
+a list of SI objects for vector fields, a list of list of
+SI objects for (rank 2) tensor fields, etc.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="probe-subfield-siv">
+<span id="id13"></span><h3>4.2.8. probe_subfield_siv<a class="headerlink" href="command_reference.html#probe-subfield-siv" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.probe_subfield_siv</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">subfieldname,</span> <span class="pre">pos,</span> <span class="pre">unit=None)</span></tt></dd>
+</dl>
+<p>The same behaviour as <tt class="docutils literal"><span class="pre">get_subfield</span></tt> but the <tt class="docutils literal"><span class="pre">pos</span></tt> and return
+data are <a class="reference internal" href="background.html#si-object"><em>SI-value</em></a>s (not SI objects).</p>
+<p>If the subfield is not defined at that part of space, <tt class="xref docutils literal"><span class="pre">None</span></tt>
+is returned.</p>
+<p>If the subfield does generally not exist, then a <tt class="docutils literal"><span class="pre">KeyError</span></tt>
+exception is thrown.</p>
+<p>The input (position) and returned data is expressed in SI
+units but of type float.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield</p>
+</dd>
+<dt><cite>pos</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of floats</span></dt>
+<dd><p class="first last">The position for which the data should be returned (in meters)</p>
+</dd>
+<dt><cite>unit</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI object</span></dt>
+<dd><p class="first">If you request the value for a subfield of a field that is part of nmag (i.e.
+fields M, m, H_demag, etc), then you do not need to provide this object.</p>
+<p>If you request data of any other (multi-physics) fields,
+then this function needs to know the SI dimensions of that
+field (for the correct conversion from simulation units to
+SI units).</p>
+<p class="last">If incorrect dimensions are provided, the returned data is
+likely to be wrongly scaled.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>data</cite> <span class="classifier-delimiter">:</span> <span class="classifier">[list [of list[ of ...]]] float</span></dt>
+<dd><p class="first last">The returned object is a float for scalar subfields,
+a list of floats for vector fields, a list of list of
+floats for (rank 2) tensor fields, etc.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="probe-h-demag-siv">
+<span id="id14"></span><h3>4.2.9. probe_H_demag_siv<a class="headerlink" href="command_reference.html#probe-h-demag-siv" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.probe_H_demag_siv</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">pos,</span> <span class="pre">pos_unit=SI(1,['m',1.0]),</span> <span class="pre">epsilon=1e-07)</span></tt></dd>
+</dl>
+<p>ME: this function returns a wrong value for points outside
+the mesh. For a sphere uniformly magnetised along +x, the x component
+of the demag field outside should be positive, while it is negative.</p>
+<p>Compute the demag field at given position. Works inside
+and outside of magnetic materials. Note that most fields can only
+be probed where they are defined. This function computes the demag
+field at the given position on the fly, based on the boundary element
+method.</p>
+<p>Note that for large distances away from the magnetic material, we expect
+this not to be very accurate. Furthermore, there is an awkward technical
+problem whenever the probe point lies in-plane with any of the surface
+triangles. These awkward limitations are strongly linked to the method
+used to compute the scalar potential internally and are intrinsically
+difficult to avoid. They will go away in the future when potential
+computations will be performed with Hlib.</p>
+<p>Also, this function should (at present) not be used to probe the
+demag field for periodic structures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>pos</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of floats</span></dt>
+<dd><p class="first last">The SI numbers described the position in meters. A command like
+<tt class="docutils literal"><span class="pre">probe_H_demag_siv([0,0,1e-9])</span></tt> would thus probe the demag field one
+nanometer away (in z-direction) from the origin.</p>
+</dd>
+<dt><cite>pos_unit</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI object</span></dt>
+<dd><p class="first last">Optional argument that defaults to SI(&#8220;m&#8221;). The full SI position is
+computed as pos*pos_unit. The above example could therefore be written as
+<tt class="docutils literal"><span class="pre">probe_H_demag_siv([0,0,1],pos_unit=SI(1e-9,&quot;m&quot;))</span></tt>.</p>
+</dd>
+<dt><cite>epsilon</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">This parameter is used internally to compute the demag
+field via central differences from the magnetic
+potential if the observer point is in the exterior (&#8220;vacuum&#8221;)
+region. It is the distance between the two points at
+which each of the field components is being computed
+(because the field is the negative gradient of the
+potential). The default value of 1e-7 should be sensible
+if normal simulation units are used (i.e. the mesh was
+provided with coordinates in the range 1-1000).
+Typically, this parameter should be ignored. Note that this number is
+measured in simulation units.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of floats containing the demag field in SI units (i.e. A/m) at the
+specified position.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="hysteresis">
+<span id="id15"></span><h3>4.2.10. hysteresis<a class="headerlink" href="command_reference.html#hysteresis" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.hysteresis</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><div class="first last highlight-python"><pre>(
+self,
+H_ext_list,
+save=[('averages', 'fields', at('stage_end'))],
+do=[],
+convergence_check=every('step', 5)
+)</pre>
+</div>
+</dd>
+</dl>
+<p>This method executes a simulation where the applied field
+is set in sequence to the values specified in <tt class="docutils literal"><span class="pre">H_ext_list</span></tt>.
+The time integration proceeds with the same applied field
+until convergence is reached. At this point the field is changed
+to the next one in <tt class="docutils literal"><span class="pre">H_ext_list</span></tt> and the method <tt class="docutils literal"><span class="pre">reinitialise()</span></tt>
+is called to proceed with the simulation.
+The user can specify when to save data using the optional
+argument <tt class="docutils literal"><span class="pre">save</span></tt>.</p>
+<p>This allows to carry out hysteresis loop computations
+and write the results to disk.</p>
+<p>Technically we say that this function performs a multi-stage
+simulation. In our terminology, a stage is a part of the simulation
+where the field does not change. Therefore, every value
+for the applied field specified in <tt class="docutils literal"><span class="pre">H_ext_list</span></tt> corresponds
+to a different stage. Stages are numbered starting from 1,
+which corresponds to <tt class="docutils literal"><span class="pre">H_ext_list[0]</span></tt>. In general during
+stage number <tt class="docutils literal"><span class="pre">i</span></tt> the applied field is <tt class="docutils literal"><span class="pre">H_ext_list[i-1]</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>H_ext_list</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of values for the applied field</span></dt>
+<dd><p class="first last">It is something like <tt class="docutils literal"><span class="pre">[H1,</span> <span class="pre">H2,</span> <span class="pre">H3,</span> <span class="pre">...]</span></tt>, where
+<tt class="docutils literal"><span class="pre">Hi</span></tt> is the triple of components of the applied field,
+i.e. SI objects having units of &#8220;A/m&#8221;;</p>
+</dd>
+<dt><cite>save</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of pairs <tt class="docutils literal"><span class="pre">(thing_to_save,</span> <span class="pre">when)</span></tt></span></dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">thing_to_save</span></tt> is either a string or a function provided
+by the user and <tt class="docutils literal"><span class="pre">when</span></tt> is an instance of the class <tt class="docutils literal"><span class="pre">When</span></tt>,
+i.e. an object which contains the specification of when
+&#8220;the thing&#8221; has to be saved.</p>
+<p>Possible string values for <tt class="docutils literal"><span class="pre">thing_to_save</span></tt> are:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;averages&quot;</span></tt>: to save the averages of all the fields
+together with other information (such as the stage number,
+the time reached, etc.). This is done calling the method
+<tt class="docutils literal"><span class="pre">save_data()</span></tt>. Refer to its documentation
+for further details;</li>
+<li><tt class="docutils literal"><span class="pre">&quot;fields&quot;</span></tt>: to save all the fields. The method
+<tt class="docutils literal"><span class="pre">save_data(fields='all')</span></tt> is called for this purpose;</li>
+<li><tt class="docutils literal"><span class="pre">&quot;restart&quot;</span></tt>: to save the current magnetisation configuration
+and all the information needed to restart the simulation.</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><cite>do</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of pairs <tt class="docutils literal"><span class="pre">(thing_to_do,</span> <span class="pre">when)</span></tt></span></dt>
+<dd><p class="first">is very similar to the <tt class="docutils literal"><span class="pre">save</span></tt> argument, but is usually used
+for other purposes.
+<tt class="docutils literal"><span class="pre">thing_to_do</span></tt> is either a string or a function provided
+by the user and <tt class="docutils literal"><span class="pre">when</span></tt> is an instance of the class <tt class="docutils literal"><span class="pre">When</span></tt>.</p>
+<p>Possible string values for <tt class="docutils literal"><span class="pre">thing_to_do</span></tt> are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;next_stage&quot;</span></tt>: induces the hysteresis method to advance
+to the next stage;</li>
+<li><tt class="docutils literal"><span class="pre">&quot;exit&quot;</span></tt>: induces the hysteresis method to exit,
+even if the hysteresis computation has not still reached
+its end.</li>
+</ul>
+</div></blockquote>
+<p>The user can provide his own function to save data.
+For example, the following three lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">my_fun</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="n">my_fun</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>are equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>To specify when something has to be saved the module <tt class="docutils literal"><span class="pre">when</span></tt>
+is used. The functions <tt class="docutils literal"><span class="pre">at</span></tt> and <tt class="docutils literal"><span class="pre">every</span></tt>, provided by
+this module, can refer to the following time variables:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">step</span></tt>: the step number from the beginning of the simulation;</li>
+<li><tt class="docutils literal"><span class="pre">stage_step</span></tt>: the step number from the beginning of
+the current stage;</li>
+<li><tt class="docutils literal"><span class="pre">time</span></tt>: the simulation time passed from the beginning
+of the simulation (measured in <a class="reference internal" href="command_reference.html#si">SI</a> objects);</li>
+<li><tt class="docutils literal"><span class="pre">stage_time</span></tt>: the simulation time passed from the beginning
+of the current stage;</li>
+<li><tt class="docutils literal"><span class="pre">stage</span></tt>: the number of the current stage;</li>
+<li><tt class="docutils literal"><span class="pre">convergence</span></tt>: a boolean value which is <tt class="xref docutils literal"><span class="pre">True</span></tt>
+if the convergence criterion is satisfied.
+Use in this way <tt class="docutils literal"><span class="pre">at('convergence')</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Remember that you can combine time specifications using
+the operator | (or) and &amp; (and):</p>
+<div class="highlight-python"><pre>every('stage', 2) &amp; at('convergence') --&gt; only at convergence
+                                          of odd stages
+every('step', 10) | at('convergence') --&gt; at convergence
+                                          and every 10 steps.</pre>
+</div>
+<p>Some usage examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Save fields (which implicitly will save the averages as well)</span>
+<span class="c"># when the magnetisation stops changing for each applied field</span>
+<span class="c"># (i.e. save at convergence):</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+
+<span class="c"># Averages will be saved every 10 steps, fields (and</span>
+<span class="c"># implicitely averages) will be saved at convergence.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+                          <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+
+<span class="c"># Each stage will not last more than 10 ps, even</span>
+<span class="c"># if the magnetisation is not relaxed yet.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;next_stage&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;stage_time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-11</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">)))])</span>
+
+<span class="c"># Exit hysteresis loop simulation if the total number of</span>
+<span class="c"># steps exceeds 1e6, save fields every 100 steps and at</span>
+<span class="c"># convergence before that:</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">|</span>
+                          <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))],</span>
+                     <span class="n">do</span> <span class="o">=</span><span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">))])</span>
+
+<span class="c"># Save averages every 0.1 ns (useful for fourier transform)</span>
+<span class="c"># leave after 20 ns (using the related relax_ command)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))],</span>
+          <span class="n">do</span>  <span class="o">=</span><span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">20e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))])</span>
+
+<span class="c"># Save averages every nanosecond, and fields every 100 ns.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span><span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))),</span>
+                <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span>  <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">100e-9</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)))])</span>
+
+<span class="c"># Save averages every nanosecond, and fields every 100 ns,</span>
+<span class="c"># save restart file every 1000 steps</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span><span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))),</span>
+                <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span>  <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">100e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))),</span>
+                <span class="p">(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;step&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p class="last">If <tt class="docutils literal"><span class="pre">save</span></tt> is not given, averages and fields will be saved whenever
+the stage ends (this is the default behaviour).</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="load-mesh">
+<span id="id16"></span><h3>4.2.11. load_mesh<a class="headerlink" href="command_reference.html#load-mesh" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.load_mesh</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">filename,</span> <span class="pre">region_names_and_mag_mats,</span> <span class="pre">unit_length,</span> <span class="pre">do_reorder=False,</span> <span class="pre">manual_distribution=None)</span></tt></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>filename</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The file that contains the mesh in nmesh format (ascii or hdf5)</p>
+</dd>
+<dt><cite>region_names_and_mag_mats</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of 2-tuples</span></dt>
+<dd><p class="first">A list of 2-tuples containing the region names and the
+magnetic materials associated to each region. For example,
+having two spheres (called <tt class="docutils literal"><span class="pre">region_A</span></tt> and <tt class="docutils literal"><span class="pre">region</span> <span class="pre">B</span></tt>)
+with materials A and B in the mesh, the argument would be
+[(&#8220;region_A&#8221;, A),(&#8220;region_B&#8221;,B)] where
+A and B must have been defined previously as <tt class="docutils literal"><span class="pre">nmag.MagMaterial</span></tt>.</p>
+<p class="last">Having two Materials X and Y both defined in region A (as in a magnetic
+two-component alloy), we would use [(&#8220;region_A&#8221;,[X,Y])].</p>
+</dd>
+<dt><cite>unit_length</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI object</span></dt>
+<dd><p class="first last">The SI object defines what a length of 1.0 in the mesh file
+corresponds to in reality. If the length 1.0 in the mesh corresponds to
+a nanometer, then this SI object would be given as SI(1e-9,&#8221;m&#8221;)</p>
+</dd>
+<dt><cite>do_reorder</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first">If set to True, metis will be called to reorder the mesh
+(aiming to bring together node ids that correspond to node
+locations that are spatially close to each other). If this
+doesn&#8217;t make sense to you, you should probably leave the
+default (which is <tt class="xref docutils literal"><span class="pre">False</span></tt>).</p>
+<p>Generally, we recommend to order a mesh using <tt class="docutils literal"><span class="pre">nmeshpp</span>
+<span class="pre">--reordernodes</span> <span class="pre">mesh.nmesh</span> <span class="pre">orderedmesh.nmesh</span></tt>, and <em>not to
+use</em> this reodering option here, if you think you need to
+order it.</p>
+<p>If you know nmag really well (you are probably a member of
+the core team) then read on.</p>
+<p>The use of <tt class="docutils literal"><span class="pre">do_reorder</span></tt> <em>can</em> make sense if either your
+mesh is not ordered already, or you provide a
+<tt class="docutils literal"><span class="pre">manual_distribution</span></tt> of nodes.</p>
+<p class="last">The use of <tt class="docutils literal"><span class="pre">do_reorder</span></tt> makes no sense, if you run on more
+than one CPU and leave the distribution of the nodes to
+nmag (i.e. you use the default
+<tt class="docutils literal"><span class="pre">manual_distribution==None</span></tt>).</p>
+</dd>
+<dt><cite>manual_distribution</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of integers</span></dt>
+<dd><p class="first last">This list (if provided) describes how many nodes are to be
+put onto which CPU under MPI-parallelized execution.  If
+this is <tt class="xref docutils literal"><span class="pre">None</span></tt> (i.e. the default), then the distribution
+is done automatically (through metis). This parameter
+should generally not be used (unless you really know what
+you are doing).</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><cite>mesh</cite> : mesh object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="load-m-from-h5file">
+<span id="id17"></span><h3>4.2.12. load_m_from_h5file<a class="headerlink" href="command_reference.html#load-m-from-h5file" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.load_m_from_h5file</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">filename,</span> <span class="pre">**kwargs)</span></tt></dd>
+</dl>
+<p>magnetisation stored in <tt class="docutils literal"><span class="pre">filename</span></tt> to set the
+magnetisation of the simulation. (If more than one magnetisation
+configurations have been saved in the file, it will load the first
+one.)</p>
+<p>This can be used to retrieve the magnetisation saved in a restart file,
+and to set the current magnetisation of the simulation object to this
+magnetisation.</p>
+<p>This restart file could have been written explicitely (using the
+<a class="reference internal" href="command_reference.html#save-restart-file">save_restart_file</a> method), or implicitly by providing a &#8216;restart&#8217;
+action to the <a class="reference internal" href="command_reference.html#hysteresis">hysteresis</a>/<a class="reference internal" href="command_reference.html#relax">relax</a> commands.</p>
+<p>To simply continue a hysteresis/relax simulation using the
+<tt class="docutils literal"><span class="pre">--restart</span></tt> option, there is no need to use this function. It should
+only be used if lower-level manipulation is required (see for example
+<a class="reference internal" href="example_zhangli1/doc.html#current-driven-motion-of-a-vortex-in-a-thin-film"><em>Current-driven motion of a vortex in a thin film</em></a>).</p>
+</div>
+<div class="section" id="save-restart-file">
+<span id="id18"></span><h3>4.2.13. save_restart_file<a class="headerlink" href="command_reference.html#save-restart-file" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.save_restart_file</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">filename=None,</span> <span class="pre">fieldnames=['m'],</span> <span class="pre">all=False)</span></tt></dd>
+</dl>
+<p>rent magnetic configuration into file that can be used for
+restarting.</p>
+<p>This function saves the current magnetisation, the time and
+all what is needed to restart the simulation exactly from
+the point it was invoked.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><cite>filename</cite> : string</p>
+<blockquote>
+<div><p>The file into which the restart file is written. Defaults
+RUNID_restart.h5.</p>
+</div></blockquote>
+<dl class="last docutils">
+<dt><cite>fieldnames</cite>: list</dt>
+<dd><p class="first last">The fieldnames to be saved. Defaults to [&#8216;m&#8217;]</p>
+</dd>
+<dt><cite>all</cite>:bool</dt>
+<dd><p class="first last">If true, then all fields will be saved.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function is used by the <a class="reference internal" href="command_reference.html#hysteresis">hysteresis</a> and <a class="reference internal" href="command_reference.html#relax">relax</a> commands
+to save a magnetic configuration from which a run can be
+continued (using &#8211;restart).</p>
+<p>Example:</p>
+<blockquote>
+<div><p>A common usecase for this function maybe to write the
+magnetic configuration that comes from a relaxation process
+to a file. And to load that configuration as the initial
+configuration for a subsequent (series of) simulation(s).</p>
+<p>In this case, one may want to provide the filename explicitely.
+For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_restart_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;relaxed_configuration.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One can then use the <a class="reference internal" href="command_reference.html#load-m-from-h5file">load_m_from_h5file</a>, to read this file
+<tt class="docutils literal"><span class="pre">relaxed_configuration.h5</span></tt> and to use it to set the
+magnetisation up in the subsequent simulation.</p>
+</div></blockquote>
+</div>
+<div class="section" id="relax">
+<span id="id19"></span><h3>4.2.14. relax<a class="headerlink" href="command_reference.html#relax" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.relax</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">H_applied=None,</span> <span class="pre">save=[('averages',</span> <span class="pre">'fields',</span> <span class="pre">at(stage_end,</span> <span class="pre">True))],</span> <span class="pre">do=[],</span> <span class="pre">convergence_check=every(5,</span> <span class="pre">'step'))</span></tt></dd>
+</dl>
+<p>This method carries out the time integration of the LLG until
+the system reaches a (metastable) equilibrium.
+Internally, this uses the <a class="reference internal" href="command_reference.html#hysteresis">hysteresis</a> loop command.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>H_applied</cite> <span class="classifier-delimiter">:</span> <span class="classifier">list of SI objects</span></dt>
+<dd><p class="first">For a 3-d simulation, the SI-objects Hx, Hy and Hz would be
+specified as <tt class="docutils literal"><span class="pre">[Hx,Hy,Hz]</span></tt>.</p>
+<p class="last">Default value is <tt class="xref docutils literal"><span class="pre">None</span></tt>, resulting in the currently applied external
+field <tt class="docutils literal"><span class="pre">H_ext</span></tt> being used.</p>
+</dd>
+<dt><cite>save</cite> <span class="classifier-delimiter">:</span> <span class="classifier">Schedule object</span></dt>
+<dd><p class="first last">Allows to define what data to save at what events.
+See documentation on the <a class="reference internal" href="command_reference.html#hysteresis">hysteresis</a> method and
+on the <tt class="docutils literal"><span class="pre">Schedule</span></tt> object.</p>
+</dd>
+</dl>
+<p class="last"><cite>convergence_check</cite> : every object The default value
+(<tt class="docutils literal"><span class="pre">every('step',</span> <span class="pre">5)</span></tt> specifies that we ask the time
+integrator to carry out 5 steps before we check for
+convergence. If in doubt, ignore this feature.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="save-data">
+<span id="id20"></span><h3>4.2.15. save_data<a class="headerlink" href="command_reference.html#save-data" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.save_data</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">fields=None,</span> <span class="pre">avoid_same_step=False)</span></tt></dd>
+</dl>
+<p>Save the <em>averages</em> of all defined (subfields) into a ascii
+data file. The filename is composed of the simulation name
+and the extension <tt class="docutils literal"><span class="pre">_dat.ndt</span></tt>. The
+extension <tt class="docutils literal"><span class="pre">ndt</span></tt> stands for Nmag Data Table (analog to OOMMFs
+<tt class="docutils literal"><span class="pre">.odt</span></tt> extension for this kind of data file.</p>
+<p>If <tt class="docutils literal"><span class="pre">fields</span></tt> is provided, then it will also save the spatially resolved fields
+to a file with extensions <tt class="docutils literal"><span class="pre">_dat.h5</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><cite>fields</cite> : None, &#8216;all&#8217; or list of fieldnames</p>
+<blockquote>
+<div><p>If None, then only spatially averaged data is saved into <tt class="docutils literal"><span class="pre">*ndt</span></tt> and <tt class="docutils literal"><span class="pre">*h5</span></tt> files.</p>
+<p>If <tt class="docutils literal"><span class="pre">all</span></tt> (i.e. the string containing &#8216;all&#8217;), then all fields are saved.</p>
+<p>If a list of fieldnames is given, then only the selected
+fieldnames will be saved (i.e. [&#8216;m&#8217;,&#8217;H_demag&#8217;]).</p>
+</div></blockquote>
+<p><cite>avoid_same_step</cite> : bool</p>
+<blockquote class="last">
+<div><p>If <tt class="xref docutils literal"><span class="pre">True</span></tt>, then the data will only be saved if the
+current <tt class="docutils literal"><span class="pre">clock['step']</span></tt> counter is different from the
+step counter of the last saved configuration. If
+<tt class="xref docutils literal"><span class="pre">False</span></tt>, then the data will be saved in any
+case. Default is <tt class="docutils literal"><span class="pre">`False`</span></tt>. This is internally used by
+the hysteresis command (which uses <tt class="docutils literal"><span class="pre">avoid_same_step</span> <span class="pre">==</span>
+<span class="pre">True</span></tt>) to avoid saving the same data twice.</p>
+<p>The only situation where the step counter may not have
+changed from the last saved configuration is if the user
+is modifying the magnetisation or external field manually
+(otherwise the call of the time integrator to advance or
+relax the system will automatically increase the step
+counter).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="set-m">
+<span id="id21"></span><h3>4.2.16. set_m<a class="headerlink" href="command_reference.html#set-m" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.set_m</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">values,</span> <span class="pre">subfieldname=None)</span></tt></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>values</cite> <span class="classifier-delimiter">:</span> <span class="classifier">vector (=list), function or numpy array.</span></dt>
+<dd><p class="first last">The values to be set. See more detailed explanation below.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This method sets the (normalised) magnetisation  (i.e. the <tt class="docutils literal"><span class="pre">m</span></tt> field)
+to a particular value (or pattern).</p>
+<p>It can be used in three different ways:</p>
+<ol class="arabic">
+<li><p class="first">Providing a constant vector</p>
+<p>If given a vector, this function sets the <tt class="docutils literal"><span class="pre">m</span></tt> field to uniformly point in
+the given direction, everywhere.</p>
+<p>For example, to have the magnetisation point
+in +x-direction, we could call the function like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>To point in a 45 degree direction between the x- and y-axis,
+we could use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>(The magnetisation will automatically be normalised.)</p>
+</li>
+<li><p class="first">Providing a function</p>
+<p>If the magnetisation is meant to vary spatially, then a
+function can be given to the <tt class="docutils literal"><span class="pre">set_m</span></tt> method as in this
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">my_magnetisation</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)):</span>
+    <span class="c"># get access to pi, cos and sin</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+
+    <span class="c"># change angle of Mx and My by 10 degree when x varies by 1nm</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="mf">1e9</span><span class="p">)</span><span class="o">*</span><span class="mf">10.</span><span class="o">/</span><span class="mi">360</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">Mx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">My</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">Mz</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c">#return magnetisation vector for position (x,y,z)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Mx</span><span class="p">,</span><span class="n">My</span><span class="p">,</span><span class="n">Mz</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">my_magnetisation</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The function <tt class="docutils literal"><span class="pre">my_magnetisation</span></tt> returns the magnetisation vector
+corresponding to the given 3d position in space.</p>
+<p>This position <tt class="docutils literal"><span class="pre">(x,y,z)</span></tt> as given to the function is expressed in meters.</p>
+</li>
+<li><p class="first">Providing a numpy array.</p>
+<p>If a numpy array is provided to set the values of the
+subfield, then the shape of this array has to match the
+shape of the subfield data. For example, if the subfield is
+the magnetisation of material X, and this material is
+defined on n mesh sites, then the array needs to have n
+entries. Each of those has to be a 3-component array,
+as the magnetisation vector has three components.</p>
+<p>Note: the Simulation.get_subfield() function can be used to
+obtain exactly such a numpy array for the relevant
+subfield.</p>
+<p>To read such a numpy array from a file, you can use the
+<a class="reference internal" href="command_reference.html#get-subfield-from-h5file">get_subfield_from_h5file</a> function. However, you have to be
+sure that the node order in the mesh (that is stored in the
+_dat.h5 file) is the same as the mesh you are currently
+using in your simulation. This should certainly be the case
+if (i) both runs [i.e. the saved and the current] are based
+on the same mesh, and (ii) you only us one CPU [as using
+more than one results in repartitioning and reordering of
+the mesh]. We aim to not allow setting &#8216;wrong&#8217; data here in
+the future, but currently such checking is not
+implemented. (fangohr 31/05/2008)</p>
+</li>
+</ol>
+</div>
+<div class="section" id="set-h-ext">
+<span id="id22"></span><h3>4.2.17. set_H_ext<a class="headerlink" href="command_reference.html#set-h-ext" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.set_H_ext</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">values,</span> <span class="pre">unit=None)</span></tt></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>values</cite> <span class="classifier-delimiter">:</span> <span class="classifier">vector (=list), function or numpy array.</span></dt>
+<dd><p class="first last">See <a class="reference internal" href="command_reference.html#set-m">set_m</a> for an explanation of possible <tt class="docutils literal"><span class="pre">values</span></tt>.</p>
+</dd>
+</dl>
+<p><cite>unit</cite> : SI Object</p>
+<blockquote class="last">
+<div><p>An SI Object that is used as a multiplier for the
+<tt class="docutils literal"><span class="pre">values</span></tt>. This unit has to be physically compatible with
+Ampere per meter.</p>
+<p>To set an applied field that is homogenous and points in
++x-direction, one can use:</p>
+<div class="highlight-python"><pre>sim.set_H_ext([1e6, 0, 0], SI("A/m"))
+
+which is equivalent to::
+
+sim.set_H_ext([1, 0, 0], SI(1e6, "A/m"))</pre>
+</div>
+<p>However, we could also define the field in Oersted:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nmag.si</span> <span class="kn">import</span> <span class="n">Oe</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span><span class="n">Oe</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or in Tesla/mu0:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nmag.si</span> <span class="kn">import</span> <span class="n">Tesla</span><span class="p">,</span> <span class="n">mu0</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Tesla</span><span class="o">/</span><span class="n">mu0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="set-pinning">
+<span id="id23"></span><h3>4.2.18. set_pinning<a class="headerlink" href="command_reference.html#set-pinning" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.set_pinning</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">values)</span></tt></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><cite>values</cite> : vector (=list), function or numpy array.</td>
+</tr>
+</tbody>
+</table>
+<p>This method sets the scalar pinning field which defines a
+local scale factor for <tt class="docutils literal"><span class="pre">dm/dt</span></tt>.</p>
+<p>Default value is <tt class="docutils literal"><span class="pre">1.0</span></tt>, use <tt class="docutils literal"><span class="pre">0.0</span></tt> to force <tt class="docutils literal"><span class="pre">dm/dt</span></tt> to
+zero, that is, to &#8220;pin&#8221; (fix) magnetisation at a certain
+position.</p>
+<p>Semantics of the <cite>values</cite> parameter match <a class="reference internal" href="command_reference.html#set-m">set_m</a>.</p>
+</div>
+<div class="section" id="set-params">
+<span id="id24"></span><h3>4.2.19. set_params<a class="headerlink" href="command_reference.html#set-params" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">Simulation.set_params</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">stopping_dm_dt=None,</span> <span class="pre">ts_rel_tol=None,</span> <span class="pre">ts_abs_tol=None,</span> <span class="pre">exact_tstop=None)</span></tt></dd>
+</dl>
+<p>Set the parameters which control the accuracy and performance
+of the simulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>ts_rel_tol</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">the relative error tolerance (default is 1e-6) for the timestepper</p>
+</dd>
+<dt><cite>ts_abs_tol</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">the absolute error tolerance (default is 1e-6) for the timestepper</p>
+</dd>
+<dt><cite>stopping_dm_dt</cite> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="command_reference.html#si">SI</a> object</span></dt>
+<dd><p class="first">the value used in the <a class="reference internal" href="command_reference.html#hysteresis">hysteresis</a> and <a class="reference internal" href="command_reference.html#relax">relax</a> functions to decide
+whether convergence has been reached. If the largest value for dm/dt drops
+below <tt class="docutils literal"><span class="pre">stopping_dm_dt</span></tt>, then convergence has been reached.</p>
+<p class="last">The default value for <tt class="docutils literal"><span class="pre">stopping_dm_dt</span></tt> this is that the
+magnetisation changes less than one degree per nanosecond,
+i.e. <tt class="docutils literal"><span class="pre">stopping_dm_dt</span> <span class="pre">=</span> <span class="pre">SI(17453292.519943293,['s',-1])</span></tt>.</p>
+</dd>
+<dt><cite>exact_tstop</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">the value of exact_tstop which is used by the advance_time method
+when the optional argument is not given. This is also the value
+used by the relax and hysteresis methods. See the documentation
+of advance_time for further details.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that this command has to be issued <em>after</em> having created
+an m-field with the <a class="reference internal" href="command_reference.html#set-m">set_m</a> command.</p>
+</div>
+</div>
+<div class="section" id="get-subfield-from-h5file">
+<span id="id25"></span><h2>4.3. get_subfield_from_h5file<a class="headerlink" href="command_reference.html#get-subfield-from-h5file" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">get_subfield_from_h5file</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(*args,</span> <span class="pre">**nargs)</span></tt></dd>
+</dl>
+<p>Retrieve data from h5 file. Data are returned as an array of floating
+point number (in SI units).</p>
+<p>This function should be used with care, as the order of the entries in the
+returned array depends on the partitioning of the mesh used when saving the
+data.</p>
+<p>Analog to <a class="reference internal" href="command_reference.html#get-subfield">get_subfield</a> (which returns subfield data for a subfield of a
+simulation object), but will retrieve data from saved <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> file.</p>
+<p>Note that the entries of the returned array are ordered accordingly
+to the mesh used in this simulation object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>filename</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The full name of the <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> data file.</p>
+</dd>
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield to be retrieved.</p>
+</dd>
+<dt><cite>id</cite> <span class="classifier-delimiter">:</span> <span class="classifier">integer</span></dt>
+<dd><p class="first last">The <tt class="docutils literal"><span class="pre">id</span></tt> of the configuration to return (defaults to 0)</p>
+</dd>
+</dl>
+<p><cite>row</cite> : integer</p>
+<blockquote class="last">
+<div><p>If the <tt class="docutils literal"><span class="pre">id</span></tt> is not specified, the <tt class="docutils literal"><span class="pre">row</span></tt> can be used to address the data
+row with index <tt class="docutils literal"><span class="pre">row</span></tt>.</p>
+<p>For example, the magnetisation may have been saved at some point during the
+simulation into a file (for example using the <a class="reference internal" href="example_restart/doc.html#restart-example"><em>Restart example</em></a> functionality, or using the <a class="reference internal" href="command_reference.html#save-data">save_data</a> method for the
+first time to save the m-field (i.e. <tt class="docutils literal"><span class="pre">sim.save_data(fields=['m']</span></tt>) into a
+new file).</p>
+<p>We can use <tt class="docutils literal"><span class="pre">row=0</span></tt> to read the first magnetisation configuration that has
+been written into this file (and <tt class="docutils literal"><span class="pre">row=1</span></tt> to access the second etc).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield-positions-from-h5file">
+<span id="id26"></span><h2>4.4. get_subfield_positions_from_h5file<a class="headerlink" href="command_reference.html#get-subfield-positions-from-h5file" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">get_subfield_positions_from_h5file</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(filename,</span> <span class="pre">subfieldname)</span></tt></dd>
+</dl>
+<p>Analogous to <a class="reference internal" href="command_reference.html#get-subfield-positions">get_subfield_positions</a> (which returns the positions of
+nodes for a subfield of a simulation object), but will retrieve
+data from saved <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>filename</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The full name of the <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> data file.</p>
+</dd>
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield to be retrieved.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>numpy array</dt>
+<dd><p class="first last">The positions are returned as <a class="reference internal" href="background.html#si-object"><em>si-value</em></a>s.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="get-subfield-sites-from-h5file">
+<span id="id27"></span><h2>4.5. get_subfield_sites_from_h5file<a class="headerlink" href="command_reference.html#get-subfield-sites-from-h5file" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">get_subfield_sites_from_h5file</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(filename,</span> <span class="pre">subfieldname)</span></tt></dd>
+</dl>
+<p>Analogous to <a class="reference internal" href="command_reference.html#get-subfield-sites">get_subfield_sites</a> (which returns the site ids of
+nodes for a subfield of a simulation object), but will retrieve
+data from saved <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>filename</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The full name of the <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> data file.</p>
+</dd>
+<dt><cite>subfieldname</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the subfield to be retrieved.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>numpy array</dt>
+<dd><p class="first last">The ids are returned as <a class="reference internal" href="background.html#si-object"><em>si-value</em></a>s.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="hmatrixsetup">
+<span id="id28"></span><h2>4.6. HMatrixSetup<a class="headerlink" href="command_reference.html#hmatrixsetup" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">HMatrixSetup</span></tt></dd>
+<dt>Class constructor information:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">algorithm='HCA2',</span> <span class="pre">**kwargs)</span></tt></dd>
+</dl>
+<p>ass collecting the parameters needed in order to set up an HMatrix
+with HLib within Nmag.</p>
+<p>The optional argument <tt class="docutils literal"><span class="pre">algorithm</span></tt> is by default set to &#8220;HCA2&#8221;.
+At present no other values are supported.
+The user can then specify a number of parameters in order to fine-tune
+the setup of the HMatrix. <tt class="docutils literal"><span class="pre">**kwargs</span></tt> stands for one or more of the
+following parameters (see <a class="reference external" href="http://www.hlib.org">Hlib</a> documentation
+for detailed descriptions of the parameers):</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Parameters of HCA II:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><dl class="first docutils">
+<dt><cite>eps_aca</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">A heuristic parameter which influences the accuracy of HCA II.
+By default this parameter is set to 1e-7</p>
+</dd>
+<dt><cite>poly_order</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">A second parameter which influences the accuracy of the HCA II.
+Its default setting is 4.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Parameter for recompression algorithm:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><dl class="first docutils">
+<dt><cite>eps</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">This parameter determines the accuracy of the recompression
+algorithm, which optimises a given hierarchical matrix.
+The default value is 0.001.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Parameters influencing the tree structure:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><dl class="first docutils">
+<dt><cite>cluster_strategy</cite> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">algorithm to be used for creating the cluster tree. Available choices
+are &#8216;regular&#8217; (cluster constructed splitting the bounding box of the
+surface in two smaller bounding boxes with half the size along x,
+then y, z, x, and so on), &#8216;geometric&#8217; (similar to &#8216;regular&#8217; but the
+splitting is done along longer dimension of the bounding box)
+&#8216;regular_box&#8217; (behaves similarly to &#8216;regular&#8217;), &#8216;cardinality&#8217; (the
+bounding box is split into two bounding boxes containing the same
+number of points, cyclically along each dimension), &#8216;pca&#8217; (clustering
+based on principal directions), &#8216;default&#8217; (uses the default).
+The default clustering strategy is &#8216;regular&#8217;.</p>
+</dd>
+<dt><cite>eta</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">eta is a parameter which influences the so called admissibility
+criterion. As explained above, a subblock of the boundary element
+matrix basically  describes the dipole potential at a cluster of
+surface nodes A generated by a different cluster B. The subblock
+can only be approximated when both cluster are spatially well
+separated. To have an objective measure of what &#8216;well separated&#8217;
+means, an admissibility criterion has been introduced. The smaller
+the parameter eta is chosen, the more restrictive is the
+admissibility criterion. The default value is 2.0.</p>
+</dd>
+<dt><cite>nmin</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">In order to be able to adjust the coarseness of the tree structure
+(a too fine tree structure would result in a higher amount of memory
+required for the storage of the tree itself), a parameter nmin has
+been introduced. It is the minimal number of lines or rows a
+submatrix within a leave can have, and is by default set to 30.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Parameter for the numerical quadrature:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><dl class="first last docutils">
+<dt><cite>quadorder</cite> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The order of the Gaussian quadrature used to compute matrix entries
+for the low-rank matrix blocks. For the matrix blocks, which are not
+approximated, an analytical expression instead of numerical
+integration is used. By default, quadorder is set to 3.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="si">
+<span id="id29"></span><h2>4.7. SI<a class="headerlink" href="command_reference.html#si" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">SI</span></tt></dd>
+<dt>Class constructor information:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">value,</span> <span class="pre">dimensions=[])</span></tt></dd>
+</dl>
+<p>Physical quantity in the SI units system.</p>
+<p>This class allows to associate SI-dimensions (such as meter,
+kilogram, Ampere, seconds, candela and mol) with a floating point
+number.</p>
+<p>The resulting object supports addition, subtraction, (which fails if
+the dimensions of the objects in a sum or difference disagree),
+multiplication and division.</p>
+<p>There are different ways to create objects:</p>
+<ol class="arabic">
+<li><p class="first">The most fundamental approach is to
+provide a value and a list of pairs where each pair is
+a character identifying the SI base unit and an integer that
+provides its power.</p>
+<p>Examples:</p>
+<ol class="upperalpha simple">
+<li><tt class="docutils literal"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">SI(10,['m',1,'s',-1])</span></tt> is the code to create an SI object v
+that represents 10 m/s.</li>
+<li><tt class="docutils literal"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">SI(0.6,['kg',1,'s',-2,'A',-1])</span></tt> is the code to create an SI
+object T that represents  0.6 kg/(s^2 A) (i.e. 0.6 Tesla)</li>
+</ol>
+</li>
+<li><p class="first">A more convenient way is to first define all the base units
+like this (these are already defined in the <tt class="docutils literal"><span class="pre">si</span></tt> submodule, so
+instead of the following lines below, we could also just write:
+<tt class="docutils literal"><span class="pre">from</span> <span class="pre">si</span> <span class="pre">import</span> <span class="pre">meter,second,Ampere</span></tt>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">meter</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span> <span class="c"># alternative spelling: metre</span>
+<span class="n">second</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="n">Ampere</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;A&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then to use these SI objects to create more complex
+expressions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">meter</span><span class="o">/</span><span class="n">second</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mf">0.6</span><span class="o">*</span><span class="n">kilogram</span><span class="o">/</span><span class="n">second</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Ampere</span>
+</pre></div>
+</div>
+<p>Of course, short hand notations can be defined such as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">T</span> <span class="o">=</span> <span class="n">kilogram</span><span class="o">/</span><span class="n">second</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Ampere</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mf">0.6</span><span class="o">*</span><span class="n">Tesla</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, there is another convenient way:</p>
+<p>Instead of a SI dimension vector as in (1), it is possible to pass
+a string specifying dimensions. Examples are:</p>
+<p>&#8220;A/m&#8221;, &#8220;V/m&#8221;, &#8220;J/m^3&#8221;, &#8220;m^2 s^(-2)&#8221;, &#8220;m^-3 s^-1&#8221; etc.</p>
+<p>The dimensions parser will understand (in addition to m, kg, s, A, K, mol, cd):
+J, N, W, T, V, C, Ohm, H</p>
+</li>
+</ol>
+<p>A very basic demonstration of the SI object in use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+<span class="go">&lt;SI: 1.001  m &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span>
+<span class="go">&lt;SI: 0.001  m^2 &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">a</span><span class="o">/</span><span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">SI</span><span class="p">:</span> <span class="mi">1000</span>  <span class="o">&gt;</span>           <span class="c">#Note that this is dimensionless</span>
+<span class="go">                           #because we divided meters by meters</span>
+</pre></div>
+</div>
+<div class="section" id="value">
+<span id="id30"></span><h3>4.7.1. value<a class="headerlink" href="command_reference.html#value" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">SI.value</span></tt></dd>
+<dt>Property information</dt>
+<dd><tt class="xref docutils literal"><span class="pre">None</span></tt></dd>
+</dl>
+<p>Read-only attribute to obtain (dimensionless) value of Physical Object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><cite>value</cite> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The numerical value.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">H</span><span class="o">.</span><span class="n">value</span>
+<span class="go">10.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">H</span>
+<span class="go">&lt;SI: 10  A / m &gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="units">
+<span id="id31"></span><h3>4.7.2. units<a class="headerlink" href="command_reference.html#units" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">SI.units</span></tt></dd>
+<dt>Property information</dt>
+<dd><tt class="xref docutils literal"><span class="pre">None</span></tt></dd>
+</dl>
+<p>Read-only attribute to obtain units of Physical Object (returned as list of pairs of dimension name and power)</p>
+</div>
+<div class="section" id="in-units-of">
+<span id="id32"></span><h3>4.7.3. in_units_of<a class="headerlink" href="command_reference.html#in-units-of" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">SI.in_units_of</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">unit_quantity)</span></tt></dd>
+</dl>
+<p>The object will be expressed in multiplies of
+&#8216;unit_quantity&#8217;. This is useful to convert from one
+measurement convention (such as m/s) to another one (such as
+km/h). The return value is just a float.</p>
+<p>The units of &#8216;unit_quantity&#8217; have to be compatible with the
+units of the object itself (otherwise an exception is raised).</p>
+<p>A simple example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inch</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">2.54e-2</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">in_units_of</span><span class="p">(</span><span class="n">inch</span><span class="p">)</span>
+<span class="go">393.70078740157478</span>
+</pre></div>
+</div>
+<p>Another example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">velocity</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">/</span><span class="n">s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">velocity</span>
+<span class="go">&lt;SI: 2  m / s &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">km</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">*</span><span class="n">m</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="mi">3600</span><span class="o">*</span><span class="n">s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">velocity</span><span class="o">.</span><span class="n">in_units_of</span><span class="p">(</span><span class="n">km</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="go">8.2</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><cite>unit_quantity</cite> <span class="classifier-delimiter">:</span> <span class="classifier">SI Object</span></dt>
+<dd><p class="first last">The SI object itself (i.e. <tt class="docutils literal"><span class="pre">self</span></tt>) will be expressed in
+multiplies of this <tt class="docutils literal"><span class="pre">unit_quantity</span></tt>.  `</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>float</dt>
+<dd><p class="first last">This is the number that, multiplied by the <tt class="docutils literal"><span class="pre">unit_quantitity</span></tt> will
+provide the SI quantity of the object itself.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="is-compatible-with">
+<span id="id33"></span><h3>4.7.4. is_compatible_with<a class="headerlink" href="command_reference.html#is-compatible-with" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">SI.is_compatible_with</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(self,</span> <span class="pre">physical_quantity)</span></tt></dd>
+</dl>
+<p>Returns True when the given physical quantity is compatible with the object
+itself.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nsim.si_units</span> <span class="kn">import</span> <span class="n">SI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m_per_sec</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span><span class="o">/</span><span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">km_per_hour</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span><span class="o">/</span><span class="n">SI</span><span class="p">(</span><span class="mi">3600</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Newton</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;kg&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">)</span><span class="o">/</span><span class="n">SI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m_per_sec</span><span class="o">.</span><span class="n">is_compatible_with</span><span class="p">(</span><span class="n">Newton</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m_per_sec</span><span class="o">.</span><span class="n">is_compatible_with</span><span class="p">(</span><span class="n">km_per_hour</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ipython">
+<span id="id34"></span><h2>4.8. ipython<a class="headerlink" href="command_reference.html#ipython" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Module:</dt>
+<dd><tt class="docutils literal"><span class="pre">nmag</span></tt></dd>
+<dt>Object:</dt>
+<dd><tt class="docutils literal"><span class="pre">ipython</span></tt></dd>
+<dt>Arguments:</dt>
+<dd><tt class="docutils literal"><span class="pre">(globals=None,</span> <span class="pre">locals=None)</span></tt></dd>
+</dl>
+<p>Interactive python prompt (see <a class="reference internal" href="example_ipython/doc.html#example-ipython"><em>Example: IPython</em></a>).</p>
+</div>
+<div class="section" id="command-line-options">
+<span id="id35"></span><h2>4.9. Command line options<a class="headerlink" href="command_reference.html#command-line-options" title="Permalink to this headline">¶</a></h2>
+<p>Nmag supports a number of command line options to configure its behaviour.</p>
+<p>Suppose the simulation script is called <tt class="docutils literal"><span class="pre">X.py</span></tt>, then these OPTIONS can be specified like this:</p>
+<div class="highlight-python"><pre>nsim X.py OPTIONS</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">X.py</span></tt> needs to contain at least the line <tt class="docutils literal"><span class="pre">import</span> <span class="pre">nmag</span></tt> as this will process the command line options.</p>
+<p>The available options are:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">&#8211;clean:</th><td class="field-body"><p class="first">to override any existing <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> and <tt class="docutils literal"><span class="pre">_dat.ndt</span></tt> files. If this
+option is not provided and the data files exist already, then nmag
+will interrupt the execution without having modified the data files
+on the disk.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre>nsim X.py --clean</pre>
+</div>
+</td>
+</tr>
+<tr class="field"><th class="field-name">&#8211;loglevel:</th><td class="field-body"><p class="first">this switch determines the amount of information that is being send
+to stdout (usually the screen) and also to the file <tt class="docutils literal"><span class="pre">X_log.log</span></tt>.</p>
+<p>The available levels are in increasing order of detail:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">error:</th><td class="field-body">print no messages apart from errors</td>
+</tr>
+<tr class="field"><th class="field-name">warning:</th><td class="field-body">print warnings</td>
+</tr>
+<tr class="field"><th class="field-name">info:</th><td class="field-body">print a moderate amount of information (default)</td>
+</tr>
+<tr class="field"><th class="field-name">info2:</th><td class="field-body">print slightly more information</td>
+</tr>
+<tr class="field"><th class="field-name">debug:</th><td class="field-body">print a lot of information (typically for developer and debugging use)</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><pre>nsim X.py --loglevel info2</pre>
+</div>
+<p>or:</p>
+<div class="highlight-python"><pre>nsim X.py --loglevel debug</pre>
+</div>
+</td>
+</tr>
+<tr class="field"><th class="field-name">&#8211;slavelog:</th><td class="field-body"><p class="first">Log message from slave nodes (when running under MPI) are usually
+supressed. This switch activates them. Printing these messages will
+reduce the MPI performance somewhat as the messages are printed to
+stdout on each slave, and then have to be transferred through the
+network to the master process.</p>
+<p>Note that any log-messages from the nodes will only go to stdout
+(whereas log messages from the master will also go into the log
+file, see <a class="reference internal" href="files_and_file_names.html#file-names-for-log-files"><em>File names for log files</em></a>.)</p>
+<p>Messages from slave nodes are preceeded by <tt class="docutils literal"><span class="pre">S0X</span></tt> where X is the
+rank of the node. I.e. log messages from slave node with rank 2,
+would start with <tt class="docutils literal"><span class="pre">S02</span></tt>.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre>nsim X.py --slavelog</pre>
+</div>
+</td>
+</tr>
+<tr class="field"><th class="field-name">&#8211;restart:</th><td class="field-body"><p class="first">If a calculation of a hysteresis loop is interrupted (power cut,
+computer crash, exceeding allocated run time on cluster, etc), then
+the calculation can be carried out starting from the moment when the
+last restart file was saved (see <a class="reference internal" href="example_restart/doc.html#restart-example"><em>Restart example</em></a>).</p>
+<p>This continuation is activated with the <tt class="docutils literal"><span class="pre">--restart</span></tt> switch.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre>nsim X.py --restart</pre>
+</div>
+<p class="last">Note that this functionality is only available for the hysteresis loop.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The command line options can be combined, for example:</p>
+<div class="highlight-python"><pre>nsim X.py --clean --loglevel debug</pre>
+</div>
+<p>There are a few other switches (mostly for debugging) which can be seen using:</p>
+<div class="highlight-python"><pre>nsim X.py --help</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="finite_element_mesh_generation.html" title="5. Finite element mesh generation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="background.html" title="3. Background"
+             >previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

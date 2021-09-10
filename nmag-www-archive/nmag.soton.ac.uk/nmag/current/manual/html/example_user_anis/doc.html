@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.12. Example: Arbitrary Anisotropy &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.13. Restart example" href="../example_restart/doc.html" />
+    <link rel="prev" title="2.11. Example: Cubic Anisotropy" href="../example_cubic_anis/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_restart/doc.html" title="2.13. Restart example"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_cubic_anis/doc.html" title="2.11. Example: Cubic Anisotropy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-arbitrary-anisotropy">
+<h1>2.12. Example: Arbitrary Anisotropy<a class="headerlink" href="doc.html#example-arbitrary-anisotropy" title="Permalink to this headline">¶</a></h1>
+<p>In this example we discuss
+the script <a class="reference download internal" href="../_downloads/coin.py"><tt class="xref download docutils literal"><span class="pre">coin.py</span></tt></a>
+which shows how the user can include in his simulations
+a customised magnetic anisotropy.</p>
+<div class="section" id="arbitrary-anisotropy-simulation-script">
+<span id="id1"></span><h2>2.12.1. Arbitrary anisotropy simulation script<a class="headerlink" href="doc.html#arbitrary-anisotropy-simulation-script" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="kn">from</span> <span class="nn">nsim.si_units</span> <span class="kn">import</span> <span class="n">si</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c"># Create simulation object (no demag field!)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">do_demag</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c"># Function to compute the scalar product of the vectors a and b</span>
+<span class="k">def</span> <span class="nf">scalar_product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="c"># Here we define a function which returns the energy for a uniaxial</span>
+<span class="c"># anisotropy of order 4.</span>
+<span class="n">K1</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">43e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)</span>
+<span class="n">K2</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">21e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>        <span class="c"># The (normalised) axis</span>
+<span class="k">def</span> <span class="nf">my_anisotropy</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">K1</span><span class="o">*</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">K2</span><span class="o">*</span><span class="n">a</span><span class="o">**</span><span class="mi">4</span>
+
+<span class="n">my_material</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;MyMat&quot;</span><span class="p">,</span>
+                               <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                               <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">10e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                               <span class="n">anisotropy</span><span class="o">=</span><span class="n">my_anisotropy</span><span class="p">,</span>
+                               <span class="n">anisotropy_order</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c"># Load the mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;coin.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;coin&quot;</span><span class="p">,</span> <span class="n">my_material</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set the magnetization</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Compute the hysteresis loop</span>
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.35</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="p">[],</span> <span class="mf">0.4</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="s">&#39;averages&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>We simulate the hysteresis loop for a ferromagnetic thin disc,
+where the field is applied orthogonal to the axis of disc.
+This script includes one main element of novelty, which concerns the way
+the magnetic anisotropy is specified.
+In previous examples we found lines such as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_material</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;MyMat&quot;</span><span class="p">,</span>
+                               <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                               <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">10e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                               <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">uniaxial_anisotropy</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                                   <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">43e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">),</span>
+                                                                   <span class="n">K2</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">21e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>where the material anisotropy was specified using the provided functions
+<tt class="docutils literal"><span class="pre">nmag.uniaxial_anisotropy</span></tt> (<a class="reference internal" href="../command_reference.html#uniaxial-anisotropy"><em>uniaxial_anisotropy</em></a>) and <tt class="docutils literal"><span class="pre">nmag.cubic_anisotropy</span></tt> (<a class="reference internal" href="../command_reference.html#cubic-anisotropy"><em>cubic_anisotropy</em></a>).
+In this example we are using a different approach to define the anisotropy.
+First we define the function <tt class="docutils literal"><span class="pre">my_anisotropy</span></tt>, which returns the energy density
+for the magnetic anisotropy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Here we define a function which returns the energy for a uniaxial</span>
+<span class="c"># anisotropy of order 4.</span>
+<span class="n">K1</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">43e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)</span>
+<span class="n">K2</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">21e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>        <span class="c"># The (normalised) axis</span>
+<span class="k">def</span> <span class="nf">my_anisotropy</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">K1</span><span class="o">*</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">K2</span><span class="o">*</span><span class="n">a</span><span class="o">**</span><span class="mi">4</span>
+</pre></div>
+</div>
+<p>Note that the function returns a SI object with units &#8220;J/m^3&#8221; (energy density).
+The reader may have recognised the familiar expression for the uniaxial anisotropy:
+in fact the two code snippets we just presented are defining exactly the same
+anisotropy, they are just doing it in different ways.
+The function <tt class="docutils literal"><span class="pre">scalar_product</span></tt>, which we have used in the second code snippet
+just returns the scalar product of two three dimensional vectors <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt>
+and is defined in the line above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">scalar_product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The function <tt class="docutils literal"><span class="pre">my_anisotropy</span></tt> has to be specified in the material definition:
+instead of passing <tt class="docutils literal"><span class="pre">anisotropy=nmag.uniaxial_anisotropy(...)</span></tt>
+we just pass <tt class="docutils literal"><span class="pre">anisotropy=my_anisotropy</span></tt> to the material constructor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_material</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;MyMat&quot;</span><span class="p">,</span>
+                               <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                               <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">10e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                               <span class="n">anisotropy</span><span class="o">=</span><span class="n">my_anisotropy</span><span class="p">,</span>
+                               <span class="n">anisotropy_order</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An important point to notice is that here we also provide an anisotropy order.
+To understand what this number is, we have to explain briefly what is going on
+behind the scenes. nsim calculates the values of the user provided function
+for an appropriately chosen set of normalised vectors,
+it then finds the polynomial in <tt class="docutils literal"><span class="pre">mx</span></tt>, <tt class="docutils literal"><span class="pre">my</span></tt> and <tt class="docutils literal"><span class="pre">mz</span></tt>
+(the components of the normalised magnetisation) of the specified order,
+which matches the sampled values.</p>
+<p>The strength of this approach stands in the fact that the user has to provide
+just the energy density for the custom anisotropy.
+nsim is taking care of working out the other quantities which
+are needed for the simulation, such as the magnetic field resulting
+from the provided anisotropy energy, which would require a differentiation
+of the energy with respect to the normalised magnetisation.</p>
+<p>However the user must be sure that the provided function can be expressed
+by a polynomial of the specified order in <tt class="docutils literal"><span class="pre">mx</span></tt>, <tt class="docutils literal"><span class="pre">my</span></tt> and <tt class="docutils literal"><span class="pre">mz</span></tt>.
+In the present case we are specifying <tt class="docutils literal"><span class="pre">anisotropy_order=4</span></tt> because the energy
+for the uniaxial anisotropy can be expressed as a 4th-order polynomial
+in <tt class="docutils literal"><span class="pre">mx</span></tt>, <tt class="docutils literal"><span class="pre">my</span></tt> and <tt class="docutils literal"><span class="pre">mz</span></tt>.</p>
+<p>In some cases the user may find useful to know that the functions
+<tt class="docutils literal"><span class="pre">nmag.uniaxial_anisotropy</span></tt> and <tt class="docutils literal"><span class="pre">nmag.cubic_anisotropy</span></tt>
+can be added: the resulting anisotropy will have as energy
+the sum of the energies of the original anisotropies.</p>
+</div>
+<div class="section" id="the-result">
+<span id="id2"></span><h2>2.12.2. The result<a class="headerlink" href="doc.html#the-result" title="Permalink to this headline">¶</a></h2>
+<p>The steps involved to extract and plot the data for the simulation discussed
+in the previous section should be familiar to the user at this point of the manual.
+We then just show the graph obtained from the results
+of the script <a class="reference download internal" href="../_downloads/coin.py"><tt class="xref download docutils literal"><span class="pre">coin.py</span></tt></a>.</p>
+<img alt="../_images/coin.png" class="align-center" src="../_images/coin.png" style="width: 730px; height: 500px;" />
+<p>During the switching the system falls into an intermediate state,
+where the magnetisation is nearly aligned with the anisotropy easy axis.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_restart/doc.html" title="2.13. Restart example"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_cubic_anis/doc.html" title="2.11. Example: Cubic Anisotropy"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

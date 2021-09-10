@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Import from salome - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Import_from_salome/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Script-to-import-unv-mesh-from-Salome-platform">Script to import .unv mesh from Salome platform<a href="Import_from_salome.html#Script-to-import-unv-mesh-from-Salome-platform" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Here is a contribution from Luyang Han.</p>
+
+
+	<p>Hello all,</p>
+
+
+	<p>This is an ad-hoc script to import the .unv mesh file exported from Salome platform (<a class="external" href="http://www.salome-platform.org/">http://www.salome-platform.org/</a>). The solid modeling and mesh generation in Salome is much more powerful and easier to use compared to gmsh.<br />
+Salome can only export unv file with just one region, thus all simplices are set to region 1.</p>
+
+
+	<p>To use the script do:</p>
+
+
+<pre>
+chmod +x importunv.py
+./importunv.py infile.unv outfile.nmesh.h5
+</pre>
+
+	<p>The script need to setup nmag path in the env.</p>
+
+
+	<p>Regards.</p>
+
+
+<pre>
+#!/usr/bin/env nsim
+
+import sys
+
+import nmesh
+
+def loadmesh(filename):
+  vertices = []
+  simplex = []
+  with open(filename) as fname:
+      #skip the first two lines
+      fname.readline()
+      fname.readline()
+      # start to read the vertices
+      input_a = fname.readline()
+      input_b = fname.readline()
+      while input_a.strip() &lt;&gt; '-1' :
+          coord = map(float,input_b.strip().split())
+          vertices.append(coord)
+          input_a = fname.readline()
+          input_b = fname.readline()
+      # finish the vertices part.
+      # ignore one line here
+      fname.readline()
+      # read lines till we reach the simplex region
+      input_a = fname.readline()
+      while True:
+          if len(input_a.strip().split()) == 6 and input_a.strip().split()[-1] == '4':
+              break
+          else:
+              input_a = fname.readline()
+      # now we reached the first line of the simplex region
+      #input_b = fname.readline()
+      #simp = map(int,input_b.strip().split())
+      #simplex.append(simp)
+      #input_a = fname.readline()
+      while input_a.strip() &lt;&gt; '-1' :
+          input_b = fname.readline()
+          simp = map(int,input_b.strip().split())
+          simplex.append(simp)
+          input_a = fname.readline()
+
+  # finish the reading
+  return vertices, simplex
+
+#main program
+mesh = None
+
+infile = sys.argv[1]
+outfile = sys.argv[2]
+
+points,simplices_indices = loadmesh(infile)
+
+simplices_regions = [1] * len(simplices_indices)
+
+mesh = nmesh.mesh_from_points_and_simplices(points=points, simplices_indices=simplices_indices, simplices_regions=simplices_regions, periodic_point_indices=[], initial=1, do_reorder=True)
+
+mesh.save(outfile)
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Import_from_salome?export=html&amp;version=1" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Import_from_salome?export=txt&amp;version=1" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.24. Compression of the Boundary Element Matrix using HLib &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.25. Example: Calculation of dispersion curves" href="../example_nmagprobe/doc.html" />
+    <link rel="prev" title="2.23. Mesh distortion for edge roughness simulation" href="../mesh_distortion/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_nmagprobe/doc.html" title="2.25. Example: Calculation of dispersion curves"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../mesh_distortion/doc.html" title="2.23. Mesh distortion for edge roughness simulation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="compression-of-the-boundary-element-matrix-using-hlib">
+<span id="id1"></span><h1>2.24. Compression of the Boundary Element Matrix using HLib<a class="headerlink" href="doc.html#compression-of-the-boundary-element-matrix-using-hlib" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="hierarchical-matrices-in-micromagnetism">
+<span id="id2"></span><h2>2.24.1. Hierarchical Matrices in Micromagnetism<a class="headerlink" href="doc.html#hierarchical-matrices-in-micromagnetism" title="Permalink to this headline">¶</a></h2>
+<p>Nmag uses the hybrid finite element method/boundary element method
+(hybrid FEM/BEM) to compute the demagnetisation field (as does
+<a class="reference external" href="http://www.magpar.net/">Magpar</a>). Not using this method, one would have to discretise a large
+part of space arround the magnetic structure (ideally all
+space). Using the hybrid FEM/BEM method, it is only necessary to
+discretise (and solve the equations for the demag field on that
+discretisation) those parts of space that are occupied by magnetic
+material.</p>
+<p>A disadvantage of the hybrid FEM/BEM method is that it involves the
+assembly of a dense boundary element matrix <strong>B</strong>, whose number of
+elements scales quadratically with the number of surface nodes N of
+our finite element mesh, i.e. the matrix <strong>B</strong> has as many rows as there are
+surface nodes N in the mesh (and also as many columns).</p>
+<p>This is in particular an issue when studying flat structures such as
+thin films. For example, imagine we model a thin film of side lengths
+100 nm x 100 nm x 2nm. If we decide to double the side lengths to 200
+nm x 200 nm x 2nm, then this roughly corresponds to an increase of
+surface node numbers N by a factor of 4. The matrix <strong>B</strong> will then
+grow in size by a factor 4^2=16 due to the doubling of the two side
+lengths by a factor of 2. In practice, the memory requirements of the
+matrix <strong>B</strong> often limit the size of a structure that can be modelled.</p>
+<p>In order to improve the efficiency of the hybrid FEM/BEM, one can
+employ techniques which involve some kind of approximation of <strong>B</strong>,
+for example using hierarchical matrices.</p>
+<p>The basic <a class="reference external" href="http://www.mis.mpg.de/publications/other-series/ln/lecturenote-2103.html">idea</a>
+is to approximate submatrices of <strong>B</strong> by a data-sparse approximation
+where possible (within user-provided tolerance margins).  In general
+the complexity of the storage requirements and execution time of
+simple operations like the matrix-vector product scale as O(N*log(N)),
+as compared to the quadratical costs N^2 using the standard matrix
+representation. For the use of HLib hierarchical matrices in
+micromagnetic simulations we are often mostly interested in the their
+reduced <em>memory</em> requirements.</p>
+<p>The library <a class="reference external" href="http://www.hlib.org">HLib</a> contains implementations of this hierarchical matrix
+methodology, and can be used with Nmag in order to run micromagnetic
+simulations in a more memory efficient way (see for example <a class="reference external" href="http://link.aip.org/link/?JAPIAU/105/07D542/1">Knittel
+et al 105, 07D542 (2009)</a>, <a class="reference external" href="http://www.soton.ac.uk/~fangohr/publications/postprint/Knittel_etal_JAP_105_07D542_2009.pdf">postprint pdf</a>).
+.</p>
+</div>
+<div class="section" id="installation-of-hlib">
+<span id="id3"></span><h2>2.24.2. Installation of HLib<a class="headerlink" href="doc.html#installation-of-hlib" title="Permalink to this headline">¶</a></h2>
+<p>In order to be able to use the <a class="reference external" href="http://www.hlib.org">HLib</a> library and to obtain the HLib source
+code, you have to apply for an HLib licence as explained on
+<a class="reference external" href="http://hlib.org/license.html">http://hlib.org/license.html</a>.</p>
+<p>Once the HLib authors grant a licence, they will send their HLib tarball. Nmag will have to be compiled from source (see <a class="reference external" href="../../../../0.1/install/install_a.html">install from source</a>) in the presence of this tarball to make use of the HLib matrix compression. (Nmag will compile happily in the absence of this file, and in that case the boundary element matrix is stored &#8216;in the normal way&#8217; as a full matrix.)</p>
+<p>We describe the required steps for this in detail.  We assume you
+downloaded the HLib tarball and the Nmag tarball in your home
+directory <tt class="docutils literal"><span class="pre">~/</span></tt> (but any other subdirectory will work fine). Then, if
+you issue a <tt class="docutils literal"><span class="pre">ls</span></tt> command, you get something like:</p>
+<div class="highlight-python"><pre>me@mymachine:~/$ ls
+HLib-1.3p19.tar.gz  nmag-0.1-all.tar.gz</pre>
+</div>
+<p>You can now untar the nmag tarball and enter the newly created directory:</p>
+<div class="highlight-python"><pre>me@mymachine:~/$ tar xzvf nmag-0.1-all.tar.gz
+me@mymachine:~/$ cd nmag-0.1</pre>
+</div>
+<p>Note that in this particular example we assume the Nmag version to be 0.1.
+For later versions, you&#8217;ll have to change the tarball name and the paths
+accordingly (e.g. <tt class="docutils literal"><span class="pre">nmag-X.Y.Z</span></tt> for version <tt class="docutils literal"><span class="pre">X.Y.Z</span></tt>).
+Inside the directory <tt class="docutils literal"><span class="pre">nmag-0.1</span></tt> there is a directory called
+<tt class="docutils literal"><span class="pre">hlib-pkg</span></tt> and we need to copy (or move) the HLib tarball into this directory:</p>
+<div class="highlight-python"><pre>me@mymachine:~/nmag-0.1$ cp HLib-1.3p19.tar.gz hlib-pkg/</pre>
+</div>
+<p>You can now compile Nmag with HLib support in the usual way:</p>
+<div class="highlight-python"><pre>me@mymachine:~/nmag-0.1$ make</pre>
+</div>
+<p>The build system should recognise that the <tt class="docutils literal"><span class="pre">hlib-pkg</span></tt> directory contains
+a tarball and should prompt you asking what to do:</p>
+<div class="highlight-python"><pre>me@mymachine:~/nmag-0.1$ make
+bash ./patches/hlib/hlib-untar.sh ./hlib-pkg HLib-1.3p19.tar.gz &amp;&amp; \
+          rm -f .deps_hlib_patch &amp;&amp; make .deps_hlib_install; true
+_____________________________________________________
+ It seems you want to compile Nmag with HLib support
+ I'll need your confirmation in order to proceed...
+
+I found ./hlib-pkg/HLib-1.3p19.tar.gz
+Is this the HLib tarball you want to use? (yes/no) yes</pre>
+</div>
+<p>Type <tt class="docutils literal"><span class="pre">yes</span></tt> and <tt class="docutils literal"><span class="pre">ENTER</span></tt>. The build system should untar the HLib tarball, it
+should patch it (HLib needs to be patched in order to be usable by Nmag)
+and it should install it in the right location with respect to the Nmag
+libraries. If all goes well, you should get an installation of Nmag which is
+capable of using HLib for the compression of the BEM matrix.</p>
+<p>As you see, the only additional step which is required with respect to the
+normal procedure for compiling Nmag from source, is to put the HLib tarball
+inside the directory <tt class="docutils literal"><span class="pre">nmag-0.1/hlib-pkg</span></tt>.</p>
+<p>The current nmag release requires Hlib version 1.3p19, to support HLib
+matrix compression.</p>
+</div>
+<div class="section" id="testing-the-hlib-bem-matrix-compression">
+<span id="id4"></span><h2>2.24.3. Testing the HLib BEM Matrix compression<a class="headerlink" href="doc.html#testing-the-hlib-bem-matrix-compression" title="Permalink to this headline">¶</a></h2>
+<p>There is a test target <tt class="docutils literal"><span class="pre">make</span> <span class="pre">checkhlib</span></tt> which tests whether a demag
+field can be computed using the HLib and compares this with the result
+of the same calculation using a full BEM. If the deviations become large,
+the test will fail. To run the test, do</p>
+<blockquote>
+<div><a class="reference external" href="mailto:me&#37;&#52;&#48;mymachine">me<span>&#64;</span>mymachine</a>:~/nmag-0.1$ make checkhlib</div></blockquote>
+<p>The test should take less than 5 minutes. If it passes, then it
+appears that the hlib is used, and produces quantitatively appropriate
+approximations of the true solution.</p>
+</div>
+<div class="section" id="using-hlib-example-1-demagnetisation-field-of-a-sphere">
+<h2>2.24.4. Using HLib example 1: Demagnetisation Field of a Sphere<a class="headerlink" href="doc.html#using-hlib-example-1-demagnetisation-field-of-a-sphere" title="Permalink to this headline">¶</a></h2>
+<p>The properties of a hierarchical matrix depend much on the settings of
+different parameters and on the particular algorithm used to create
+the low-rank approximations.  In Nmag, we only use the HCA II
+algorithm, which seems to be the most reliable amongst the commonly
+used algorithms, being still very efficient (see for example <a class="reference external" href="http://link.aip.org/link/?JAPIAU/105/07D542/1">Knittel et al 105,
+07D542 (2009)</a>,
+<a class="reference external" href="http://www.soton.ac.uk/~fangohr/publications/postprint/Knittel_etal_JAP_105_07D542_2009.pdf">postprint pdf</a>).</p>
+<p>The performance and accuracy of the HCA II algorithm can be tuned by providing
+a number of parameters, which are collected inside a <a class="reference internal" href="../command_reference.html#hmatrixsetup"><em>HMatrixSetup</em></a> object.
+A default <tt class="docutils literal"><span class="pre">HMatrixSetup</span></tt> object is provided, where a reasonable choice of
+these parameters is made. The default parameters can be overriden by users.</p>
+<p>We point the reader to the documentation of the <a class="reference internal" href="../command_reference.html#hmatrixsetup"><em>HMatrixSetup</em></a> class
+for a list and description of all avaliable parameters. The next
+example shows how to use HLib with the default values for the setup of
+the BEM matrix.</p>
+<div class="section" id="using-hlib-with-default-parameters">
+<span id="id5"></span><h3>2.24.4.1. Using HLib with default parameters<a class="headerlink" href="doc.html#using-hlib-with-default-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The Nmag script <a class="reference download internal" href="../_downloads/sphere_hlib.py"><tt class="xref download docutils literal"><span class="pre">sphere_hlib.py</span></tt></a> shows how Nmag can be used in order to compute
+the demagnetisation field within a sphere with a radius of 50 nm.</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="c"># When creating the simulation object, specify that the BEM hmatrix should be</span>
+<span class="c"># set up by using the default parameters.</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">phi_BEM</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">default_hmatrix_setup</span><span class="p">)</span>
+
+<span class="c"># Specify magnetic material, parameters chosen as in example 1</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># Load the mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&#39;sphere.nmesh.h5&#39;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&#39;sphere&#39;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c"># Set the initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Save the demagnetisation field</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;H_demag&#39;</span><span class="p">])</span>
+
+<span class="c"># Probe the demagnetisation field at ten points within the sphere</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>
+    <span class="n">Hdemag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x=&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_demag = &quot;</span><span class="p">,</span> <span class="n">Hdemag</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In this first example, we use default parameters for setting up the BEM
+matrix by passing the object <tt class="docutils literal"><span class="pre">nmag.default_hmatrix_setup</span></tt> to the
+<tt class="docutils literal"><span class="pre">Simulation</span></tt> object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">phi_BEM</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">default_hmatrix_setup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This command specifies that the BEM matrix should be set up using the default
+parameters in <tt class="docutils literal"><span class="pre">nmag.default_hmatrix_setup</span></tt>.
+(The actual values of the parameters can be visualised on the screen by simply
+printing the object with <tt class="docutils literal"><span class="pre">import</span> <span class="pre">nmag;</span> <span class="pre">print</span> <span class="pre">nmag.default_hmatrix_setup</span></tt>.)</p>
+<p>When running the simulation <a class="reference download internal" href="../_downloads/sphere_hlib.py"><tt class="xref download docutils literal"><span class="pre">sphere_hlib.py</span></tt></a> using the usual command:</p>
+<div class="highlight-python"><pre>nsim sphere_hlib.py --clean,</pre>
+</div>
+<p>it should print out the demagnetisation field at ten points along the line
+(x,0,0):</p>
+<div class="highlight-python"><pre>x= -5e-09 : H_demag =  [-333060.61988567741, -16.426569556599606, -63.649046900628299]
+x= -4e-09 : H_demag =  [-333061.67213255615, -17.81158234138228, -65.112039406898973]
+x= -3e-09 : H_demag =  [-333062.69422596297, -19.401486521725044, -66.015626464953897]
+x= -2e-09 : H_demag =  [-333062.72991753434, -20.940683675745074, -66.988296036794026]
+x= -1e-09 : H_demag =  [-333061.60282647074, -22.420106762492924, -68.042400926888646]
+x= 0.0 : H_demag =  [-333060.29023012909, -23.736721821840622, -68.984395930340639]
+x= 1e-09 : H_demag =  [-333058.66039082204, -24.758745874347209, -69.6797361890888]
+x= 2e-09 : H_demag =  [-333055.87727687479, -24.635979967196079, -70.705429412122513]
+x= 3e-09 : H_demag =  [-333054.17167091055, -24.9868363963913, -73.501799477569747]
+x= 4e-09 : H_demag =  [-333052.78687652596, -25.388604442091431, -76.097088958697071]
+x= 5e-09 : H_demag =  [-333051.43416558538, -25.507782471847442, -77.792885797356391]</pre>
+</div>
+<p>As in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: Demag field in uniformly magnetised sphere</em></a> of our guided tour, we should obtain a constant
+magnetic induction of about [333333,0,0] [A/m]. Deviations from that value
+can be mainly ascribed to the discretisation errors of the finite
+element method (rather than the error due to the approximation with
+hierarchical matrices). To see this, we use <a class="reference download internal" href="../_downloads/sphere_fullBEM.py"><tt class="xref download docutils literal"><span class="pre">sphere_fullBEM.py</span></tt></a> which carries out the same
+calculation but uses the normal full BEM. It reports:</p>
+<div class="highlight-python"><pre>x= -5e-09 : H_demag =  [-333065.71403658605, -5.2685406972238447, -55.70105442854085]
+x= -4e-09 : H_demag =  [-333067.37484881631, -4.2116117445407726, -57.778611300679266]
+x= -3e-09 : H_demag =  [-333068.83107133937, -3.7372238611028603, -59.825445387210245]
+x= -2e-09 : H_demag =  [-333069.28217968839, -2.9635031726006642, -62.513814422201456]
+x= -1e-09 : H_demag =  [-333067.6639511605, -1.5730916838594211, -66.546659227740889]
+x= 0.0 : H_demag =  [-333066.04572263273, -0.18268019511817793, -70.579504033280344]
+x= 1e-09 : H_demag =  [-333064.22835497675, 0.79797869001455679, -74.851480234723581]
+x= 2e-09 : H_demag =  [-333060.20872696047, 2.9088218728650852, -77.0823444044496]
+x= 3e-09 : H_demag =  [-333056.59267071093, 5.064110260421554, -80.187548021318634]
+x= 4e-09 : H_demag =  [-333052.97641355224, 7.2199889195136837, -83.294534914159939]
+x= 5e-09 : H_demag =  [-333051.27043353132, 9.4396856537516776, -85.662174893158024]</pre>
+</div>
+<p>This shows that the error introduced by the HLib is of the order of 10
+in 333333 (in this example). Note that the y and z component
+theoretically should be zero (for both calculations: with and without
+HLib), and that the error we see there (of the order of 60/333333 in
+the z-component) is coming from approximating the spherical shape with
+tetrahedra, and approximating the magnetisation with a piecewise
+linear function (not primarily from using the HLib approximation of the BEM).</p>
+</div>
+<div class="section" id="hlib-memory-usage">
+<span id="id6"></span><h3>2.24.4.2. HLib Memory usage<a class="headerlink" href="doc.html#hlib-memory-usage" title="Permalink to this headline">¶</a></h3>
+<p>Nmag will also provide information on the memory requirements for the
+hierarchical matrix. First it will print to stdout (and here
+exceptionally not write to the log file) the following lines to the
+screen, which are each preceded by <tt class="docutils literal"><span class="pre">HLib</span></tt>:</p>
+<div class="highlight-python"><pre>HLib: Memory footprint of hierarchical matrix: 10.523720 MB.
+HLib: Equivalent full matrix would require: 98.273628 MB.
+HLib: The compression rate is 10.71%</pre>
+</div>
+<p>The first line states the amount of memory required for the storage of the
+hierarchical matrix, the second one states the equivalent memory requirements
+when using the full boundary element matrix, and the last line gives the
+corresponding compression rate. Furthermore Nmag creates the file
+<cite>memory_info.dat</cite>, which in our example looks like:</p>
+<div class="highlight-python"><pre>Number of surface nodes:                3589
+Size of hierarchical matrix:        10.52 MB
+Total size of inadmissible leaves:   1.40 MB
+Total size of admissible leaves:     8.96 MB</pre>
+</div>
+<p>While the first two lines should be relatively self-explanatory, the third
+line states the total amount of memory needed to store the matrix blocks
+which cannot be approximated, while the fourth line gives the equivalent
+number for the approximated matrix blocks. Additionally, one can obtain
+the memory used for the hierarchical tree structure itself, by computing
+the difference between the size of the hierarchical matrix and
+the sum of the total sizes of the admissible and inadmissible leaves.</p>
+</div>
+<div class="section" id="changing-the-parameters-of-hlib">
+<span id="id7"></span><h3>2.24.4.3. Changing the Parameters of HLib<a class="headerlink" href="doc.html#changing-the-parameters-of-hlib" title="Permalink to this headline">¶</a></h3>
+<p>Let us assume we want to run the simulation of the last section again, but this
+time we would like to reduce the time needed to assemble our hierarchical
+matrix. To achieve this, we coarsen the hierarchical tree by increasing the
+parameter <tt class="docutils literal"><span class="pre">nmin</span></tt> to 50, reassign the parameter <tt class="docutils literal"><span class="pre">eps_aca</span></tt> to 1e-5 in order to
+decrease the accuracy of the HCA II algorithm, and reduce the accuracy of
+the numerical integration by setting the parameter <tt class="docutils literal"><span class="pre">quadorder</span></tt> to 2.</p>
+<p>To use non-default settings in a new script <a class="reference download internal" href="../_downloads/sphere_hlib2.py"><tt class="xref download docutils literal"><span class="pre">sphere_hlib2.py</span></tt></a> we  add one line to create an <tt class="docutils literal"><span class="pre">HMatrixSetup</span></tt> object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#create an HLib object</span>
+<span class="n">hms</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">HMatrixSetup</span><span class="p">(</span><span class="n">nmin</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">eps_aca</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">quadorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This object is then passed to the <tt class="docutils literal"><span class="pre">Simulation</span></tt> object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">phi_BEM</span><span class="o">=</span><span class="n">hms</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to make the time measurement you can just run the nsim command
+with a preceding &#8216;time&#8217;, i.e.</p>
+<div class="highlight-python"><pre>time nsim sphere_hlib2.py --clean</pre>
+</div>
+<p>do the same with the sphere_hlib.py script, and compare the execution times. Alternatively,
+search for the string like &#8220;Populating BEM took 25.094362 seconds&#8221; in the log file/output.
+The execution time of the second script should be smaller (see also <a class="reference internal" href="doc.html#using-hlib-example-2-thin-films"><em>Using HLib Example 2: Thin Films</em></a>).</p>
+<p>For completeness: the Hdemag values computed with this script are:</p>
+<div class="highlight-python"><pre>x= -5e-09 : H_demag =  [-333060.73884748813, -5.7471691393211453, -56.164777361260889]
+x= -4e-09 : H_demag =  [-333062.34355895646, -4.6973695734449556, -58.19523338342605]
+x= -3e-09 : H_demag =  [-333063.7357911733, -4.2543955018989577, -60.199068292632305]
+x= -2e-09 : H_demag =  [-333064.14913635491, -3.5107100192801424, -62.841949236542568]
+x= -1e-09 : H_demag =  [-333062.54691465426, -2.1473409122582736, -66.824386136704007]
+x= 0.0 : H_demag =  [-333060.94469295366, -0.78397180523640564, -70.806823036865438]
+x= 1e-09 : H_demag =  [-333059.14023403701, 0.15188988623380831, -75.030255790251871]
+x= 2e-09 : H_demag =  [-333055.17692864774, 2.2289146769013355, -77.213961296827563]
+x= 3e-09 : H_demag =  [-333051.63216875959, 4.3434799953307275, -80.273150211395659]
+x= 4e-09 : H_demag =  [-333048.08718075219, 6.4586908275326955, -83.334113807086638]
+x= 5e-09 : H_demag =  [-333046.47566667694, 8.6375699926922742, -85.648195356633963]</pre>
+</div>
+</div>
+</div>
+<div class="section" id="using-hlib-example-2-thin-films">
+<span id="id8"></span><h2>2.24.5. Using HLib Example 2: Thin Films<a class="headerlink" href="doc.html#using-hlib-example-2-thin-films" title="Permalink to this headline">¶</a></h2>
+<p>In this example we consider square thin films with a thickness of 10
+nm (in z-direction), and a varying edge length (in x and y directions)
+between 20 and 130 nm . The magnetisation within those films is
+initially homogeneously aligned and points out-of-plane. We then use
+Nmag&#8217;s <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> routine in order to evolve the magnetisation field to an
+energetically (meta-)stable state.</p>
+<p>In order to estimate the efficiency benefits of hierarchical matrices,
+the simulations are executed twice: (i) with and (ii) without
+hierarchical matrices. Optimal damping is ensured by setting the
+damping constant of the LLG equation to 1. To increase the efficiency
+of the relaxation the tolerance of the time-stepper has been increased
+to 1e-5 (see <a class="reference internal" href="../example_tolerances/doc.html#example-tolerances"><em>Example: Timestepper tolerances</em></a>).</p>
+<p>For our estimation of the efficiency we measure the time needed for
+the setup of our simulation (basically the time for populating the
+finite element and boundary element matrices), the time for relaxing
+the system, and the memory consumption at the end of the simulation,
+which should be roughly equal to the maximal value throughout the
+simulation.</p>
+<p>For each film size and either use of the full BEM or the approximation through hierarchical matrices, a separate nsim script file
+(<a class="reference download internal" href="../_downloads/thinfilm20_full.py"><tt class="xref download docutils literal"><span class="pre">thinfilm20_full.py</span></tt></a>,
+<a class="reference download internal" href="../_downloads/thinfilm40_full.py"><tt class="xref download docutils literal"><span class="pre">thinfilm40_full.py</span></tt></a>,
+<a class="reference download internal" href="../_downloads/thinfilm60_full.py"><tt class="xref download docutils literal"><span class="pre">thinfilm60_full.py</span></tt></a>, ...,
+<a class="reference download internal" href="../_downloads/thinfilm20_hlib.py"><tt class="xref download docutils literal"><span class="pre">thinfilm20_hlib.py</span></tt></a>, etc.)
+has been written. It is important to start every simulation as a
+single process (by calling <tt class="docutils literal"><span class="pre">nsim</span> <span class="pre">thinfilm20_full.py</span> <span class="pre">--clean</span></tt> etc.),
+so that there are no overlaps in the memory access of different
+simulations. From every script a routine <tt class="docutils literal"><span class="pre">run_simulation</span></tt> which is
+imported from a local nsim module <a class="reference download internal" href="../_downloads/simtools.py"><tt class="xref download docutils literal"><span class="pre">simtools.py</span></tt></a>, starts a simulation specified by
+its arguments (name of the simulation, name of the mesh file, name of
+hlib object in case hierarchical matrices are used, and the tolerance
+for the time integrator) and returns the number of nodes of the mesh,
+the simulation&#8217;s memory consumption and the setup- and relaxation
+times. These values are then written to a file <tt class="docutils literal"><span class="pre">timings_hlib.dat</span></tt> or
+<tt class="docutils literal"><span class="pre">timings_full.dat</span></tt>, respectively.</p>
+<p>Beside extracting the information on the performance, it is also important to
+check, whether simulations using the full boundary element matrix and a
+hierarchical matrix approximation actually do the same, and that the simulated
+behaviour is physically correct.</p>
+<p>Looking at the spatially averaged magnetisation we find a very good agreement
+between both simulation types (example given for the film with an edge length of
+100nm):</p>
+<img alt="../_images/relaxation_m.png" class="align-center" src="../_images/relaxation_m.png" style="width: 740px; height: 510px;" />
+<p>The magnetisation field moves from its out-of-plane configuration into the plane
+and relaxes into a high remanent state, which is aligned along the diagonal of the
+square base. The plot below shows a 3d visualisation of the relaxed magnetisation
+field (obtained with Mayavi2) for a thin film with an edge length of 130 nm.</p>
+<img alt="../_images/thinfilm130.png" class="align-center" src="../_images/thinfilm130.png" style="width: 678px; height: 678px;" />
+<p>We have run the simulations on a machine with an
+<cite>AMD Athlon(tm) 64 X2 Dual Core Processor 3800+</cite>, using only one core. The
+graphs below show the results of our efficiency test of hierarchical matrices.
+It can be seen that the memory requirements are reduced considerably. While the
+consumed memory increases (almost) linearly with the number of surface nodes <cite>N</cite>
+for the calculation with hierarchical matrices, the increase is of a higher
+order (O(<cite>N</cite><sup>4/3</sup>)), when using the accurate boundary element matrix
+<strong>B</strong>. The enhanced scaling behaviour allows for simulation of larger
+ferromagnetic structures. The graph
+on the memory consumption should enable users to estimate, whether they can
+simulate a certain structure with Nmag+HLib and the available hardware.</p>
+<img alt="../_images/performance.png" class="align-center" src="../_images/performance.png" style="width: 725px; height: 375px;" />
+<p>Besides the savings in memory, hierarchical matrices also reduce the time needed
+for the simulation setup considerably (see the bottom graph).</p>
+</div>
+<div class="section" id="hlib-and-mpi">
+<span id="id9"></span><h2>2.24.6. HLib and MPI<a class="headerlink" href="doc.html#hlib-and-mpi" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="http://www.hlib.org">HLib</a> library that is available for academic use does not support
+parallel execution. It is thus stored on the master node, and cannot
+be distributed over several nodes. Simulations using the Hlib library
+can use MPI (for all other calculations).</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_nmagprobe/doc.html" title="2.25. Example: Calculation of dispersion curves"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../mesh_distortion/doc.html" title="2.23. Mesh distortion for edge roughness simulation"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

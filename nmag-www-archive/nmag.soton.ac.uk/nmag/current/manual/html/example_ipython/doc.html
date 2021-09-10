@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.8. Example: IPython &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.9. Example: Pinning Magnetisation" href="../example_pinning/doc.html" />
+    <link rel="prev" title="2.7. Example: Manipulating magnetisation" href="../example_manipulate/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_pinning/doc.html" title="2.9. Example: Pinning Magnetisation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_manipulate/doc.html" title="2.7. Example: Manipulating magnetisation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-ipython">
+<span id="id1"></span><h1>2.8. Example: IPython<a class="headerlink" href="doc.html#example-ipython" title="Permalink to this headline">¶</a></h1>
+<p>The basics of this file are as in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: Demag field in uniformly
+magnetised sphere</em></a>: a ferromagnetic sphere is studied, and initially
+configured to have homogeneous magnetisation.</p>
+<p>Here is the source code of <a class="reference download internal" href="../_downloads/sphere_ipython.py"><tt class="xref download docutils literal"><span class="pre">sphere_ipython.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="c"># Create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># Define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># Load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;sphere1.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;sphere&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Activate interactive python session</span>
+<span class="n">nmag</span><span class="o">.</span><span class="n">ipython</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s">&quot;Back in main code&quot;</span>
+</pre></div>
+</div>
+<p>To execute this script, we have to give its name to the <a class="reference internal" href="../executables.html#nsim"><em>nsim</em></a>
+executable, for example (on linux):</p>
+<div class="highlight-python"><pre>$ nsim sphere_ipython.py</pre>
+</div>
+<p>The new command appearing here is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nmag</span><span class="o">.</span><span class="n">ipython</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This calls an interactive python interpreter (this is like the
+standard <tt class="docutils literal"><span class="pre">ipython</span></tt> interpreter called from the command prompt).</p>
+<p>Once we are &#8220;inside&#8221; this ipython interpreter, we can interactively work with
+the simulation object. We demonstrate this with the transcript of such
+a session:</p>
+<div class="highlight-python"><pre>$ nsim sphere_ipython.py
+
+&lt;snip&gt;
+
+In [1]: sim.get_subfield("H_demag")
+Out[1]:
+array([[ -3.30028671e+05,  -2.57073101e+01,  -4.63461085e+01],
+       [ -3.30518650e+05,  -2.65364907e+01,   2.12323921e+02],
+       [ -3.30380750e+05,  -1.34382835e+02,   1.94635283e+01],
+       ...,
+       [ -3.30063839e+05,   4.56312711e+01,  -1.31204248e+02],
+       [ -3.30056243e+05,  -3.23341645e+01,  -2.26732582e+02],
+       [ -3.29950815e+05,   4.44150291e+01,  -5.41700794e+01]])
+
+In [2]: sim.set_m([0,0,1])
+
+In [3]: sim.get_subfield("H_demag")
+Out[3]:
+array([[ -6.86773473e+01,   4.44496808e+01,  -3.30084368e+05],
+       [ -2.83792944e+02,   1.78935681e+02,  -3.30268314e+05],
+       [ -2.04396266e+02,   2.48374212e+02,  -3.30180923e+05],
+       ...,
+       [ -1.02055030e+02,  -9.53215211e+01,  -3.30239401e+05],
+       [  1.94875407e+02,   1.22757584e+02,  -3.29771010e+05],
+       [  6.16259262e+01,   1.66071597e+02,  -3.29848851e+05]])</pre>
+</div>
+<p>Note that within ipython, one can just press the TAB key to
+autocomplete object names, functions and commands.</p>
+<p>You can leave the ipython environment by pressing CTRL+D. For the
+script shown here, this will print <tt class="docutils literal"><span class="pre">Back</span> <span class="pre">in</span> <span class="pre">main</span> <span class="pre">code</span></tt> before the
+end of the script is reached. The <tt class="docutils literal"><span class="pre">ipython()</span></tt> command is
+occasionally a handy debugging feature: in order to investigate the
+behaviour of the system &#8220;on the spot&#8221;, one can insert an <tt class="docutils literal"><span class="pre">ipython</span></tt> call
+into the script which will open an interactive command line.</p>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_pinning/doc.html" title="2.9. Example: Pinning Magnetisation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_manipulate/doc.html" title="2.7. Example: Manipulating magnetisation"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

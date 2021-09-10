@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.9. Example: Pinning Magnetisation &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.10. Example: Uniaxial anisotropy" href="../example_uniaxial_anis/doc.html" />
+    <link rel="prev" title="2.8. Example: IPython" href="../example_ipython/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_uniaxial_anis/doc.html" title="2.10. Example: Uniaxial anisotropy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_ipython/doc.html" title="2.8. Example: IPython"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-pinning-magnetisation">
+<h1>2.9. Example: Pinning Magnetisation<a class="headerlink" href="doc.html#example-pinning-magnetisation" title="Permalink to this headline">¶</a></h1>
+<p>In this example we show how to pin (<em>i.e.</em> fix) magnetisation
+in certain parts of a material.</p>
+<div class="section" id="pinning-simulation-script">
+<span id="id1"></span><h2>2.9.1. Pinning simulation script<a class="headerlink" href="doc.html#pinning-simulation-script" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">si</span>
+
+<span class="c"># Create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># Define magnetic material: PermAlloy</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">0.86e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># Load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;sphere1.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;sphere&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set initial magnetisation to +x direction</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Pin magnetisation at center in radius of 4e-9m</span>
+<span class="k">def</span> <span class="nf">pin_at_center</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mf">4e-9</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">4e-9</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.0</span> <span class="c"># Inside the 4nm sphere -&gt; pin</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="c"># Outside -&gt; do not pin</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">pin_at_center</span><span class="p">)</span>
+
+<span class="c"># Apply external field in +y direction</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span> <span class="c"># 500mT in A/m</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">0</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="mi">1</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">unit</span><span class="p">])</span>
+
+<span class="c"># Relax the magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pinning-magnetisation">
+<span id="id2"></span><h2>2.9.2. Pinning magnetisation<a class="headerlink" href="doc.html#pinning-magnetisation" title="Permalink to this headline">¶</a></h2>
+<p>In order to allow the user to fix the magnetisation, nmag provides a
+scalar field, the so-called <em>pinning field</em>: its value at each site is
+used as a scale factor for <tt class="docutils literal"><span class="pre">dm/dt</span></tt>, hence by setting it to 0 at
+certain locations of the mesh we can force magnetisation to remain
+constant at these locations for the entire simulation.</p>
+<p>We set the pinning field using <a class="reference internal" href="../command_reference.html#set-pinning"><em>set_pinning</em></a> (which is used like
+<a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> and <a class="reference internal" href="../command_reference.html#set-h-ext"><em>set_H_ext</em></a>, except that it is a scalar field whereas the
+latter are vector fields) such that magnetisation is fixed at sites
+with distance less than 4 nm from the sphere&#8217;s center. First we define
+a Python function which we decide to call <tt class="docutils literal"><span class="pre">pin_at_center</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">pin_at_center</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mf">4e-9</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">4e-9</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.0</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>The function is called for each site of the mesh
+and receives the site position as an argument,
+a 3-tuple <tt class="docutils literal"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></tt> containing the three
+components <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt> and <tt class="docutils literal"><span class="pre">z</span></tt> (three floating point numbers),
+given in metres.
+The function returns either 0.0 (which means the magnetisation
+at this position is pinned) or 1.0 (in which case there is no pinning),
+for the given position vector.</p>
+<p>The formula in the <tt class="docutils literal"><span class="pre">if</span></tt> statement simply evaluates the magnitude
+of the vector <tt class="docutils literal"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></tt> by squaring each component.
+This number is then compared against (4nm)^2.
+As a result, the magnetisation is pinned at all the mesh nodes that are
+located within a sphere with center <tt class="docutils literal"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></tt> and radius 4 nm.
+All the nodes that are located outside this sphere can change
+their magnetisation as usual.</p>
+<p>Second, we need to tell nmag that it should use this function to
+decide where the magnetisation should be pinned:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_pinning</span><span class="p">(</span><span class="n">pin_at_center</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note the slightly counterintuitive fact that value 1 means &#8220;no pinning&#8221;.</p>
+<p>Finally we apply an external field of 0.5 T in +y direction, and use
+<a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> to compute the equilibrium configuration.</p>
+<p>The <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>will save the fields and averages at convergence (this is the default
+of the <a class="reference internal" href="../command_reference.html#relax"><em>relax</em></a> command).</p>
+</div>
+<div class="section" id="visualisation">
+<span id="id3"></span><h2>2.9.3. Visualisation<a class="headerlink" href="doc.html#visualisation" title="Permalink to this headline">¶</a></h2>
+<p>After running the example via <tt class="docutils literal"><span class="pre">nsim</span> <span class="pre">sphere.py</span></tt> we convert the equilibrium
+data to VTK format:</p>
+<div class="highlight-python"><pre>$ nmagpp --vtk=sphere.vtk sphere</pre>
+</div>
+<p>We would first like to verify that the pinning field has been set up
+properly.  Hence we use <a class="reference internal" href="../useful_tools.html#mayavi"><em>MayaVi</em></a> to visualise it by showing an
+isosurface of the pinning field (shown in blue), together with the
+magnetisation vector field.</p>
+<img alt="../_images/pinned_core.png" class="align-center" src="../_images/pinned_core.png" style="width: 800px; height: 836px;" />
+<p>The blue blob in the center of the sphere is the collection of those
+tetrahedra that have corners just inside the 4nm sphere. Because we
+have not generated the mesh to have nodes coinciding with the 4nm
+sphere, the shape of the blue region is not particularly spherical.</p>
+<p>In the above diagram, we also see the magnetisation vectors of the
+final configuration. Their colour corresponds to the pinning field at
+their location. It can be seen that the blue magnetisation vectors
+emerging from the central region of the sphere are all pointing
+(strictly) in the x-direction. The magnetisation vectors outside the
+blue sphere are coloured red. The applied field drives these vectors
+to point into the y-direction. However, the magnetisation in the
+centre is pinned and the exchange interaction requires a gradual
+spatial change of magnetisation. This explains the spatial variation
+of the magnetisation.</p>
+<p>The next figure shows the same data as the last figure but in addition a
+<tt class="docutils literal"><span class="pre">ScalarCutPlane</span></tt> (in MayaVi terminology) has been introduced which
+is coloured according to the x-component of the magnetisation. Red
+corresponds to 1.0 and blue corresponds to 0.73 (we have not shown the
+legend to provide a larger main plot). This demonstrates the gradual
+change from the pinned magnetisation in the centre to the outside.</p>
+<img alt="../_images/magnetisation.png" class="align-center" src="../_images/magnetisation.png" style="width: 800px; height: 777px;" />
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_uniaxial_anis/doc.html" title="2.10. Example: Uniaxial anisotropy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_ipython/doc.html" title="2.8. Example: IPython"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

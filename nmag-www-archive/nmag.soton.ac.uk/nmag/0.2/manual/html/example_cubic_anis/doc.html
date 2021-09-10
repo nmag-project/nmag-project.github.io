@@ -1,0 +1,159 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.11. Example: Cubic Anisotropy &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.12. Example: Arbitrary Anisotropy" href="../example_user_anis/doc.html" />
+    <link rel="prev" title="2.10. Example: Uniaxial anisotropy" href="../example_uniaxial_anis/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_user_anis/doc.html" title="2.12. Example: Arbitrary Anisotropy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_uniaxial_anis/doc.html" title="2.10. Example: Uniaxial anisotropy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-cubic-anisotropy">
+<h1>2.11. Example: Cubic Anisotropy<a class="headerlink" href="doc.html#example-cubic-anisotropy" title="Permalink to this headline">¶</a></h1>
+<p>In this example we will study the behaviour of a 10 x 10 x 10 nm iron
+cube with <a class="reference internal" href="../command_reference.html#cubic-anisotropy"><em>cubic_anisotropy</em></a> in an external field.</p>
+<div class="section" id="cubic-anisotropy-simulation-script">
+<span id="id1"></span><h2>2.11.1. Cubic anisotropy simulation script<a class="headerlink" href="doc.html#cubic-anisotropy-simulation-script" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">si</span>
+
+<span class="c"># Create the simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># Define the magnetic material (data from OOMMF materials file)</span>
+<span class="n">Fe</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Fe&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1700e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">21e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">cubic_anisotropy</span><span class="p">(</span><span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">axis2</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">48e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+
+<span class="c"># Load the mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;cube.nmesh&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;cube&quot;</span><span class="p">,</span> <span class="n">Fe</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set the initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># Launch the hysteresis loop</span>
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">19</span><span class="p">,</span> <span class="mf">19.1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">50</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">0.001</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We will now discuss the <a class="reference download internal" href="../_downloads/cube.py"><tt class="xref download docutils literal"><span class="pre">cube.py</span></tt></a> script step-by-step:</p>
+<p>After creating the simulation object we define a magnetic material <tt class="docutils literal"><span class="pre">Fe</span></tt>
+with cubic anisotropy representing iron:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Fe</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Fe&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1700e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">21e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">anisotropy</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">cubic_anisotropy</span><span class="p">(</span><span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">axis2</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">48e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>We load the mesh and set initial magnetisation pointing in +z direction
+(that is, in a local minimum of anisotropy energy density).</p>
+<p>Finally, we use <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> to apply gradually stronger fields in +x direction (up to 50 mT):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">19</span><span class="p">,</span> <span class="mf">19.1</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="p">[],</span> <span class="mi">50</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">0.001</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that we sample more often the region between 19 and 21 mT where
+magnetisation direction changes rapidly due to having crossed the anisotropy
+energy &#8220;barrier&#8221; between +z and +x (as can be seen in the graph below).</p>
+</div>
+<div class="section" id="analyzing-the-result">
+<span id="id2"></span><h2>2.11.2. Analyzing the result<a class="headerlink" href="doc.html#analyzing-the-result" title="Permalink to this headline">¶</a></h2>
+<p>First, we extract the magnitude of the applied field and the x component of
+magnetisation:</p>
+<div class="highlight-python"><pre>ncol cube H_ext_0 M_Fe_0 &gt; cube_hext_vs_m.txt</pre>
+</div>
+<p>Then we compare the result with OOMMF&#8217;s result (generated from the
+equivalent scene description <a class="reference download internal" href="../_downloads/cube.mif"><tt class="xref download docutils literal"><span class="pre">oommf/cube.mif</span></tt></a>)
+using the following <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a> script:</p>
+<div class="highlight-python"><pre>set term png giant size 800,600
+set out 'cube_hext_vs_m.png'
+set xlabel 'H_ext.x (A/m)'
+set ylabel 'M.x (A/m)'
+plot 'cube_hext_vs_m.txt' t 'nmag' w l 2,\
+ 'oommf/cube_hext_vs_m.txt' u ($1*795.77471545947674):2 ti 'oommf' w p 1
+</pre>
+</div>
+<p>which gives the following result:</p>
+<img alt="../_images/cube_hext_vs_m.png" class="align-center" src="../_images/cube_hext_vs_m.png" style="width: 800px; height: 600px;" />
+<p>Nmag provides advanced capabilities to conveniently handle
+arbitrary-order anisotropy energy functions. Details can be found in
+the documentation of the <a class="reference internal" href="../command_reference.html#magmaterial"><em>MagMaterial</em></a> class.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_user_anis/doc.html" title="2.12. Example: Arbitrary Anisotropy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_uniaxial_anis/doc.html" title="2.10. Example: Uniaxial anisotropy"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

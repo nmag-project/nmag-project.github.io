@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Installing netgen - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Installing_netgen/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Installing-Netgen-from-source-on-Ubuntu-104-or-Debian-60-Squeeze">Installing Netgen from source on Ubuntu 10.4  (or Debian 6.0 Squeeze)<a href="Installing_netgen.html#Installing-Netgen-from-source-on-Ubuntu-104-or-Debian-60-Squeeze" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>In this example we do everything inside the directory <code>~/src</code> (<code>~</code> is a common shell convention to refer to your home directory, it is typically expanded to something like <code>/home/yourusername</code>). You can create the directory with:</p>
+
+
+<pre>
+cd ~
+mkdir src # create the directory, in case it does not exist, yet
+</pre>
+
+	<h2 id="Requirements">Requirements<a href="Installing_netgen.html#Requirements" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>You will need to install a number of packages in order to compile Netgen correctly. You can do it with just one line from your shell:</p>
+
+
+<pre>
+sudo aptitude install tcl-dev tk-dev tix-dev libxmu-dev
+</pre>
+
+	<p>Notice that you will need administrator priviledges in order to do that.<br />
+You may need to also install <code>libglut-dev</code> and <code>g++</code> (at least on a clean Debian 6.0 Squeeze installation).</p>
+
+
+	<h2 id="Installing-Togl-from-sources">Installing Togl from sources<a href="Installing_netgen.html#Installing-Togl-from-sources" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>There is a further requirement which is not available in the Ubuntu repositories. You'll then have to install it by hand. First let's download the package:</p>
+
+
+<pre>
+cd ~/src
+wget http://sourceforge.net/projects/togl/files/Togl/1.7/Togl-1.7.tar.gz/download
+tar xzvf Togl-1.7.tar.gz
+</pre>
+
+	<p>Now enter the directory, configure, compile and install.</p>
+
+
+<pre>
+cd ~/src/Togl-1.7
+./configure
+make
+sudo make install
+</pre>
+
+	<p>The last command will require to enter your password (and require you to be an administrator). If everything went as it should, typing the command <code>ls /usr/lib/Togl-1.7</code> should produce the following output:</p>
+
+
+<pre>
+libTogl1.7.so  pkgIndex.tcl
+</pre>
+
+	<h2 id="Installing-Netgen-from-sources">Installing Netgen from sources<a href="Installing_netgen.html#Installing-Netgen-from-sources" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Download the latest Netgen tarball and unpack it under the <code>~/src</code> directory.</p>
+
+
+<pre>
+cd ~/src
+wget http://kent.dl.sourceforge.net/project/netgen-mesher/netgen-mesher/4.9.13/netgen-4.9.13.zip
+unzip netgen-4.9.13
+cd netgen-4.9.13
+</pre>
+
+	<p>Configure, compile and install it:</p>
+
+
+<pre>
+./configure
+make
+sudo make install
+</pre>
+
+	<p>That will create a directory under <code>/opt</code>. Now get back to the <code>~/src</code> directory and download a file like this:</p>
+
+
+<pre>
+cd ~/src
+wget http://dl.dropbox.com/u/1820549/soton/netgen
+</pre>
+
+	<p>The file should have the following content:</p>
+
+
+<pre>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/Togl1.7
+export NETGENDIR=/opt/netgen/bin
+/opt/netgen/bin/netgen "$@" 
+</pre>
+
+	<p>Copy the file in the <code>/usr/bin</code> directory and adjust the permissions with the following two commands:</p>
+
+
+<pre>
+sudo cp netgen /usr/bin
+sudo chmod a+x /usr/bin/netgen
+</pre>
+
+	<p>You should now be able to launch Netgen from the command line:</p>
+
+
+<pre>
+you@machine:~$ netgen &#38;
+[1] 15400
+you@machine:~$ NETGEN-4.9.13
+Developed at RWTH Aachen University, Germany
+and Johannes Kepler University Linz, Austria
+Parsing ng.tcl                                                                                
+optfile ./ng.opt does not exist - using default values
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Installing_netgen?export=html&amp;version=4" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Installing_netgen?export=txt&amp;version=4" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

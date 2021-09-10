@@ -1,0 +1,1936 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+</style>
+</head>
+<body>
+
+<strong>Index by title</strong>
+<ul>
+
+    <li><a href="special.html#About_this_wiki">About this wiki</a></li>
+
+    <li><a href="special.html#Bugfix1">Bugfix1</a></li>
+
+    <li><a href="special.html#Bug_report">Bug report</a></li>
+
+    <li><a href="special.html#Compile_cblaslapack">Compile cblaslapack</a></li>
+
+    <li><a href="special.html#Granular_media">Granular media</a></li>
+
+    <li><a href="special.html#Hlib_issues">Hlib issues</a></li>
+
+    <li><a href="special.html#H_change_in_t">H change in t</a></li>
+
+    <li><a href="special.html#Import_from_salome">Import from salome</a></li>
+
+    <li><a href="special.html#Installing_netgen">Installing netgen</a></li>
+
+    <li><a href="special.html#Installing_scipy">Installing scipy</a></li>
+
+    <li><a href="special.html#Install_fedora14x64">Install fedora14x64</a></li>
+
+    <li><a href="special.html#Iridis3">Iridis3</a></li>
+
+    <li><a href="special.html#Magnetization_along_a_curve_">Magnetization along a curve </a></li>
+
+    <li><a href="special.html#Multiarch_problems">Multiarch problems</a></li>
+
+    <li><a href="special.html#Nmag_cheat_sheet">Nmag cheat sheet</a></li>
+
+    <li><a href="special.html#Nmag_Wiki">Nmag Wiki</a></li>
+
+    <li><a href="special.html#Ocaml_3_11_1">Ocaml 3 11 1</a></li>
+
+    <li><a href="special.html#Performance_data">Performance data</a></li>
+
+    <li><a href="special.html#Probing_the_magnetization_along_a_curve_as_a_function_of_space_and_time_">Probing the magnetization along a curve as a function of space and time </a></li>
+
+    <li><a href="special.html#Recompile_nmag">Recompile nmag</a></li>
+
+    <li><a href="special.html#Resampling">Resampling</a></li>
+
+    <li><a href="special.html#Salome_as_cad_form_mesh">Salome as cad form mesh</a></li>
+
+    <li><a href="special.html#Save_in_different_dir">Save in different dir</a></li>
+
+    <li><a href="special.html#Sim_convergence">Sim convergence</a></li>
+
+    <li><a href="special.html#Snowleopard">Snowleopard</a></li>
+
+    <li><a href="special.html#User_contrib">User contrib</a></li>
+
+    <li><a href="special.html#User_contrib_example">User contrib example</a></li>
+
+    <li><a href="special.html#Using_Gmsh">Using Gmsh</a></li>
+
+    <li><a href="special.html#Visualise_diff">Visualise diff</a></li>
+
+</ul>
+
+
+<hr />
+<a name="About_this_wiki" />
+<h1 id="About-this-wiki">About this wiki<a href="special.html#About-this-wiki" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>This Nmag Wiki is world visible. It is more dynamic than the Nmag manual and provides recipes for some simulations scenarios that are not (yet) captured in the Nmag manual (<a href="../../../../nmag/current/manual/html/manual.html" class="external">html</a>).</p>
+
+
+	<p>We do invite and welcome contributions from users (full recipes into the "User contributed section", corrections are welcome anywhere). Currently, we ask you <a href="https://152.78.138.239/community/account/register" class="external">to register</a> and to let us know subsequently by email that you have done so (<a href="mailto:nmag@soton.ac.uk" class="email">nmag@soton.ac.uk</a>) so that we can activate your account.</p>
+
+<hr />
+<a name="Bugfix1" />
+<h1 id="Patch-to-fix-a-bug-arising-when-dealing-with-periodic-systems">Patch to fix a bug arising when dealing with periodic systems<a href="special.html#Patch-to-fix-a-bug-arising-when-dealing-with-periodic-systems" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>The last released version of Nmag (0.1 beta (6481)) is affected by a bug which emerges when simulating a periodic system (see this <a href="../../../../nmag/0.1/manual/html/manual.html#example-spin-waves-in-periodic-system" class="external">example in the manual</a>). The issue appears when saving data to file and leads to the interruption of the simulation with the following error messages:</p>
+
+
+<pre>
+[...]
+File "/home/username/src/nmag-0.1/lib/python2.6/site-packages/tables/carray.py",
+line 191, in __init__
+  % type(atom)
+ValueError: atom parameter should be an instance of tables.Atom and you passed a &lt;type 'tuple'&gt;.
+</pre>
+
+	<p>To solve the issue you should download the <a href="http://dl.dropbox.com/u/1820549/soton/nmag/hdf5_v01.py" class="external">following file</a> and use it to replace the file <code>nmag-0.1/nsim/interface/nfem/hdf5_v01.py</code>. For example,</p>
+
+
+<pre>
+cd nmag-0.1 # Enter the directory where Nmag is
+wget http://dl.dropbox.com/u/1820549/soton/nmag/hdf5_v01.py
+cp hdf5_v01.py nsim/interface/nfem/hdf5_v01.py
+</pre>
+
+	<p>Here we use <code>wget</code> to download the file from the command line, we then use <code>cp</code> to transfer the file to the proper location. You may achieve the same effect in a different way (downloading the file with your browser and copying to the right location).</p>
+
+
+	<p>This should solve the issue.</p>
+
+<hr />
+<a name="Bug_report" />
+<h1 id="Reporting-a-bug-to-the-Nmag-developers">Reporting a bug to the Nmag developers<a href="special.html#Reporting-a-bug-to-the-Nmag-developers" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Create-a-bug-report">Create a bug report<a href="special.html#Create-a-bug-report" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>We created a script to collect information about your system and the problems Nmag may have encountered. If you are using the release candidate then this script can be found in the main directory of the distribution, and has the name <code>build_bug_report</code>. If you are using the old, officially released, version, then this file is not present and you need to download by clicking <a href="http://dl.dropbox.com/u/1820549/soton/nmag/build-bug-report" class="external">here</a>. You should place the file under the directory containing the nmag distribution (typically named <code>nmag-0.1</code>).<br />
+For example,</p>
+
+
+<pre>
+cd nmag-0.1
+mv ~/Downloads/build_bug_report .
+</pre>
+
+	<p>(here it is assumed that you saved the file in the folder <code>~/Downloads</code>)<br />
+Now you should just run the script (from the directory <code>nmag-0.1</code>):</p>
+
+
+	<pre><code>bash build_bug_report</code></pre>
+
+
+	<p>The script should generate a file named <code>bug-report.tgz</code>.<br />
+Please send it together with a description of the problem to the Nmag developers.</p>
+
+<hr />
+<a name="Compile_cblaslapack" />
+<h1 id="Compile-Nmag-with-BLASLAPACK-versions-downloaded-automatically-by-PETSc">Compile Nmag with BLAS/LAPACK versions downloaded automatically by PETSc<a href="special.html#Compile-Nmag-with-BLASLAPACK-versions-downloaded-automatically-by-PETSc" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>This is a contribution from Gilles Nguyen from the University of Brest (France):</p>
+
+
+	<p>To compile nmag :</p>
+
+
+	<p>1. you should compile Nmag using GCC. If you are in a cluster, you may then have to disable using the Intel C compiler, by commenting in your .cshrc (or equivalent) the line <code>module intel</code> (otherwise, the header files for Intel compiler are selected during compilation, leading to compilation errors each time the headers are included with #include<...> (because using <...> instead of using "..." commands to the preprocessor to find the header files in the environment paths which depend to the modules used)</p>
+
+
+	<p>2. add in the Makefile:</p>
+
+
+<pre>
+  PETSC_MORE_CONFIG_OPTS=-COPTFLAGS=$(COPTFLAGS) -CXXOPTFLAGS=$(COPTFLAGS) --download-c-blas-lapack=1
+</pre>
+
+	<p>as mentioned when the compilation error prompted to do this.</p>
+
+
+	<p>3. make uninstall</p>
+
+
+	<p>4 - make The option <code>"--download-c-blas-lapack=1"</code> downloads effectively the C source files of the libraries blas et lapack in "nmag-0.1/lib/petsc/externalpackages/f2cblaslapack". It seems that they are detected as they were already compiled. But they are in fact not compiled.</p>
+
+
+	<p>The error is probably due to the file "BlasLapack.py" in "/lib/petsc/python/BuildSystem/config/packages/":</p>
+
+
+<pre>
+   if os.path.isfile(os.path.join(libdir,'tmpmakefile')) and
+                     (SourceDB.getChecksum(os.path.join(libdir,'tmpmakefile'))
+                     == SourceDB.getChecksum(os.path.join(blasDir,'tmpmakefile'))):
+      self.framework.log.write('Do not need to compile '+l +'blaslapack, already compiled\n')
+      return libdir  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+</pre>
+
+	<p>5 - So after, we compile the libraries with "tmpmakefile" : <code>make -f tmpmakefile</code></p>
+
+
+6- After, we add in the "Makefile"  the path where the librairy files could be found:<br />
+<pre>
+
+PETSC_MORE_CONFIG_OPTS=-COPTFLAGS=$(COPTFLAGS) -CXXOPTFLAGS=$(COPTFLAGS) --with-blas-lapack-dir=/home3/caparmor/gnguyen/Gilles/nmag/nmag-0.1/lib/petsc/externalpackages/f2cblaslapack
+</pre>
+
+<hr />
+<a name="Granular_media" />
+<h1 id="Granular-media">Granular media<a href="special.html#Granular-media" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Overview">Overview<a href="special.html#Overview" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>The scripts on this page are intended as a starting point to allow users to create their own granular-like meshes for use with Nmag. Although both scripts should be fully functional as they are, it is likely they will need amending for each particular case. There are two different programs, both written in Python, one which creates an array of ellipsoids using Netgen and the other creates a Voronoi-cell type arrangement of grains. Both programs have very similar input syntaxes.</p>
+
+
+	<h2 id="Ellipsoid-Builder">Ellipsoid Builder<a href="special.html#Ellipsoid-Builder" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>This program creates an array of meshed ellipsoids using Netgen. The program has many variables which can be selected from the command line; the full list of which can be found by running <code>EllipsoidBuilder.py --help</code> or reading the source code.</p>
+
+
+	<h3 id="Download">Download<a href="special.html#Download" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><a href="https://www.dropbox.com/sh/gifwko3dh6yplqj/vV4ladlO-v" class="external">Download here</a><br />
+This Dropbox page has the EllipsoidBuilder.py script, combined with a sample output which was used to make the image below for reference.</p>
+
+
+	<h3 id="Prerequisites">Prerequisites<a href="special.html#Prerequisites" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Python 2.x</li>
+		<li>Netgen <a class="external" href="http://www.hpfem.jku.at/netgen/">http://www.hpfem.jku.at/netgen/</a></li>
+	</ul>
+
+
+	<h3 id="Output">Output<a href="special.html#Output" class="wiki-anchor">&para;</a></h3>
+
+
+Once successfully run, the program outputs a selection of files as follows (assuming the chosen filename was <code>Ellipsoids</code>):
+	<ul>
+	<li><code>Ellipsoids.py</code> - skeleton Python Nmag script with the material and meshes defined (needs actual simulation code to be written manually, e.g. to define a hysteresis loop etc.)</li>
+		<li><code>Ellipsoids.geo</code> - geometry file read by Netgen</li>
+		<li><code>Ellipsoids.neutral</code> - 'neutral' file which is the mesh output from Netgen</li>
+		<li><code>Ellipsoids.nmesh.h5</code> - the mesh file once interpreted and compressed using <code>nmeshimport</code></li>
+	</ul>
+
+
+	<p>A meshed output can be seen in the image below.</p>
+
+
+	<p><img src="https://dl.dropbox.com/sh/gifwko3dh6yplqj/0fdIZK_GRJ/Ellipsoids.jpg?dl=1" alt="" /></p>
+
+
+	<p>This was created using the default values in the script with 5 rows and 10 columns. Note that the script introduces randomness in the ellipsoid orientation by default.</p>
+
+
+	<h3 id="Known-Issues">Known Issues<a href="special.html#Known-Issues" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>On some installations, calling <code>netgen</code> will not start Netgen. The reference to Netgen at the bottom of the script may have to be changed to <code>/opt/netgen/bin/netgen</code> or a symbolic link or similar created.</p>
+
+
+	<h2 id="Voronoi-Builder">Voronoi Builder<a href="special.html#Voronoi-Builder" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>This program creates and array of extruded Voronoi cells using Gmsh which can be used to simulate a granular medium in Nmag. The program has many variables which can be selected from the command line; the full list of which can be found by running <code>VoronoiBuilder.py --help</code> or reading the source code. Unlike the Ellipsoid Builder script, this program does not automatically mesh the geometry. Instead, the <code>.geo</code> file must be opened in Gmsh and meshed manually.</p>
+
+
+	<h3 id="Download">Download<a href="special.html#Download" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><a href="https://www.dropbox.com/sh/frxdsc1zksw9wb6/_izvTs5pBP" class="external">Download here</a><br />
+This Dropbox page has the VoronoiBuilder.py script, combined with a sample output which was used to make the images below for reference.</p>
+
+
+	<h3 id="Prerequisites">Prerequisites<a href="special.html#Prerequisites" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Python 2.6</li>
+		<li>Gmsh <a class="external" href="http://geuz.org/gmsh/">http://geuz.org/gmsh/</a></li>
+		<li>Qhull <a class="external" href="http://qhull.org">http://qhull.org</a></li>
+	</ul>
+
+
+	<h3 id="Output">Output<a href="special.html#Output" class="wiki-anchor">&para;</a></h3>
+
+
+Once successfully run, the program outputs a selection of files as follows (assuming the chosen filename was <code>Voronoi</code>):
+	<ul>
+	<li><code>Voronoi.py</code> - skeleton Python Nmag script with the material and meshes defined (needs actual simulation code to be written manually, e.g. to define a hysteresis loop etc.)</li>
+		<li><code>Voronoi.geo</code> - geometry file read by Gmsh</li>
+	</ul>
+
+
+	<p>A meshed output can be seen in the images below.<br />
+<img src="https://dl.dropbox.com/s/qcq3foj1y7m7se5/voronoi_1.jpg?dl=1" alt="" /><br />
+<img src="https://dl.dropbox.com/s/iekq1s6ai620011/voronoi_2.jpg?dl=1" alt="" /></p>
+
+
+	<p>This was created using the default values in the script with 5 rows and 10 columns. Note that the script introduces randomness in the cell boundary position by default.</p>
+
+<hr />
+<a name="Hlib_issues" />
+<h1 id="What-to-do-if-compilation-of-HLib-fails">What to do if compilation of HLib fails<a href="special.html#What-to-do-if-compilation-of-HLib-fails" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>If the compilation of HLib fails with the error:</p>
+
+
+<pre>
+...
+...
+checking for BLAS in VecLib... no
+checking for g77 BLAS... no
+checking for g77 BLAS with pthread... no
+checking for gfortran BLAS... no
+configure: error: Cannot find BLAS
+make[1]: *** [.deps_hlib_configure] Error 1
+make[1]: Leaving directory `/home/guru/Downloads/nmag-0.1'
+make: ***
+[nsim/interface/extra/lib/libhmatrix-1.3.so&lt;http://libhmatrix-1.3.so&gt;&lt;http://libhmatrix-1.3.so&gt;]
+Error 2
+</pre>
+
+	<p>Try to install liblas-dev, libgfortran and gfortran.</p>
+
+<hr />
+<a name="H_change_in_t" />
+<h1 id="User-query-Can-I-have-an-applied-field-changing-both-in-time-and-in-space">User query: Can I have an applied field changing both in time and in space?<a href="special.html#User-query-Can-I-have-an-applied-field-changing-both-in-time-and-in-space" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>You can simulate an applied field which both changes in space and time: this may be useful to mimic the effect of a write head on the magnetic grains of an hard disk while the head is moving.<br />
+The way we do this is by changing the applied field every delta_t picoseconds. This means that the applied field won't change continuously in time: it will be piecewise constant in time (but, in general, it can be non uniform in space).<br />
+You can do something like that:</p>
+
+
+<pre><code class="python CodeRay"><span class="no"> 1</span> import math
+<span class="no"> 2</span> 
+<span class="no"> 3</span> def set_H(sim):
+<span class="no"> 4</span>   width = 10.0        # nm
+<span class="no"> 5</span>   v = 100.0           # nm/ns == m/s
+<span class="no"> 6</span>   H_amplitude = 0.5e6 # A/m
+<span class="no"> 7</span> 
+<span class="no"> 8</span>   t = float(sim.time/SI(1e-9, 's')) # get the time in ns
+<span class="no"> 9</span>   center = (v*t, 0, 0) # center of the applied field region
+<span class="no"><strong>10</strong></span>   def H(r):
+<span class="no">11</span>     x, y, z = [ri/1e-9 - ci for ri, ci in zip(r, center)] 
+<span class="no">12</span>     factor = H_amplitude*math.exp(-(x*x + y*y + z*z)/(width*width))
+<span class="no">13</span>     return [factor, factor, factor]
+<span class="no">14</span> 
+<span class="no">15</span>   sim.set_H_ext(H, unit=SI('A/m'))
+<span class="no">16</span> 
+<span class="no">17</span> sim.relax(do=[(set_H, every('time', SI(50e-12, 's'))),
+<span class="no">18</span>               ('exit', at('time', SI(1000e-12, 's')))])
+</code></pre>
+
+	<p>The function set_H is called every 50 ps and does the following: it sets a new field from the function H(r).<br />
+This function sets a field which directed along the direction [1, 1, 1] and almost vanishes outside a sphere with radius ~ 30.0 nm.<br />
+The center of this sphere moves along the direction [1, 0, 0] with velocity 100 nm/ns, thus simulating the motion of a write head in a hard disk.<br />
+Obviously the piece of code is not complete, it shows only the technique in order to have a field changing in time and space.<br />
+For a complete example see the next section.</p>
+
+
+	<h2 id="Complete-example-simple-moving-write-head-example">Complete example: simple moving write-head example<a href="special.html#Complete-example-simple-moving-write-head-example" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Here is a simulation of five cubes made of cobalt and a write-head which moves on the top of the cubes and applies a time-varying field in order to change their magnetisation. At the beginning the magnetisation of all the cubes is pointing in the [0, 0, 1] direction. After the write-head has passed over the cubes, the magnetisation of cube 1, 3 and 5 are switched in the opposite direction, while cube 2 and 4 have unchanged magnetisation.<br />
+This is possible because the write-head field, which is space-dependent (being intense only inside a sphere of radius 15-20 nm), changes also in time. It indeed translates in space, but also change in intensity, being directed in the [0, 0, -1] direction when the sphere is at the center of cube 1, 3 and 5 and in the [0, 0, 1] direction when the center of the sphere is in cube 2 and 4.</p>
+
+
+	<p>Here is the geo file used to generate the mesh (Netgen):</p>
+
+
+<pre>
+algebraic3d
+
+# cubes
+solid cube1 = orthobrick (    0, 0, 0;  20.0, 20.0, 20.0) -maxh = 2;
+solid cube2 = orthobrick ( 30.0, 0, 0;  50.0, 20.0, 20.0) -maxh = 2;
+solid cube3 = orthobrick ( 60.0, 0, 0;  80.0, 20.0, 20.0) -maxh = 2;
+solid cube4 = orthobrick ( 90.0, 0, 0; 110.0, 20.0, 20.0) -maxh = 2;
+solid cube5 = orthobrick (120.0, 0, 0; 140.0, 20.0, 20.0) -maxh = 2;
+
+tlo cube1;
+tlo cube2;
+tlo cube3;
+tlo cube4;
+tlo cube5;
+</pre>
+
+	<p>And here is the full listing of the example:</p>
+
+
+<pre><code class="python CodeRay"><span class="no"> 1</span> from nmag.common import *
+<span class="no"> 2</span> import math
+<span class="no"> 3</span> 
+<span class="no"> 4</span> # Define magnetic material (data from OOMMF materials file)
+<span class="no"> 5</span> mat_Co = MagMaterial(name="Co",
+<span class="no"> 6</span>                      Ms=SI(1400e3, "A/m"),
+<span class="no"> 7</span>                      exchange_coupling=SI(30e-12, "J/m"),
+<span class="no"> 8</span>                      anisotropy=uniaxial_anisotropy(axis=[0, 0, 1],
+<span class="no"> 9</span>                                                     K1=SI(520e3, "J/m^3")))
+<span class="no"><strong>10</strong></span> sim = Simulation()
+<span class="no">11</span> sim.load_mesh("cubes.nmesh.h5",
+<span class="no">12</span>               [('cube1', mat_Co), ('cube2', mat_Co), ('cube3', mat_Co),
+<span class="no">13</span>                ('cube4', mat_Co), ('cube5', mat_Co)],
+<span class="no">14</span>               unit_length=SI(1e-9, 'm'))
+<span class="no">15</span> 
+<span class="no">16</span> sim.set_m([0, 0, 1])
+<span class="no">17</span> 
+<span class="no">18</span> sim.relax(save=[('fields', at('convergence'))])
+<span class="no">19</span> 
+<span class="no"><strong>20</strong></span> t0 = [sim.time]
+<span class="no">21</span> 
+<span class="no">22</span> def set_H(sim):
+<span class="no">23</span>     t = float((sim.time - t0[0])/SI(1e-9, 's'))  # get time in ns
+<span class="no">24</span>     width = 10.0                                 # nm
+<span class="no">25</span>     v = 25.0                                     # nm/ns = m/s
+<span class="no">26</span>     H_amplitude = 4.0e6*math.sin(math.pi*t)      # A/m
+<span class="no">27</span>     center = (v*t, 20, 10)
+<span class="no">28</span>     print "CENTER IN", center
+<span class="no">29</span>     def H(r):
+<span class="no"><strong>30</strong></span>         x, y, z = [ri/1e-9 - ci for ri, ci in zip(r, center)]
+<span class="no">31</span>         factor = H_amplitude*math.exp(-(x*x + y*y + z*z)/(width*width))
+<span class="no">32</span>         return [0, 0, -factor]
+<span class="no">33</span> 
+<span class="no">34</span>     sim.set_H_ext(H, unit=SI('A/m'))
+<span class="no">35</span> 
+<span class="no">36</span> set_H(sim)
+<span class="no">37</span> 
+<span class="no">38</span> sim.set_params(stopping_dm_dt=0*degrees_per_ns)
+<span class="no">39</span> 
+<span class="no"><strong>40</strong></span> sim.relax(save=[('fields', every('time', SI(200e-12, 's'), first=t0[0]))],
+<span class="no">41</span>           do=[(set_H, every('time', SI(50e-12, 's'), first=t0[0])),
+<span class="no">42</span>               ('exit', at('time', SI(6000e-12, 's')))])
+</code></pre>
+
+	<p>Here is the magnetisation at the beginning of the simulation, after the first relax command (whose purpose is just to find the zero field magnetisation configuration):<br />
+<img src="http://dl.dropbox.com/u/1820549/before.png" alt="" /></p>
+
+
+	<p>and here is the magnetisation after the write-head has passed over the cubes:<br />
+<img src="http://dl.dropbox.com/u/1820549/after.png" alt="" /></p>
+
+<hr />
+<a name="Import_from_salome" />
+<h1 id="Script-to-import-unv-mesh-from-Salome-platform">Script to import .unv mesh from Salome platform<a href="special.html#Script-to-import-unv-mesh-from-Salome-platform" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Here is a contribution from Luyang Han.</p>
+
+
+	<p>Hello all,</p>
+
+
+	<p>This is an ad-hoc script to import the .unv mesh file exported from Salome platform (<a class="external" href="http://www.salome-platform.org/">http://www.salome-platform.org/</a>). The solid modeling and mesh generation in Salome is much more powerful and easier to use compared to gmsh.<br />
+Salome can only export unv file with just one region, thus all simplices are set to region 1.</p>
+
+
+	<p>To use the script do:</p>
+
+
+<pre>
+chmod +x importunv.py
+./importunv.py infile.unv outfile.nmesh.h5
+</pre>
+
+	<p>The script need to setup nmag path in the env.</p>
+
+
+	<p>Regards.</p>
+
+
+<pre>
+#!/usr/bin/env nsim
+
+import sys
+
+import nmesh
+
+def loadmesh(filename):
+  vertices = []
+  simplex = []
+  with open(filename) as fname:
+      #skip the first two lines
+      fname.readline()
+      fname.readline()
+      # start to read the vertices
+      input_a = fname.readline()
+      input_b = fname.readline()
+      while input_a.strip() &lt;&gt; '-1' :
+          coord = map(float,input_b.strip().split())
+          vertices.append(coord)
+          input_a = fname.readline()
+          input_b = fname.readline()
+      # finish the vertices part.
+      # ignore one line here
+      fname.readline()
+      # read lines till we reach the simplex region
+      input_a = fname.readline()
+      while True:
+          if len(input_a.strip().split()) == 6 and input_a.strip().split()[-1] == '4':
+              break
+          else:
+              input_a = fname.readline()
+      # now we reached the first line of the simplex region
+      #input_b = fname.readline()
+      #simp = map(int,input_b.strip().split())
+      #simplex.append(simp)
+      #input_a = fname.readline()
+      while input_a.strip() &lt;&gt; '-1' :
+          input_b = fname.readline()
+          simp = map(int,input_b.strip().split())
+          simplex.append(simp)
+          input_a = fname.readline()
+
+  # finish the reading
+  return vertices, simplex
+
+#main program
+mesh = None
+
+infile = sys.argv[1]
+outfile = sys.argv[2]
+
+points,simplices_indices = loadmesh(infile)
+
+simplices_regions = [1] * len(simplices_indices)
+
+mesh = nmesh.mesh_from_points_and_simplices(points=points, simplices_indices=simplices_indices, simplices_regions=simplices_regions, periodic_point_indices=[], initial=1, do_reorder=True)
+
+mesh.save(outfile)
+</pre>
+
+<hr />
+<a name="Installing_netgen" />
+<h1 id="Installing-Netgen-from-source-on-Ubuntu-104-or-Debian-60-Squeeze">Installing Netgen from source on Ubuntu 10.4  (or Debian 6.0 Squeeze)<a href="special.html#Installing-Netgen-from-source-on-Ubuntu-104-or-Debian-60-Squeeze" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>In this example we do everything inside the directory <code>~/src</code> (<code>~</code> is a common shell convention to refer to your home directory, it is typically expanded to something like <code>/home/yourusername</code>). You can create the directory with:</p>
+
+
+<pre>
+cd ~
+mkdir src # create the directory, in case it does not exist, yet
+</pre>
+
+	<h2 id="Requirements">Requirements<a href="special.html#Requirements" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>You will need to install a number of packages in order to compile Netgen correctly. You can do it with just one line from your shell:</p>
+
+
+<pre>
+sudo aptitude install tcl-dev tk-dev tix-dev libxmu-dev
+</pre>
+
+	<p>Notice that you will need administrator priviledges in order to do that.<br />
+You may need to also install <code>libglut-dev</code> and <code>g++</code> (at least on a clean Debian 6.0 Squeeze installation).</p>
+
+
+	<h2 id="Installing-Togl-from-sources">Installing Togl from sources<a href="special.html#Installing-Togl-from-sources" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>There is a further requirement which is not available in the Ubuntu repositories. You'll then have to install it by hand. First let's download the package:</p>
+
+
+<pre>
+cd ~/src
+wget http://sourceforge.net/projects/togl/files/Togl/1.7/Togl-1.7.tar.gz/download
+tar xzvf Togl-1.7.tar.gz
+</pre>
+
+	<p>Now enter the directory, configure, compile and install.</p>
+
+
+<pre>
+cd ~/src/Togl-1.7
+./configure
+make
+sudo make install
+</pre>
+
+	<p>The last command will require to enter your password (and require you to be an administrator). If everything went as it should, typing the command <code>ls /usr/lib/Togl-1.7</code> should produce the following output:</p>
+
+
+<pre>
+libTogl1.7.so  pkgIndex.tcl
+</pre>
+
+	<h2 id="Installing-Netgen-from-sources">Installing Netgen from sources<a href="special.html#Installing-Netgen-from-sources" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Download the latest Netgen tarball and unpack it under the <code>~/src</code> directory.</p>
+
+
+<pre>
+cd ~/src
+wget http://kent.dl.sourceforge.net/project/netgen-mesher/netgen-mesher/4.9.13/netgen-4.9.13.zip
+unzip netgen-4.9.13
+cd netgen-4.9.13
+</pre>
+
+	<p>Configure, compile and install it:</p>
+
+
+<pre>
+./configure
+make
+sudo make install
+</pre>
+
+	<p>That will create a directory under <code>/opt</code>. Now get back to the <code>~/src</code> directory and download a file like this:</p>
+
+
+<pre>
+cd ~/src
+wget http://dl.dropbox.com/u/1820549/soton/netgen
+</pre>
+
+	<p>The file should have the following content:</p>
+
+
+<pre>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/Togl1.7
+export NETGENDIR=/opt/netgen/bin
+/opt/netgen/bin/netgen "$@" 
+</pre>
+
+	<p>Copy the file in the <code>/usr/bin</code> directory and adjust the permissions with the following two commands:</p>
+
+
+<pre>
+sudo cp netgen /usr/bin
+sudo chmod a+x /usr/bin/netgen
+</pre>
+
+	<p>You should now be able to launch Netgen from the command line:</p>
+
+
+<pre>
+you@machine:~$ netgen &#38;
+[1] 15400
+you@machine:~$ NETGEN-4.9.13
+Developed at RWTH Aachen University, Germany
+and Johannes Kepler University Linz, Austria
+Parsing ng.tcl                                                                                
+optfile ./ng.opt does not exist - using default values
+</pre>
+
+<hr />
+<a name="Installing_scipy" />
+<h1 id="Introduction">Introduction<a href="special.html#Introduction" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Once you have compiled Nmag from sources, you may want to add some extra packages to the Python installation which comes with it. Indeed, Nmag does not use the Python installed on your system (if there is one), but rather brings its own Python interpreter, meaning that any other extra Python library has to be compiled expressly for it. In other words, when you launch <code>nsim</code> you won't be able to import the libraries that you installed on your system Python. While this is certainly inconvenient, it allows us to distribute one unique file (<code>nmag-0.1.tar.gz</code>) which is likely to compile with little trouble on most Linux distributions.</p>
+
+
+	<h1 id="Installing-SciPy">Installing SciPy<a href="special.html#Installing-SciPy" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>First, compile Nmag from sources. <br />
+Second, make sure you have installed the following packages:</p>
+
+
+	<ul>
+	<li>a sane build environment (which you already have, since you managed to compile Nmag)</li>
+		<li>Swig</li>
+		<li>a Fortran compiler</li>
+	</ul>
+
+
+	<p>Indeed, the compilation of SciPy requires such packages to be installed on your system. Install all of them using the most convenient tool for your distribution. Download SciPy from the official website. You can do it with your browser by clicking <a href="http://sourceforge.net/projects/scipy/files/scipy/0.7.2/scipy-0.7.2.tar.gz/download" class="external">here</a>. You should save the file into the directory <code>nmag-0.1/pkgs/</code>. Then untar the package:</p>
+
+
+<pre>
+cd nmag-0.1
+tar xzvf pkgs/scipy-?.?.?.tar.gz
+</pre>
+
+	<p>Now enter the directory created by the tar command and build SciPy:</p>
+
+
+<pre>
+. exports.bash
+cd scipy-?.?.?
+../bin/python setup.py install
+</pre>
+
+	<p>The first line modifies the environment such that the local installed libraries can be found.<br />
+Be careful to use <code>../bin/python</code> (the Python which comes with Nmag) rather than simply <code>python</code> (the Python installed on your system).<br />
+If all goes well than you should be able to import scipy:</p>
+
+
+<pre>
+cd .. # cd into the nmag-0.1 directory
+./bin/nsim 
+import scipy
+</pre>
+
+	<p>You should get a silent prompt (no error messages). Exit nsim pressing CTRL+D or typing exit().</p>
+
+<hr />
+<a name="Install_fedora14x64" />
+<h1 id="How-to-install-Nmag-01-beta-6481-on-Fedora-14-64-bit">How to install Nmag 0.1 beta (6481) on Fedora 14 (64 bit)<a href="special.html#How-to-install-Nmag-01-beta-6481-on-Fedora-14-64-bit" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Wagner de Oliveira da Rosa explains how he installed Nmag on Fedora 14. Note that newer versions should not require this hack.<br />
+Here is his mail:</p>
+
+
+	<p>How to install nmag on Fedora 14 - 64 bits using the method A (compiling all from the source):</p>
+
+
+	<p>1 - Download the nmag source file from the developers webpage nmag-0.1-all.tar.gz<br />
+2 - Install all the libraries and compilers needed like gawk, gcc, gfortran, readline, blas, lapack, etc (see the instruction manual)<br />
+3 - To compile the code from the source, you need to locate the library libutil.so using the follow command in terminal:</p>
+
+
+<pre>
+$ locate libutil.so
+</pre>
+
+	<p>This search it will produce a result like this:</p>
+
+
+<pre>
+/lib64/libutil.so.1
+/usr/lib64/libutil.so 
+</pre>
+
+	<p>4 - Once located the <code>libutil.so</code> path, now we should go into the nmag main directory (where you untarred the files) and create a link to this file as shown below:</p>
+
+
+<pre>
+cd nmag-0.1 # directory where you untarred nmag
+cd lib
+ln -s /usr/lib64/libutil.so # you should replace with whatever you got from your system (from the locate command)
+</pre>
+
+	<p>5 - Then, after all, do as follows:</p>
+
+
+<pre>
+cd .. # go back to the nmag main directory
+make
+</pre>
+
+	<p>6 - From now, nmag should compile without any problems. However, before you get set and start any simulation, you should proceed as follows. Find the file <code>ldflags.bash</code>, under the directory <code>nmag-0.1/nsim/bin/</code> (<code>nmag-0.1</code> is the main nmag directory). Open it using your preferred text editor and append this line to the end of the file</p>
+
+
+<pre>
+export LD_PRELOAD=/usr/lib64/libz.so
+</pre>
+
+	<p>where <code>/usr/lib64/libz.so</code> should be replaced with the correct path to the <code>libz.so</code> library in your system (you can use <code>locate libz.so</code> to determine this, as done in step 3).</p>
+
+
+	<p>7 - Now that you will force to load the lib.so the nmag should be ready to use. You can try it by typing in terminal:</p>
+
+
+<pre>
+$ nsim
+&gt;&gt;&gt;
+</pre>
+
+	<p>If you got this the nmag and nsim were successfully compiled and they are ready to use.</p>
+
+
+	<p>Have a nice simulation!!!</p>
+
+<hr />
+<a name="Iridis3" />
+<h1 id="Compiling-Nmag-on-Iridis-3">Compiling Nmag on Iridis 3<a href="special.html#Compiling-Nmag-on-Iridis-3" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>On Iridis 3 the compilation of Nmag is complicated by the fact that one has to use the Intel provided versions of BLAS/LAPACK. On the other hand, such libraries are able to exploit the hardware of the machine and should allow Nmag to use the multi-core architecture of the CPUs.</p>
+
+
+	<h2 id="Using-Intel-Math-Kernel-Library-MKL">Using Intel Math Kernel Library (MKL)<a href="special.html#Using-Intel-Math-Kernel-Library-MKL" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>To compile against the Intel MKL one has to load the appropriate module on Iridis 3.<br />
+Login on Iridis 3, <code>ssh yourusername@iridis3_a.soton.ac.uk</code> and type:</p>
+
+
+<pre>
+module load intel/mkl
+</pre>
+
+	<p>Documentation for the library can be found by typing:</p>
+
+
+<pre>
+mkl_ref
+mkl_use
+</pre>
+
+	<p>These are two shell scripts launching acrobat reader with the appropriate path for the PDF files.<br />
+Try <code>less `which mkl_ref`</code> and <code>less `which mkl_use`</code>.<br />
+In theory you could now compile Nmag, download the tarball, place it somewhere on the system</p>
+
+
+	<h2 id="PETSc">PETSc<a href="special.html#PETSc" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Note that PETSc configuration may fail due to a problem with python and libssl.so (which on Iridis3 does reference a symbol, <code>pqueue_size</code>, which is not defined anywhere). If you have this problem, then jump to  the section about Python later before reading this one.</p>
+
+
+	<p>For PETSc 2.3.3-p15 the following works:</p>
+
+
+<pre>
+python ./config/configure.py --with-shared \
+ --with-mpi-dir=/temp/franchin/i3/nmag-0.1/lib/mpich2 \
+ --COPTFLAGS=-O3 --CXXOPTFLAGS=-O3 --with-debugging=no \
+ --with-blas-lapack-lib="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm" 
+</pre>
+
+	<p>While for PETSc 3.1-p5 the following works:</p>
+
+
+<pre>
+python ./config/configure.py --with-shared --with-single-library=1 \
+ --with-mpi-dir=/temp/franchin/i3/nmag-0.1/lib/mpich2 \
+ --COPTFLAGS=-O3 --CXXOPTFLAGS=-O3 --with-debugging=no \
+ --with-blas-lapack-lib="" --LDFLAGS="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm" 
+</pre>
+
+	<h2 id="HLib">HLib<a href="special.html#HLib" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>To configure HLib:</p>
+
+
+With sequential MKL:<br />
+<pre>
+./configure --with-blas-ldflags='-lm -L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread' --prefix=/home/franchin/nmag-0.1/nsim/interface/extra'
+</pre>
+
+With parallel MKL:<br />
+<pre>
+./configure --prefix=/work/franchin/par/nmag-0.1/nsim/interface/extra --with-blas-ldflags="-L/local/software/intel/mkl/10.2.1.017/lib/em64t -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -liomp5 -lm -lpthread" 
+</pre>
+
+	<h2 id="Python">Python<a href="special.html#Python" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>If compilation of Python fails, do as follows. First, Iridis 3 has its own version of Python, in particular what we need is Python 2.6 or above. Get it from Iridis:</p>
+
+
+<pre>
+cd nmag-0.1
+cp /local/software/rh53/python/2.6.5/source/Python-2.6.5.tar pkgs/
+</pre>
+
+	<p>Now adjust the package (it looks as a .tar file but it actually isn't, it is a zipped tar file):</p>
+
+
+<pre>
+cd nmag-0.1/pkgs
+mv Python-2.6.5.tar Python-2.6.5.tar.gz
+gunzip Python-2.6.5.tar.gz
+bzip2 Python-2.6.5.tar
+</pre>
+
+	<p>Now change the <code>nmag-0.1/Makefile</code> so that it uses this file. Type <code>make</code>. Python 2.6.5 should be compiled. PETSc is the next to be compiled and it fails. Indeed, Iridis 3 is apparently broken: the symbol pqueue_size in libssl.so is not defined anywhere else (at least at the time of writing) and this makes it impossible to import modules such as md5 or hashlib. No worries, Iridis 3 has its own python2.6 (apparently it has been compiled before the package damage) we can steal it.</p>
+
+
+<pre>
+cd nmag-0.1/lib
+mv python2.6 old-python2.6
+cp -r /local/software/rh53/python/2.6.5/gcc/lib/python2.6 .
+</pre>
+
+	<p>Now your local python almost works, but you still needs some adjustments:</p>
+
+
+<pre>
+cd nmag-0.1/lib
+cp old-python2.6/config/libpython2.6.a python2.6/config/
+# ^^^ This is needed because the Iridis 3 guys didn't use --enable-shared when configuring
+cp old-python2.6/config/Makefile python2.6/config/
+# ^^^ This will let python compile new modules appropriately
+</pre>
+
+	<p>You now have your own working copy of Python 2.6. Note that you cannot easily use the Iridis 3 Python, as it doesn't have pytables (and maybe other modules). This is why here we build our own version of Python, so that we can install on it whatever we want.<br />
+Note that Python >= 2.6 is necessary, since Nmag is using syntax features which are not present in Python 2.4. Now you can use Python to compile PETSc and Nmag.</p>
+
+
+	<h2 id="libutilsso">libutils.so<a href="special.html#libutilsso" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>You may also have to do the following in order for the pycaml module to compile correctly</p>
+
+
+<pre>
+cd nmag-0.1/lib
+ln -s /usr/lib64/libutil.so .
+</pre>
+
+	<p>Indeed, in order to link against libpython one also needs to link against libutil (sometimes), which is not stored inside <code>/usr/lib</code> for some reasons...</p>
+
+<hr />
+<a name="Magnetization_along_a_curve_" />
+<h1 id="Probing-the-magnetization-along-a-curve-as-a-function-of-space-and-time">Probing the magnetization, along a curve, as a function of space and time<a href="special.html#Probing-the-magnetization-along-a-curve-as-a-function-of-space-and-time" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>This is to describe how to probe the magnetization, from the h5 file, along a circular arc. The arc may be replaced with any geometric curve.</p>
+
+
+	<p>Once the magnetization has been obtained it may be Fourier transformed in order to obtain the dispersion.</p>
+
+
+	<p>This script should be saved as probe.py and then run with the following command:</p>
+
+
+	<p>nsim &lt;path to the .h5 file&gt; &lt;file in which the probed magnetization is to be saved&gt;</p>
+
+
+<pre>
+
+#Import some libraries
+import math
+import sys
+
+import ocaml
+from nmag.h5probe import Fields
+from nmag import float_set
+
+from numpy import pi, linspace, cos, sin, subtract, savetxt, size
+
+# First we obtain the handler for the fields
+handler = Fields(sys.argv[1])
+
+#probing along a 90 degree (45 degrees on both sides from the centre) arc along a circle of radius 550 nm and at z=0
+angle = float_set([3*pi/4.0, [100], pi/4.0])
+R=550
+xs=R*cos(angle)
+ys=R*sin(angle)
+
+#idlist to give different instances of time
+idlist=range(0,10241,1)    
+
+#Declare some lists for saving purposes
+vs = []
+minit=[];mlist=[]
+
+#loading the 0th time step field; The '0' corresponds to the id and not a time value
+field = handler.set_field_data("m", "Py", 0)
+
+#Calculating the field along the arc for the 0th time step; it has to be subtracted from every other time step
+
+for i in range(size(xs)):
+    minit.append(ocaml.probe_field(field, "m_Py", [xs[i], ys[i], 0.0])[0][1][1])
+
+#For each time (id) step, the field along the arc is calculated and
+#the field at the 0th time step is deducted. This field is then appended to a file
+for t in idlist:
+    field = handler.set_field_data("m", "Py", t)
+      vs=[]
+    for i in range(size(xs)):
+        vs.append(ocaml.probe_field(field, "m_Py", [xs[i], ys[i], 0.0])[0][1][1]);
+    for num in range(size(xs)):
+        mlist.append(subtract(vs, minit)[num])
+
+savetxt(sys.argv[1], mlist)
+
+</pre>
+
+<hr />
+<a name="Multiarch_problems" />
+<h1 id="Compilation-of-Nmag-on-Ubuntu-1104-and-possibly-recent-systems">Compilation of Nmag on Ubuntu 11.04 (and possibly recent systems)<a href="special.html#Compilation-of-Nmag-on-Ubuntu-1104-and-possibly-recent-systems" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Details-about-the-issue">Details about the issue<a href="special.html#Details-about-the-issue" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Starting from Ubuntu 11.04, there have been modifications in the path layout conventions (filesystem hierarchy) to enhance support for different architectures (details are given here <a class="external" href="https://wiki.ubuntu.com/MultiarchSpec">https://wiki.ubuntu.com/MultiarchSpec</a>). In particular, some system libraries have been moved into a directories like <code>/usr/lib/x86_64-linux-gnu</code> or <code>/lib/x86_64-linux-gnu</code>. These directories contain libraries which have been compiled targeting specific architectures. This change confuses some of the packages we are currently installing in the tarball. In particular, the Python tables modules, the zlib Python module do not manage to find <code>libz.so</code> and are not compiled properly. This leads to failures when loading and saving data in Nmag scripts.</p>
+
+
+	<p>You may try to follow the instructions below, while we work on providing a patch to solve the problem.</p>
+
+
+	<h2 id="How-to-solve-it">How to solve it<a href="special.html#How-to-solve-it" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>First, you should locate where your libz.so library is. Type <code>locate libz.so</code>, you'll get something like:</p>
+
+
+<pre>
+/lib/x86_64-linux-gnu/libz.so.1
+/lib/x86_64-linux-gnu/libz.so.1.2.3.4
+/usr/lib/x86_64-linux-gnu/libz.so
+/usr/lib32/libz.so.1
+/usr/lib32/libz.so.1.2.3.4
+</pre>
+
+	<p>Our candidate is <code>/usr/lib/x86_64-linux-gnu/libz.so</code> we should then do as follows:</p>
+
+
+<pre>
+cd nmag-0.1.1
+echo 'export LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libz.so"' &gt;&gt; nsim/bin/ldflags.bash
+</pre>
+
+	<p>In the line above you should substitute <code>/usr/lib/x86_64-linux-gnu/libz.so</code> with what is appropriate for your system (given as an output of the <code>locate</code> command).</p>
+
+<hr />
+<a name="Nmag_cheat_sheet" />
+<ul class="toc"><li class="heading2"><a href="special.html#Nmag-cheat-sheet">Nmag cheat sheet</a></li>
+<li class="heading3"><a href="special.html#Mesh-generation">Mesh generation</a></li>
+<li class="heading3"><a href="special.html#Convert-from-one-mesh-format-to-the-other">Convert from one mesh format to the other</a></li>
+<li class="heading3"><a href="special.html#Inspect-and-visualise-mesh">Inspect and visualise mesh</a></li>
+<li class="heading3"><a href="special.html#Running-simulations">Running simulations</a></li>
+<li class="heading3"><a href="special.html#Running-MPI-simulations">Running MPI simulations</a></li>
+<li class="heading3"><a href="special.html#Visualise-mesh-partitioning">Visualise mesh partitioning</a></li>
+<li class="heading3"><a href="special.html#Postprocessing-data">Postprocessing data</a></li>
+</ul>
+
+
+	<h2 id="Nmag-cheat-sheet">Nmag cheat sheet<a href="special.html#Nmag-cheat-sheet" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Mesh-generation">Mesh generation<a href="special.html#Mesh-generation" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Create mesh with Netgen from command line (Geometry specification to Neutral Mesh)<br />
+  <pre>netgen -geofile=in.geo -moderate -meshfiletype="Neutral Format" \
+       -meshfile=out.neu -batchmode</pre></li>
+	</ul>
+
+
+	<h3 id="Convert-from-one-mesh-format-to-the-other">Convert from one mesh format to the other<a href="special.html#Convert-from-one-mesh-format-to-the-other" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Neutral format (Netgen) to Nmag format:<br />
+  <pre>nmeshimport --netgen in.neu out.nmesh.h5
+nmeshimport --netgen in.neu out.nmesh</pre></li>
+		<li>Binary Nmag format to ASCII Nmag format and viceversa:<br />
+  <pre>nmeshpp -c in.nmesh.h5 out.nmesh
+nmeshpp -c in.nmesh out.nmesh.h5</pre></li>
+		<li>Binary Nmag format to AVS format (Magpar):<br />
+  <pre>nmeshpp -m in.nmesh.h5 out.inp</pre></li>
+	</ul>
+
+
+	<h3 id="Inspect-and-visualise-mesh">Inspect and visualise mesh<a href="special.html#Inspect-and-visualise-mesh" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Getting generic info on the mesh<br />
+  <pre>nmeshpp in.nmesh.h5 -i   # show general information, num points, num simplices, etc
+nmeshpp in.nmesh.h5 -a   # show a distribution of lengths of the edges of the simplices
+nmeshpp in.nmesh.h5 -q   # show a distribution of simplex quality
+</pre></li>
+		<li>Transforming the mesh to a VTK file for visualisation (with Mayavi2 or Paraview):<br />
+  <pre>nmeshpp --vtk in.nmesh.h5 out.vtk</pre></li>
+		<li>Visualising the mesh from the VTK file obtained from command above (using Mayavi2 or Paraview)<br />
+  <pre>mayavi2 -d out.vtk -m Surface
+paraview --data=out.vtk # click on apply when Paraview windows is shown</pre></li>
+	</ul>
+
+
+	<h3 id="Running-simulations">Running simulations<a href="special.html#Running-simulations" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Run simulation file ``mysim.py``<br />
+  <pre>nsim mysim.py</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Run simulation and confirm that existing data files should be overridden<br />
+  <pre>nsim mysim.py --clean</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Continue simulation from stage where it was interrupted before (only for hysteresis command)<br />
+  <pre>nsim mysim.py --restart</pre></li>
+	</ul>
+
+
+	<h3 id="Running-MPI-simulations">Running MPI simulations<a href="special.html#Running-MPI-simulations" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Start a parallel run (on 2 machines):
+
+<pre>mpirun -np 2 nsim mysim.py</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>For MPICH2 you need to launch the daemon first (not required for Nmag VM as it is using OpenMPI):
+
+<pre>cd nmag-0.1 # here we assume you installed from source
+~/lib/mpich2/bin/mpd &#38;
+</pre>
+
+	<p>If you launch <code>mpd</code> for the first time take a look at the <a href="../../../../nmag/current/manual/html/manual.html#using-mpich2" class="external">instructions in the manual</a></p></li>
+	</ul>
+
+
+	<h3 id="Visualise-mesh-partitioning">Visualise mesh partitioning<a href="special.html#Visualise-mesh-partitioning" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>When you run the simulation in parallel you get:</p>
+
+
+<pre>
+...
+nfem.ocaml:2010-07-26 15:54:50,578    INFO Processor 0: 1065 nodes
+nfem.ocaml:2010-07-26 15:54:50,578    INFO Processor 1: 1052 nodes
+...
+</pre>
+
+	<p>These numbers are recorded in the log file (example <code>simulation_log.log</code>).<br />
+We here assume that your fields are saved in the file <code>simulation_dat.h5</code>.<br />
+You can produce a VTK file with the partitioning (and visualise it) using:</p>
+
+
+<pre>nmeshpp simulation_dat.h5 --partitioning=[1065,1052] partitioning.vtk
+mayavi2 -d partitioning.vtk -m Surface</pre>
+
+	<h3 id="Postprocessing-data">Postprocessing data<a href="special.html#Postprocessing-data" class="wiki-anchor">&para;</a></h3>
+
+
+	<ul>
+	<li>Inspect field data file simulation_dat.h5:<br />
+  <pre>nmagpp simulation --fieldlist # get the list of field stored inside the file
+nmagpp simulation --idlist    # get the list of the IDs for the stored fields</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Convert data from <code>mysim_dat.h5</code> file to vtk-files with name <code>myvtk-000000.vtk</code>, <code>myvtk-000001.vtk</code>, etc.<br />
+  <pre>nmagpp --vtk myvtk.vtk mysim</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Write VTK files containing <strong>only</strong> the specified fields (faster than command above):<br />
+  <pre>nmagpp --vtk myvtk.vtk --fields=m,H_demag mysim</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Visualising data from the VTK obtained above<br />
+  <pre>mayavi2 -d myvtk-000000.vtk -m Vectors</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Get a list of fields stored in NDT file <code>mysim.ndt</code><br />
+   <pre>ncol mysim</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Get a list of the fields whose name starts with <code>H</code> or <code>H_e</code><br />
+   <pre>ncol mysim H
+ncol mysim H_e</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Extract external field (spatial average against time) from ``mysim.ndt`` file<br />
+   <pre>ncol mysim time H_ext_0 H_ext_1 H_ext_2</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>Extract magnetisation against time (with <code>ncol</code>) and plot it with <code>Gnuplot</code>:<br />
+  <pre>ncol mysim time m_Py_0 m_Py_1 m_Py_2 &gt; outfile.dat
+gnuplot
+plot "./outfile.dat" u 1:2 t "m_x" w l, "" u 1:3 t "m_y" w l, "" u 1:4 t "m_z" w l
+</pre></li>
+	</ul>
+
+<hr />
+<a name="Nmag_Wiki" />
+<h1 id="Nmag-Wiki">Nmag Wiki<a href="special.html#Nmag-Wiki" class="wiki-anchor">&para;</a></h1>
+
+
+	<p><a href="special.html#About_this_wiki" class="wiki-page">About this Wiki, including: how to contribute</a></p>
+
+
+	<h2 id="Release-candidate">Release candidate<a href="special.html#Release-candidate" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Please find development snapshots at <a class="external" href="../../../../nmag/snapshots.html">http://nmag.soton.ac.uk/nmag/snapshots</a></p>
+
+
+	<h2 id="Recipes-useful-info">Recipes, useful info<a href="special.html#Recipes-useful-info" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Old-entries-that-have-been-included-in-the-Documentation-of-Nmag-02">Old entries that have been included in the Documentation of Nmag-0.2:<a href="special.html#Old-entries-that-have-been-included-in-the-Documentation-of-Nmag-02" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><a href="special.html#H_change_in_t" class="wiki-page">User query: Applied field changing in time and space</a></p>
+
+
+	<p><a href="special.html#Save_in_different_dir" class="wiki-page">Saving data in directory other than current working one</a></p>
+
+
+	<p><a href="special.html#Sim_convergence" class="wiki-page">How to check the convergence of the simulation</a></p>
+
+
+	<p><a href="special.html#Visualise_diff" class="wiki-page">How to visualise the difference between two fields defined on the same mesh?</a></p>
+
+
+	<p><a href="special.html#Resampling" class="wiki-page">How to reload an h5 file, sample it along arbitrary points and save to VTK</a></p>
+
+
+	<p><a href="special.html#Nmag_cheat_sheet" class="wiki-page">Nmag cheat sheet</a></p>
+
+
+	<p><a href="special.html#Using_Gmsh" class="wiki-page">Using Gmsh</a></p>
+
+
+	<h3 id="User-contributed">User contributed<a href="special.html#User-contributed" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><a href="special.html#Compile_cblaslapack" class="wiki-page">Compile Nmag with BLAS/LAPACK versions downloaded automatically by PETSc</a></p>
+
+
+	<p><a href="special.html#User_contrib" class="wiki-page">All user contributions...</a></p>
+
+
+	<h2 id="Installation-issues">Installation issues<a href="special.html#Installation-issues" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><a href="special.html#Bug_report" class="wiki-page">Reporting a bug to the Nmag developers</a></p>
+
+
+	<p><a href="special.html#Hlib_issues" class="wiki-page">What to do if compilation of HLib fails</a></p>
+
+
+	<p><a href="special.html#Multiarch_problems" class="wiki-page">Compilation of Nmag on Ubuntu 11.04 (and possibly recent systems)</a></p>
+
+
+	<p><a href="special.html#Ocaml_3_11_1" class="wiki-page">Compiling with OCaml 3.11.1</a></p>
+
+
+	<p><a href="special.html#Snowleopard" class="wiki-page">Compiling on Mac OS X Snow Leopard</a></p>
+
+
+	<p><a href="special.html#Recompile_nmag" class="wiki-page">Recompiling Nmag after a change in the source</a></p>
+
+
+	<p><a href="special.html#Installing_scipy" class="wiki-page">Installing SciPy from source</a></p>
+
+
+	<p><a href="special.html#Installing_netgen" class="wiki-page">Installing Netgen from source on Ubuntu 10.4 (or Debian 6.0 Squeeze)</a></p>
+
+
+	<p><a href="special.html#Iridis3" class="wiki-page">Compiling Nmag on Iridis 3</a></p>
+
+
+	<h3 id="User-contributed">User contributed<a href="special.html#User-contributed" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><a href="special.html#User_contrib" class="wiki-page">All user contributions...</a></p>
+
+
+	<h2 id="Patches">Patches<a href="special.html#Patches" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><a href="special.html#Bugfix1" class="wiki-page">Patch to solve a issue arising when dealing with periodic systems</a></p>
+
+<hr />
+<a name="Ocaml_3_11_1" />
+<h1 id="Compiling-Nmag-with-OCaml-3111">Compiling Nmag with OCaml 3.11.1<a href="special.html#Compiling-Nmag-with-OCaml-3111" class="wiki-anchor">&para;</a></h1>
+
+
+The newer version of the OCaml (3.11.1) compiler introduces two problems with the compilation of Nmag.<br />
+The first is connected with the changes to the Camlp4 preprocessor, which break version 0.4.0 of ocamlgsl. This can be solved by updating gsl and ocamlgsl to the latest versions (1.13 for gsl and 0.6.0 for ocamlgsl). Alternatively the old version of gsl (1.8) can be used together with version 0.5.3 of ocamlgsl.<br />
+The second problem has to do with changes in the implementation of OCaml, which break the code used to find the size of an OCaml data structure, i.e. the file <code>nsim/snippets/objsize.c</code>. The problem can be solved by replacing the content of the file <code>nsim/snippets/objsize.c</code> (or <code>nmag-0.1/nsim/snippets/objsize.c</code> for those who compiled everything from source) with the following:<br />
+<pre>
+#include &lt;stdlib.h&gt;
+
+#include &lt;caml/mlvalues.h&gt;
+#include &lt;caml/memory.h&gt;
+#include &lt;caml/alloc.h&gt;
+
+CAMLprim value caml_memory_footprint(value start) {
+      CAMLparam1(start);
+      CAMLlocal1(res);
+      size_t s = 0;
+
+      res = caml_alloc_tuple(3);
+      Store_field(res, 0, copy_double(s));
+      Store_field(res, 1, copy_double(s));
+      Store_field(res, 2, copy_double(s));
+      CAMLreturn(res);
+}
+</pre>
+
+<hr />
+<a name="Performance_data" />
+<h1 id="Performance-data">Performance data<a href="special.html#Performance-data" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>The idea for this webpage is to share information about run times and memory consumption for various simulations, to help in making assessments as to what system size can feasibly be computed.</p>
+
+
+	<p>Entries below should contain:</p>
+
+
+	<ol>
+	<li>the system geometry </li>
+		<li>the total number of nodes (<code>points</code>) in the mesh and surface nodes (<code>boundary points</code>) (this can be obtained using the ``nmeshpp -i `` command)</li>
+		<li>the amount of time that has been simulated (i.e. 2ns or such), or how many points in a hysteresis loop have been computed</li>
+		<li>the amount of RAM that as required (and whether the Hlib has been used)</li>
+		<li>the amount of time it took to run the simulation (i.e. hours, days, weeks)</li>
+		<li>the hardware: some info on CPU and clockrate if available<br />
+#.serial or parallel, if parallel: what hardware? MPI on multi-core, multi-CPU or multi-nodes?</li>
+	</ol>
+
+
+	<p>Ideally, the entries should include</p>
+
+
+	<ol>
+	<li>a reference to a publication (this can be added later when it becomes available)</li>
+		<li>the nmag simulation file (maybe for one of the simulations run for this work)</li>
+		<li>if possible a file to create the mesh if possible (for example a geo file for Netgen)</li>
+	</ol>
+
+
+	<h1 id="Data">Data<a href="special.html#Data" class="wiki-anchor">&para;</a></h1>
+
+<hr />
+<a name="Probing_the_magnetization_along_a_curve_as_a_function_of_space_and_time_" />
+<h1 id="Probing-the-magnetization-along-a-curve-as-a-function-of-space-and-time">Probing the magnetization, along a curve, as a function of space and time<a href="special.html#Probing-the-magnetization-along-a-curve-as-a-function-of-space-and-time" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>This wiki page describes how to probe the magnetization, from the h5 file, along a circular arc. The arc may be replaced with any geometric curve.</p>
+
+
+	<p>Once the magnetization has been obtained, it may be Fourier transformed in order to obtain the dispersion of spin waves.</p>
+
+
+	<p>This script should be saved as a python script (say probe.py) and then run with the following command:</p>
+
+
+	<p>nsim probe.py &lt;path to the .h5 file&gt; &lt;file in which the probed magnetization is to be saved&gt;</p>
+
+
+	<p>This has been implemented with Nmag version 0.2.1</p>
+
+
+<pre>
+
+#Import some libraries
+import math
+import sys
+
+import ocaml
+from nmag.h5probe import Fields
+from nmag import float_set
+
+from numpy import pi, linspace, cos, sin, subtract, savetxt, size
+
+# First we obtain the handler for the fields
+handler = Fields(sys.argv[1])
+
+#probing along a 90 degree (45 degrees on both sides from the centre) arc along a circle of radius 550 nm and at z=0
+angle = float_set([3*pi/4.0, [100], pi/4.0])
+R=550
+xs=R*cos(angle)
+ys=R*sin(angle)
+
+#idlist to give different instances of time
+idlist=range(0,10241,1)    
+
+#Declare some lists for saving purposes
+vs = []
+minit=[];mlist=[]
+
+#loading the 0th time step field; The '0' corresponds to the id and not a time value
+field = handler.set_field_data("m", "Py", 0)
+
+#Calculating the field along the arc for the 0th time step; it has to be subtracted from every other time step
+
+for i in range(size(xs)):
+    minit.append(ocaml.probe_field(field, "m_Py", [xs[i], ys[i], 0.0])[0][1][1])
+
+#For each time (id) step, the field along the arc is calculated and
+#the field at the 0th time step is deducted. This field is then appended to a file
+for t in idlist:
+    field = handler.set_field_data("m", "Py", t)
+      vs=[]
+    for i in range(size(xs)):
+        vs.append(ocaml.probe_field(field, "m_Py", [xs[i], ys[i], 0.0])[0][1][1]);
+    for num in range(size(xs)):
+        mlist.append(subtract(vs, minit)[num])
+
+savetxt(sys.argv[2], mlist)
+
+</pre>
+
+<hr />
+<a name="Recompile_nmag" />
+<h1 id="Recompiling-Nmag-after-a-change-in-the-source">Recompiling Nmag after a change in the source<a href="special.html#Recompiling-Nmag-after-a-change-in-the-source" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>(This document refers to the all-source distribution of Nmag.)</p>
+
+
+	<p>Imagine you have changed some files in the source, such as for example <code>nmag-0.1/nsim/snippets/snippets.ml</code> and you want to recompile Nmag.<br />
+You can do this as follows:</p>
+
+
+<pre>
+cd nmag-0.1
+rm nsim/config/configuration.inc
+make
+</pre>
+
+<hr />
+<a name="Resampling" />
+<h1 id="Resampling">Resampling<a href="special.html#Resampling" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>(Available in Nmag-0.1.0-dev)<br />
+You can load an h5 file like this</p>
+
+
+<pre>
+import ocaml
+from nmag.h5probe import Fields
+
+handler = Fields("infile.h5")
+field = handler.set_field_data("m", "Py", 0)
+</pre>
+
+	<p>And probe one of its fields like this</p>
+
+
+<pre>
+position = [0, 1, 2] # In mesh units (typically is nanometres)
+value = ocaml.probe_field(field, "m_Py", position)[0][1]
+</pre>
+
+	<p>This way you can create two arrays: <code>rs</code> containing an array of points and <code>vs</code> containing the corresponding values.<br />
+You can then use pyvtk to generate a VTK file from these:</p>
+
+
+<pre>
+import pyvtk
+
+grid = pyvtk.UnstructuredGrid(rs)
+data = pyvtk.PointData(pyvtk.Vectors(vs))
+v = pyvtk.VtkData(grid, data)
+v.tofile("outfile.vtk")
+</pre>
+
+	<p>Here is a full example, which probes the magnetisation in the outer skin of a cylinder, in sections which are not equally spaced.<br />
+Notice the usage of the function <code>float_set</code> to specify where the sampling should be denser (originally, here is where a domain wall was).<br />
+The script should be used as <code>nsim probe.py infile.h5 outfile.vtk</code></p>
+
+
+<pre>
+import math
+import sys
+
+import pyvtk
+
+import ocaml
+from nmag.h5probe import Fields
+from nmag import float_set
+
+# First we probe the field in the required points
+handler = Fields(sys.argv[1])
+field = handler.set_field_data("m", "Py", 0)
+
+xs = float_set([-150.0, -145.0, [], -15.0, -12.5, [], 15.0, 20.0, [], 50.0])
+angles = float_set([0, [20], 2*math.pi])
+R, R2 = (4.9, 5.1)
+
+rs = []
+vs = []
+for x in xs:
+  for angle in angles:
+    r = [x, R*math.cos(angle), R*math.sin(angle)]
+    rs.append([x, R2*math.cos(angle), R2*math.sin(angle)])
+    vs.append(ocaml.probe_field(field, "m_Py", r)[0][1])
+
+# Now we output the values to a VTK file
+grid = pyvtk.UnstructuredGrid(rs)
+data = pyvtk.PointData(pyvtk.Vectors(vs))
+v = pyvtk.VtkData(grid, data)
+v.tofile(sys.argv[2])
+</pre>
+
+<hr />
+<a name="Salome_as_cad_form_mesh" />
+<h1 id="Using-Salome-as-a-CAD-tool-for-creating-complex-meshes">Using Salome as a CAD tool for creating complex meshes<a href="special.html#Using-Salome-as-a-CAD-tool-for-creating-complex-meshes" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Here is a contribution from Hari Srinivas Gorripati. Hari uses Salome as a CAD (Computer-Aided Design) program to create complex 3D geometries. Salome creates the surface of the mesh. For complex geometries with many bodies and many surfaces, the surfaces have to be saved individually to separate STL files. These files are then loaded with Netgen to create individual meshes for each of them. The meshes are then merged and exported to the Neutral file format. Finally, Nmeshpp can be used to import the merged mesh and use it with Nmag.</p>
+
+
+	<p>Here is Hari's mail:</p>
+
+
+	<p>If this kind of reporting helps others solve problems, I found a work around how to generate more than one region using NETGEN. I applied this to your cube problem though your .geo file is the easiest way to go. Following are the steps for it:</p>
+
+
+	<ol>
+	<li>Create the required geometries/objects using Salome (or any other similar software) as you would want it to appear in the final simulation and export them as individual ascii-STL files (Exporting the objects built into a compound with groups didn't work for me here).</li>
+		<li>Open each exported geometry using NETGEN and generate the mesh. This allows assigning different mesh sizes for different regions. After the mesh was created save all those objects using "File->Save mesh (.vol)" </li>
+		<li>Final step is to open one of those files and and then chose "File -> Merge mesh" to merge all the individual files. This would just appear like the one created in Salome in the beginning.</li>
+	</ol>
+
+
+	<p>I think this procedure will be good for users who create complex geometries. I tried this procedure for ".brep" files. It didn't work for me.</p>
+
+<hr />
+<a name="Save_in_different_dir" />
+<h1 id="Save-data-in-arbitrary-directory">Save data in arbitrary directory<a href="special.html#Save-data-in-arbitrary-directory" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Do-you-really-need-to-do-so">Do you really need to do so?<a href="special.html#Do-you-really-need-to-do-so" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>First, consider whether you really need to save data in a different directory. Remember that you can run many simulation with one single script just using a different simulation name, like:</p>
+
+
+<pre>
+...
+s1 = Simulation('one')
+...
+s2 = Simulation('two')
+...
+</pre>
+
+	<p>When you save the data for simulation one you get files like <code>one_dat.h5</code> and <code>one_dat.ndt</code>, while when dealing with simulation two you get <code>two_dat.h5</code> and <code>two_dat.nd5</code>. There is no interference between the two simulation, which may be the main reason why you may be reading this part of the Nsim documentation.</p>
+
+
+	<h2 id="Here-is-how-you-do-it">Here is how you do it<a href="special.html#Here-is-how-you-do-it" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>When you run a simulation script which saves data from a simulation, you get that the files are saved in the current working directory.<br />
+In order to change this and save data into a directory called <code>./mydir/</code> you should start your script in the following way:</p>
+
+
+<pre>
+import nmag
+import nsim.features
+fts = nsim.features.Features()
+fts.set('etc', 'savedir', './mydir/')
+...
+...
+</pre>
+
+	<p>Alternatively, you can change the current working directory at the beginning of the file with ordinary Python code:</p>
+
+
+<pre>
+import os
+initial_dir = os.path.abspath(os.path.curdir)
+os.chdir('./mydir')
+...
+...
+os.chdir(initial_dir)
+</pre>
+
+	<p>If the directory you want to write to does not exist then (in both the two example) you may have to create it first, with something like:</p>
+
+
+<pre>
+the_dir = './mydir'
+import os
+if not os.path.exists(the_dir):
+  os.mkdir(the_dir)
+</pre>
+
+<hr />
+<a name="Sim_convergence" />
+<h1 id="How-to-check-the-convergence-of-the-simulation">How to check the convergence of the simulation<a href="special.html#How-to-check-the-convergence-of-the-simulation" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>How long it takes to run a simulation? This depends very much on what you are simulating and under what conditions (applied field, current, etc). Sometimes, however, your simulation may not be ending quickly as you expected and you may want to check what is happening. It may be, indeed, that the simulation is not converging, which means that it may actually never end. One thing you can do in such a case is to take a look at the file <code>*_progress.txt</code>, where <code>*</code> stands for the simulation name (given to the <code>Simulation</code> class when creating the simulation oject). For example, if you created your simulation object with a line such as</p>
+
+
+<pre>
+s = nmag.Simulation('one')
+</pre>
+
+	<p>Then you may be looking for a file with name <code>one_progress.txt</code>. If you used simply <code>s = nmag.Simulation()</code> and your file is named <code>two.py</code> then you should look for a file with name <code>two_progress.txt</code>. This file contains statistics about the time integrator. You'll first get the current time, step number, etc. Then you'll get a list of rows each containing four columns, such as</p>
+
+
+<pre>
+123 0.456 0.123 None
+</pre>
+
+	<p>Column 1 is the step reached, an integer number which always increases. The file shows convergence statistics for the last few steps (it doesn't contain statistics for all the steps, since this would make it quickly very big). Column 2 contains the current value of max || dM/dt ||. Column 3 contains the stopping value of dM/dt. Convergence is reached when column 2 < column 3 for at least two times. If the simulations is going well, then you should see that column 2 contains numbers which are not oscillating rapidly and are rather decreasing or increasing "smoothly". This is what typically should happen, even if it can be that your simulation has really a bizarre dynamics which really oscillates in a frenetic way, so one should be careful when analysing the data. The fourth column contains an evaluation of the quality of the convergence according to what we just said. This number should be close to one when the convergence is smooth and close to zero when it is oscillating frenetically.</p>
+
+
+	<h1 id="What-to-do-in-case-of-convergence-problems">What to do in case of convergence problems<a href="special.html#What-to-do-in-case-of-convergence-problems" class="wiki-anchor">&para;</a></h1>
+
+
+If your simulation has really a convergence problem, you can do two things:
+	<ol>
+	<li>improve the tolerances <code>ts_abs_err</code> and <code>ts_rel_err</code> (decrease these numbers) by using the method <code>set_params</code> of the <code>Simulation</code> object;</li>
+		<li>use a <code>do=[('next_stage', at('stage_time', SI(x, 's')))]</code> as an argument to the <code>hysteresis</code> method. This way you impose a maximum time <code>x</code> to spend in the computation of a stage (you should make sure this makes sense in your case).</li>
+	</ol>
+
+<hr />
+<a name="Snowleopard" />
+<h1 id="Compiling-on-Mac-OS-X-Snow-Leopard">Compiling on Mac OS X Snow Leopard<a href="special.html#Compiling-on-Mac-OS-X-Snow-Leopard" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Updating-the-OCaml-compiler-GSL-and-OCamlGSL">Updating the OCaml compiler, GSL and OCamlGSL<a href="special.html#Updating-the-OCaml-compiler-GSL-and-OCamlGSL" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Compilation of Nmag on Mac OS X Snow Leopard requires to update the OCaml compiler to the latest version.<br />
+Indeed, some users reported problems with OCaml compiler 3.09.3, which does not seem to support the newest OS/architecture.<br />
+One thing you could try is to update to the latest version of OCaml. You'll see that this will require - in turn - to update to the latest versions of GSL and OCamlGSL. Here I explain how to do that.<br />
+Firstly, you should untar again Nmag to get a fresh copy of the nmag all-source directory.</p>
+
+
+<pre>
+tar xzvf nmag-0.1-all.tar.gz
+</pre>
+
+	<p>Then you should enter the newly created directory (named simply nmag-0.1) and get the latest versions of the three packages:</p>
+
+
+<pre>
+cd nmag-0.1
+cd pkgs
+wget http://caml.inria.fr/pub/distrib/ocaml-3.11/ocaml-3.11.1.tar.bz2
+wget ftp://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gsl/gsl-1.14.tar.gz
+wget http://oandrieu.nerim.net/ocaml/gsl/ocamlgsl-0.6.0.tar.gz
+cd ..
+</pre>
+
+	<p>Now edit the file nmag-0.1/Makefile with your favourite editor.<br />
+Search for the string "ocaml-3.09.3", you'll find just one occurrence. Change it to "ocaml-3.11.1".<br />
+Do the same for the other two strings "gsl-1.8.tar.gz" and "ocamlgsl-0.4.0.tar.gz". Replace them with "gsl-1.14.tar.gz" and "ocamlgsl-0.6.0.tar.gz", respectively.</p>
+
+
+	<h2 id="Patching-Nmag-to-work-with-OCaml-311">Patching Nmag to work with OCaml 3.11<a href="special.html#Patching-Nmag-to-work-with-OCaml-311" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>The new version of the OCaml compiler introduces some incompatibilities in the camlp4 preprocessor (which is bad, I think, and is the reason why OCamlGSL didn't work anymore) and some incompatibilites in the implementation, which is acceptable, but breaks one small piece of our code.<br />
+The solution is the following. Download the file objsize.c using on the following link <a class="external" href="http://dl.dropbox.com/u/1820549/objsize.c">http://dl.dropbox.com/u/1820549/objsize.c</a><br />
+I now assume you downloaded it in your home directory. Then:</p>
+
+
+<pre>
+cd nmag-0.1 # we go into the directory where nmag was unpacked
+cd nsim/snippets
+mv objsize.c old-objsize.c
+mv ~/objsize.c .
+</pre>
+
+	<p>As you see you are basically replacing the file nmag-0.1/nsim/snippets/objsize.c with the one you just downloaded before.</p>
+
+
+	<h2 id="Patching-Petsc">Patching Petsc<a href="special.html#Patching-Petsc" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>There are some more steps to do in order to get Nmag working on your Mac Snow Leopard:</p>
+
+
+<pre>
+cd nmag-0.1 # you should get inside the directory nmag-0.1
+make .deps_petsc_patch
+</pre>
+
+	<p>Your system will now spend some minutes compiling some libraries.<br />
+When it finishes you should do as follows:</p>
+
+
+<pre>
+cd lib/petsc/bmake/common
+mv rules.shared.basic old-rules.shared.basic
+wget http://dl.dropbox.com/u/1820549/rules.shared.basic
+</pre>
+
+	<p>This line will replace the file <code>bmake/common/rules.shared.basic</code> in the Petsc distribution.<br />
+After this you should be able to finally compile Nmag:</p>
+
+
+<pre>
+make
+</pre>
+
+<hr />
+<a name="User_contrib" />
+<h1 id="User-contributed-content">User contributed content<a href="special.html#User-contributed-content" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Recipes-useful-info">Recipes, useful info<a href="special.html#Recipes-useful-info" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><a href="special.html#Salome_as_cad_form_mesh" class="wiki-page">Using Salome as a CAD tool for creating complex meshes</a></p>
+
+
+	<p><a href="special.html#Import_from_salome" class="wiki-page">Script to import .unv mesh from Salome platform</a></p>
+
+
+	<p><a href="special.html#User_contrib_example" class="wiki-page">Example of user provided content</a></p>
+
+
+	<p><a href="special.html#Performance_data" class="wiki-page"> Performance data - memory usage, runtimes for particular simulations</a></p>
+
+
+	<p><a href="special.html#Probing_the_magnetization_along_a_curve_as_a_function_of_space_and_time_" class="wiki-page"> Probing the magnetization along a curve</a></p>
+
+
+	<p><a href="special.html#Multipole_expansion" class="wiki-page new">Script to calculate multipole expansion of magnetic charge</a></p>
+
+
+	<p><a href="special.html#Granular_media" class="wiki-page">Scripts to create meshes for granular media</a></p>
+
+
+	<h2 id="Installation-issues">Installation issues<a href="special.html#Installation-issues" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><a href="special.html#Install_fedora14x64" class="wiki-page">How to install Nmag 0.1 beta (6481) on Fedora 14 (64 bit)</a></p>
+
+<hr />
+<a name="User_contrib_example" />
+<h1 id="Example-of-user-provided-content">Example of user provided content<a href="special.html#Example-of-user-provided-content" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>To add your own content go back to the previous page and click the link <code>edit</code> which you can find on the right at the top of the text editing box.</p>
+
+
+	<p>To add a page that, for example, might provide a recipe how to achieve X, you would add a line</p>
+
+
+	<p><code> [</code>[How to achieve X]]</p>
+
+
+	<p>Try to choose a good title here as it will become part of the URL for the Wiki page you are about to create.</p>
+
+
+	<p>You can use the <code>Preview</code> link to check what this will look like. You should expect that your new line (<code>How to achieve X</code>) shows in red colour -- this is a sign that (i) it is a link but (ii) the link is pointing to a Wikipage that does not yet exist.</p>
+
+
+	<p>Once you are happy with this, add a comment in the comment box (for example <code>Adding link to "How to achieve X"</code>) and press the <code>Save</code> button. Providing comments will be useful if we need to go back through the history of the webpage (in case somebody has broken something accidentally).</p>
+
+
+	<p>Your new line will be rendered in the user contribution page as</p>
+
+
+	<p><a href="special.html#How_to_achieve_X" class="wiki-page new">How to achieve X</a></p>
+
+
+	<p>You can now click on this link a new page will open. This is your own Wiki page, you can add content inside it.</p>
+
+
+	<p>You can find more help (while you are in edit mode) on how to edit Wiki pages by clicking the <code>Help</code> link (just over the text edit box on the right). Note that at the bottom of the help windows there is another link to even more detailed formatting.</p>
+
+<hr />
+<a name="Using_Gmsh" />
+<h1 id="Using-Gmsh">Using Gmsh<a href="special.html#Using-Gmsh" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>If you want to create many meshes using Gmsh, you may first generate a mesh manually.<br />
+Then you can create a Python script which uses this mesh as a template to quickly create a mesh for a different set of parameters.<br />
+Here is a script which shows how to do so. The mesh file (geo) has been enclosed between quotes <code>"""</code> and some of the values for the points coordinates have been substituted with strings that the Python script substitutes with real values.</p>
+
+
+	<p>Note that we use <code>Mesh.CharacteristicLengthFactor = 5.0;</code> to control the discretisation of the mesh. We also use <code>Physical Volume(1) = {1};</code> to make sure that the mesh region is labeled starting from region number 1.</p>
+
+
+<pre>
+mesh = """ 
+cl1 = 1;
+Point(1) = {$x2$, 0, 0, cl1};
+Point(2) = {$x2$, $x2$, 0, cl1};
+Point(3) = {0, $x2$, 0, cl1};
+Point(4) = {0, $x1$, 0, cl1};
+Point(5) = {$x1$, 0, 0, cl1};
+Point(6) = {$x0$, $x0$, 0, cl1};
+Point(7) = {$x0$, $x1$, 0, cl1};
+Point(8) = {$x1$, $x0$, 0, cl1};
+Point(9) = {$x2$, 0, $y1$, cl1};
+Point(10) = {$x1$, 0, $y1$, cl1};
+Point(14) = {$x1$, $x0$, $y1$, cl1};
+Point(18) = {$x0$, $x0$, $y1$, cl1};
+Point(19) = {$x0$, $x1$, $y1$, cl1};
+Point(23) = {0, $x1$, $y1$, cl1};
+Point(27) = {0, $x2$, $y1$, cl1};
+Point(31) = {$x2$, $x2$, $y1$, cl1};
+Line(1) = {1, 5};
+Line(2) = {5, 8};
+Circle(3) = {8, 6, 7};
+Line(4) = {7, 4};
+Line(5) = {4, 3};
+Line(6) = {3, 2};
+Line(7) = {2, 1};
+Line(11) = {9, 10};
+Line(12) = {10, 14};
+Circle(13) = {14, 18, 19};
+Line(14) = {19, 23};
+Line(15) = {23, 27};
+Line(16) = {27, 31};
+Line(17) = {31, 9};
+Line(19) = {1, 9};
+Line(20) = {5, 10};
+Line(24) = {8, 14};
+Line(28) = {7, 19};
+Line(32) = {4, 23};
+Line(36) = {3, 27};
+Line(40) = {2, 31};
+Line Loop(9) = {1, 2, 3, 4, 5, 6, 7};
+Plane Surface(9) = {9};
+Line Loop(21) = {1, 20, -11, -19};
+Ruled Surface(21) = {21};
+Line Loop(25) = {2, 24, -12, -20};
+Ruled Surface(25) = {25};
+Line Loop(29) = {3, 28, -13, -24};
+Ruled Surface(29) = {29};
+Line Loop(33) = {4, 32, -14, -28};
+Ruled Surface(33) = {33};
+Line Loop(37) = {5, 36, -15, -32};
+Ruled Surface(37) = {37};
+Line Loop(41) = {6, 40, -16, -36};
+Ruled Surface(41) = {41};
+Line Loop(45) = {7, 19, -17, -40};
+Ruled Surface(45) = {45};
+Line Loop(46) = {11, 12, 13, 14, 15, 16, 17};
+Plane Surface(46) = {46};
+Surface Loop(1) = {9, 46, 21, 25, 29, 33, 37, 41, 45};
+
+Volume(1) = {1};
+
+Physical Volume(1) = {1};
+
+Mesh.CharacteristicLengthFactor = $discret$;
+""" 
+
+def create_mesh(filename,
+                inner_size=100.0,
+                curvature=5.0,
+                width=10.0,
+                thickness=20.0,
+                discretisation=2.5):
+  global mesh
+  s = str(mesh)
+  x = 0.5*inner_size
+  variables = [("x0", x - curvature),
+               ("x1", x),
+               ("x2", x + 0.5*width),
+               ("y1", thickness),
+               ("discret", discretisation)]
+  for variable_name, variable_value in variables:
+    s = s.replace("$%s$" % variable_name, str(variable_value))
+
+  f = open(filename, "w")
+  f.write(s)
+  f.close()
+
+create_mesh("dots.geo")
+</pre>
+
+<hr />
+<a name="Visualise_diff" />
+<h1 id="How-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh">How to visualise the difference between two fields defined over the same mesh?<a href="special.html#How-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>First save the data into two <b>ASCII</b> VTK files. For example,</p>
+
+
+<pre>
+nmagpp --vtk=m.vtk --vtkascii --fields=m simulation_name
+</pre>
+
+	<p>Note the option <code>"--vtkascii"</code> to force the creation of a ASCII file. <br />
+Let's say this command created the two files <code>m-000000.vtk</code> and <code>m-000001.vtk</code>.<br />
+You can now use the library <code>pyvtk</code> to load the two files, compute the difference and save it back to a third file.</p>
+
+
+<pre>
+import numpy, pyvtk
+a = pyvtk.VtkData("m-000000.vtk")
+b = pyvtk.VtkData("m-000001.vtk")
+va = a.point_data.data[0].vectors
+vb = b.point_data.data[0].vectors
+for i in range(len(va)):
+    va[i] = list(numpy.array(va[i]) - numpy.array(vb[i]))
+a.tofile("difference.vtk")
+</pre>
+
+	<p>Save this text to a file named <code>diff.py</code> and run it as:</p>
+
+
+<pre>
+python diff.py
+</pre>
+
+	<p>You'll get a third file with name <code>difference.vtk</code> containing the difference of the two fields.</p>
+
+
+	<h2 id="A-step-forward">A step forward<a href="special.html#A-step-forward" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>If you are repeating this operation many times, it may become annoying to open again and again the <code>diff.py</code> file to change the names of the input files. You can then modify the script as follows:</p>
+
+
+<pre>
+import sys, numpy, pyvtk
+a = pyvtk.VtkData(sys.argv[1])
+b = pyvtk.VtkData(sys.argv[2])
+va = a.point_data.data[0].vectors
+vb = b.point_data.data[0].vectors
+for i in range(len(va)):
+    assert a.structure.points[i] == b.structure.points[i]
+    va[i] = list(numpy.array(va[i]) - numpy.array(vb[i]))
+a.tofile(sys.argv[3])
+</pre>
+
+	<p>The name of the files are taken from the command line. You can then compute the difference using:</p>
+
+
+<pre>
+python diff.py a.vtk b.vtk a_minus_b.vtk 
+</pre>
+
+	<p>Notice that in the last version of the script we also added the line,</p>
+
+
+<pre>
+assert a.structure.points[i] == b.structure.points[i]
+</pre>
+
+	<p>which does just check that the two files are using the same set of points (i.e. the same mesh).</p>
+
+
+</body>
+</html>

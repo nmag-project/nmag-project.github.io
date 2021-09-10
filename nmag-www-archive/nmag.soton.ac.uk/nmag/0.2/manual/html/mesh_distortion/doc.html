@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.23. Mesh distortion for edge roughness simulation &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.24. Compression of the Boundary Element Matrix using HLib" href="../example_phi_BEM_hlib/doc.html" />
+    <link rel="prev" title="2.22. Example: Current-driven magnetisation precession in nanopillars" href="../example_zhangli2/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_phi_BEM_hlib/doc.html" title="2.24. Compression of the Boundary Element Matrix using HLib"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_zhangli2/doc.html" title="2.22. Example: Current-driven magnetisation precession in nanopillars"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="mesh-distortion-for-edge-roughness-simulation">
+<span id="id1"></span><h1>2.23. Mesh distortion for edge roughness simulation<a class="headerlink" href="doc.html#mesh-distortion-for-edge-roughness-simulation" title="Permalink to this headline">¶</a></h1>
+<p>The meshes used in micromagnetic simulations usually represent
+idealized geometries (for example, a nanowire might be modeled using a
+completely smooth cuboid mesh).  Real-world materials, on the other
+hand, possess imperfections on various scales caused by fabrication
+processes (e.g., electron beam lithography or sputter
+deposition). This can potentially have a significant impact on the
+magnetization dynamics.  The advantage of finite element-based
+simulations is that such effects can be simulated (at least
+qualitatively) by distorting the mesh in a suitable way. <a class="reference internal" href="../executables.html#nmeshpp"><em>nmeshpp</em></a>
+provides a means of distorting a given mesh in order to imitate
+roughness so that the resulting effects on simulations can be
+explored. Note that at the moment only edge roughness is supported.
+We first present an example in the following section and then go into
+the details of the command line interface and how the distortion
+process works.</p>
+<p>The appropriate reference for this mesh distortion is Albert <em>et al</em> <a class="footnote-reference" href="doc.html#albert2012" id="id2">[2]</a>,
+where the method is described and used to study domain walll motion in
+the presence of edge roughness.</p>
+<div class="section" id="example">
+<span id="id3"></span><h2>2.23.1. Example<a class="headerlink" href="doc.html#example" title="Permalink to this headline">¶</a></h2>
+<p>Consider a nanowire with dimensions 800nm x 20nm x 5nm (for
+convenience we provide the corresponding mesh in the file
+<a class="reference download internal" href="../_downloads/nanowire_800x20x55.nmesh"><tt class="xref download docutils literal"><span class="pre">nanowire_800x20x5.nmesh</span></tt></a>). <a class="footnote-reference" href="doc.html#examesh" id="id4">[1]</a></p>
+<p>We distort this mesh using the following command:</p>
+<div class="highlight-python"><pre>nmeshpp --distort 0.4 --correlation-length 2.0 --seed 23 nanowire_800x20x5.nmesh \
+          nanowire_800x20x5_distorted.nmesh</pre>
+</div>
+<p>Intuitively, what this command does is to randomly displace the
+&#8220;front&#8221; and &#8220;rear&#8221; nodes of the mesh and to stretch/shrink the middle
+bits accordingly. The details of this process, as well as meaning of
+all the command line switches, are explained in the next section. The
+original and distorted mesh look like this (only part of each mesh
+is shown):</p>
+<img alt="../_images/smooth_wire_3D_view5.png" class="align-center" src="../_images/smooth_wire_3D_view5.png" style="width: 500px; height: 200px;" />
+<img alt="../_images/rough_wire_3D_view5.png" class="align-center" src="../_images/rough_wire_3D_view5.png" style="width: 500px; height: 200px;" />
+<p>This figure shows a smooth nanowire (top), and then the same mesh after having been distorted using the nmesh command shown above. The figure is taken from <a class="footnote-reference" href="doc.html#albert2012" id="id5">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="examesh" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="doc.html#id4">[1]</a></td><td>The mesh file for the nanowire was produced using the <tt class="docutils literal"><span class="pre">examesh</span></tt> tool, which is included in the nmag distribution in the directory <tt class="docutils literal"><span class="pre">utils/cubicmesh/</span></tt> (note that it needs to be compiled before it can be used - just <tt class="docutils literal"><span class="pre">cd</span></tt> into this directory and type <tt class="docutils literal"><span class="pre">make</span></tt>). The exact command used to produce the mesh file was <tt class="docutils literal"><span class="pre">examesh</span> <span class="pre">nanowire_800x20x5.nmesh,800:450,20:15,5:3</span></tt>.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="details-and-command-line-options">
+<span id="id6"></span><h2>2.23.2. Details and command line options<a class="headerlink" href="doc.html#details-and-command-line-options" title="Permalink to this headline">¶</a></h2>
+<p>Preliminary remark: As mentioned above, <tt class="docutils literal"><span class="pre">nmeshpp</span></tt> can only produce
+edge roughness at the moment. There is a slight chance that the user
+interface might change in the future when more functionality (such as
+surface roughness) is added.</p>
+<p>In this section we go into the details of the distortion process and
+explain the relevant command line options. The general usage is:</p>
+<div class="highlight-python"><pre>nmeshpp --front-rear-axis [X|Y|Z] --distort-along-axis [X|Y|Z] --distort D \
+        --correlation-length C --seed S mesh_orig.nmesh mesh_distorted.nmesh</pre>
+</div>
+<p>Only <tt class="docutils literal"><span class="pre">--distort</span></tt>, <tt class="docutils literal"><span class="pre">--correlation-length</span></tt> and the name of the input
+mesh are required arguments.</p>
+<p>The overall distortion process works as follows. First, the surface
+nodes of the mesh are divided into &#8220;front&#8221; and &#8220;rear&#8221;, depending on
+which side of the mesh they lie on. By default, this distinction is
+based on their y-coordinate (as in the example in the previous
+section), but this can be changed using the option
+<tt class="docutils literal"><span class="pre">--front-rear-axis</span></tt>. Next, a univariate &#8220;distortion function&#8221;
+<tt class="docutils literal"><span class="pre">f(x)</span></tt> is constructed based on the given command line parameters
+(the details of this process will be explained in a moment). This
+function specifies the amount by which each <em>front</em> node is displaced in
+y-direction (as a function of the x-coordinate of the
+node). Analogously, the <em>rear</em> nodes are displaced using a second,
+independently constructed distortion function <tt class="docutils literal"><span class="pre">g(x)</span></tt> (so that both
+sides of the mesh are distorted differently). The intermediate parts
+of the mesh are stretched to fit nicely between the new distorted
+sides.</p>
+<p>The whole procedure is illustrated in the following picture (see
+<a class="footnote-reference" href="doc.html#albert2012" id="id7">[2]</a>). It shows a top view (i.e., along the z-axis) of the
+rear part of the nanowire from the previous section. The left hand
+side shows the original mesh, the right hand side shows the mesh after
+distortion with the function <tt class="docutils literal"><span class="pre">g</span></tt>, which is depicted in the
+middle. Note that the contour of the distorted mesh follows the
+outline of <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+<img alt="../_images/steps_illustrated5.png" class="align-center" src="../_images/steps_illustrated5.png" style="width: 1194px; height: 149px;" />
+<p>The distortion functions <tt class="docutils literal"><span class="pre">f</span></tt> and <tt class="docutils literal"><span class="pre">g</span></tt> are constructed as
+follows. First we pick equidistant nodes <tt class="docutils literal"><span class="pre">x_i</span></tt> along the x-axis
+(note that these are just auxiliary entities and completely
+independent from the nodes of the mesh). Then random values <tt class="docutils literal"><span class="pre">f(x_i)</span></tt>
+and <tt class="docutils literal"><span class="pre">g(x_i)</span></tt> are assigned to each such node, chosen from a normal
+distribution with mean 0 and a certain standard deviation that
+determines the &#8220;amplitude&#8221; of the roughness. Finally, these random
+values are interpolated smoothly to obtain the continuous distortion
+functions <tt class="docutils literal"><span class="pre">f(x)</span></tt> and <tt class="docutils literal"><span class="pre">g(x)</span></tt>. In order to make the randomization
+reproducible, it is possible to specify a seed for the internal random
+number generator (by passing any integer value as an argument to
+<tt class="docutils literal"><span class="pre">--seed</span></tt>). Otherwise the output mesh is different each time because
+the random number generator is seeded using the system time or
+something similar.</p>
+<p>The reason why we need these distortion functions at all and can&#8217;t
+just randomly displace each mesh node individually is because then the
+result would strongly depend on the mesh spacing and the overall
+quality of the mesh. However, since we usually want roughness on a
+scale independent from the mesh spacing, we need some kind of
+correlation between the displacements of adjacent mesh nodes, hence
+the need for the distortion functions.</p>
+<p>The parameters in the construction of <tt class="docutils literal"><span class="pre">f</span></tt> and <tt class="docutils literal"><span class="pre">g</span></tt> are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>the distance between the nodes <tt class="docutils literal"><span class="pre">x_i</span></tt>, which can be controlled
+with the flag <tt class="docutils literal"><span class="pre">--correlation-length</span></tt>,</li>
+<li>the standard deviation of the underlying normal distribution,
+which must be specified using the command line switch <tt class="docutils literal"><span class="pre">-d</span></tt>, or
+<tt class="docutils literal"><span class="pre">--distort</span></tt>.</li>
+</ul>
+</div></blockquote>
+<p>Note that depending on which edges of the mesh the roughness should be
+applied to (and on the way the mesh is oriented in the coordinate
+system), it may be necessary to apply the distortion in a direction
+different from the y-direction and also to consider <tt class="docutils literal"><span class="pre">f</span></tt> and <tt class="docutils literal"><span class="pre">g</span></tt> as
+functions of a different input axis (distinct from the x-axis). The
+first can again be controlled using the option <tt class="docutils literal"><span class="pre">--front-rear-axis</span></tt>,
+which was already mentioned above. The second can be adjusted using
+<tt class="docutils literal"><span class="pre">--distort-along-axis</span></tt>. For instance, if the roughness should
+displace the nodes in z-direction and if the amount of displacement
+should be a function of their y-coordinates, the command line
+arguments would be <tt class="docutils literal"><span class="pre">--front-rear-axis</span> <span class="pre">Z</span> <span class="pre">--distort-along-axis</span> <span class="pre">Y</span></tt>.</p>
+<table class="docutils footnote" frame="void" id="albert2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="doc.html#id2">1</a>, <a class="fn-backref" href="doc.html#id5">2</a>, <a class="fn-backref" href="doc.html#id7">3</a>)</em> Maximilian Albert, Matteo Franchin, Thomas Fischbacher, Guido Meier, and Hans Fangohr, <em>Domain wall motion in perpendicular anisotropy nanowires with edge roughness</em>, <a class="reference external" href="http://iopscience.iop.org/0953-8984/24/2/024219">J. Phys.: Condens. Matter 24 , 024219 (14 pages) (2012)</a> (<a class="reference external" href="http://www.soton.ac.uk/~fangohr/publications/postprint/Albert_etal_JPhysCondMat_2011.pdf">postprint pdf</a>)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_phi_BEM_hlib/doc.html" title="2.24. Compression of the Boundary Element Matrix using HLib"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_zhangli2/doc.html" title="2.22. Example: Current-driven magnetisation precession in nanopillars"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

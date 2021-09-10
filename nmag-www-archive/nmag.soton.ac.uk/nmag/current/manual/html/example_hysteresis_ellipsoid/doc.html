@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.3. Example: Simple hysteresis loop &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle" href="../example_stoner_wohlfarth/doc.html" />
+    <link rel="prev" title="2.2. Example 2: Computing the time development of a system" href="../example2/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_stoner_wohlfarth/doc.html" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example2/doc.html" title="2.2. Example 2: Computing the time development of a system"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-simple-hysteresis-loop">
+<span id="simple-hysteresis-example"></span><h1>2.3. Example: Simple hysteresis loop<a class="headerlink" href="doc.html#example-simple-hysteresis-loop" title="Permalink to this headline">¶</a></h1>
+<p>This example computes the hysteresis loop of an ellipsoidal magnetic
+object. We use an ellipsoid whose x,y,z semi-axes
+have lengths 30 nm, 10 nm and 10 nm, respectively. (The mesh is contained
+in <a class="reference download internal" href="../_downloads/ellipsoid.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">ellipsoid.nmesh.h5</span></tt></a>
+and produced with <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> from <a class="reference download internal" href="../_downloads/ellipsoid.geo"><tt class="xref download docutils literal"><span class="pre">ellipsoid.geo</span></tt></a>):</p>
+<img alt="../_images/mesh2.png" class="align-center" src="../_images/mesh2.png" style="width: 800px; height: 531px;" />
+<p>This picture has been obtained by converting the mesh to a <a class="reference internal" href="../useful_tools.html#vtk"><em>vtk</em></a> file using:</p>
+<div class="highlight-python"><pre>$ nmeshpp --vtk ellipsoid.nmesh.h5 mesh.vtk</pre>
+</div>
+<p>and subsequent visualisation with <a class="reference internal" href="../useful_tools.html#mayavi"><em>MayaVi</em></a>:</p>
+<div class="highlight-python"><pre>$ mayavi -d mesh.vtk -m SurfaceMap</pre>
+</div>
+<p>We have further added the axes within MayaVi
+(Visualize-&gt;Modules-&gt;Axes), and changed the display color from blue to
+red (Double click on <tt class="docutils literal"><span class="pre">SurfaceMap</span></tt> in the selected Modules list, then
+uncheck the <tt class="docutils literal"><span class="pre">Scalar</span> <span class="pre">Coloring</span></tt> box, click on <tt class="docutils literal"><span class="pre">Change</span> <span class="pre">Object</span> <span class="pre">Color</span></tt>
+and select a suitable color).</p>
+<p>We provide the mayavi file <a class="reference download internal" href="../_downloads/mesh.mv"><tt class="xref download docutils literal"><span class="pre">mesh.mv</span></tt></a> that shows the
+visulisation as in the figure above. (If you want to load this file
+into MayaVi, just use <tt class="docutils literal"><span class="pre">$</span> <span class="pre">mayavi</span> <span class="pre">mesh.mv</span></tt> but make sure that
+<tt class="docutils literal"><span class="pre">mesh.vtk</span></tt> is in the same directory as mayavi will need to read
+this.)</p>
+<div class="section" id="hysteresis-simulation-script">
+<span id="id1"></span><h2>2.3.1. Hysteresis simulation script<a class="headerlink" href="doc.html#hysteresis-simulation-script" title="Permalink to this headline">¶</a></h2>
+<p>To compute the hysteresis loop for the ellipsoid, we use the
+script <a class="reference download internal" href="../_downloads/ellipsoid.py"><tt class="xref download docutils literal"><span class="pre">ellipsoid.py</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span><span class="p">,</span> <span class="n">at</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># load mesh: the mesh dimensions are scaled by 0.5 nm</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;ellipsoid.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&quot;ellipsoid&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+
+<span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span> <span class="mf">1.00</span><span class="p">,</span>  <span class="mf">0.95</span><span class="p">,</span> <span class="p">[],</span> <span class="o">-</span><span class="mf">1.00</span><span class="p">,</span>
+                                <span class="o">-</span><span class="mf">0.95</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.90</span><span class="p">,</span> <span class="p">[],</span>  <span class="mf">1.00</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">1e6</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+
+<span class="c"># loop over the applied fields Hs</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>As in the previous examples, we first need to import the modules
+necessary for the simulation. <tt class="docutils literal"><span class="pre">at('convergence')</span></tt> allows us to save
+the fields and the averages whenever convergence is reached.
+We then define the material of the magnetic object, load the mesh and set
+the initial configuration of the magnetisation as well as the
+external field.</p>
+</div>
+<div class="section" id="hysteresis-loop-computation">
+<span id="id2"></span><h2>2.3.2. Hysteresis loop computation<a class="headerlink" href="doc.html#hysteresis-loop-computation" title="Permalink to this headline">¶</a></h2>
+<p>We apply the external magnetic fields in the x-direction with range of
+1e6 A/m down to -1e6 A/m in steps of <tt class="docutils literal"><span class="pre">0.05e6</span> <span class="pre">A/m</span></tt>.</p>
+<p>To convey this information efficiently to nmag, we use:</p>
+<ol class="arabic simple">
+<li>a direction for the applied field (here just <tt class="docutils literal"><span class="pre">[1,0.01,0]</span></tt>), (note
+that we have a small y-component of 1% in the applied field to break
+the symmetry)</li>
+<li>a list of magnitudes of the field that will be multiplied with the
+direction vector,</li>
+<li>another multiplier that defines the physical dimension of the applied fields
+(here <tt class="docutils literal"><span class="pre">1000kA/m</span></tt>, given as <tt class="docutils literal"><span class="pre">1e6*SI('A/m')</span></tt>).</li>
+</ol>
+<p>Putting all this together, we obtain this command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Hs</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">vector_set</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                     <span class="n">norm_list</span><span class="o">=</span><span class="p">[</span> <span class="mf">1.00</span><span class="p">,</span>  <span class="mf">0.95</span><span class="p">,</span> <span class="p">[],</span> <span class="o">-</span><span class="mf">1.00</span><span class="p">,</span>
+                                <span class="o">-</span><span class="mf">0.95</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.90</span><span class="p">,</span> <span class="p">[],</span>  <span class="mf">1.00</span><span class="p">],</span>
+                     <span class="n">units</span><span class="o">=</span><span class="mf">1e6</span><span class="o">*</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>which computes a list of vectors <tt class="docutils literal"><span class="pre">Hs</span></tt>. Each entry in the list
+corresponds to one applied field.</p>
+<p>The <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command takes this list of applied fields <tt class="docutils literal"><span class="pre">Hs</span></tt> as
+one input parameter, and computes the hysteresis loop for these
+fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">save</span></tt> parameter is used to tell the hysteresis command what
+data to save, and how often. We have come across this notation when
+explaining the <tt class="docutils literal"><span class="pre">relax</span></tt> command in the section <a class="reference internal" href="../example2/doc.html#relaxing-the-system"><em>&#8220;Relaxing&#8221; the system</em></a> of the previous example. In the example shown here, we
+request that the <em>fields</em> and the <em>restart</em> data should be saved <em>at</em>
+the point in time where we reach <em>convergence</em>. (The spatially
+averaged data is saved automatically to the <a class="reference internal" href="../files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> file when the
+<em>fields</em> are saved.) This is done in a compact notation shown above
+which is equivalent to this more explicit version:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">hysteresis</span><span class="p">(</span><span class="n">Hs</span><span class="p">,</span>
+               <span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;restart&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">)),</span>
+                     <span class="p">(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span>   <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>The compact notation can be used because here we want to save
+<em>fields</em> and <em>restart</em> data at the same time.</p>
+<p>The <a class="reference internal" href="../command_reference.html#hysteresis"><em>hysteresis</em></a> command computes the time development of the system
+for one applied field until a convergence criterion is met. It then
+proceeds to the next external field value provided in <tt class="docutils literal"><span class="pre">Hs</span></tt>.</p>
+<p>We run the simulation as usual using:</p>
+<div class="highlight-python"><pre>$ nsim ellipsoid.py</pre>
+</div>
+<p>If you have run the simulation before, we need to use the <tt class="docutils literal"><span class="pre">--clean</span></tt>
+switch to enforce overriding of existing data files:</p>
+<div class="highlight-python"><pre>$ nsim ellipsoid.py --clean</pre>
+</div>
+<p>The simulation should take only a few minutes (for example 3 minutes
+on an Athlon64 3800+), and needs about 75MB of RAM.</p>
+<p>If the simulation has been interrupted, it can be continued using</p>
+<blockquote>
+<div>$ nsim ellipsoid.py &#8211;restart</div></blockquote>
+</div>
+<div class="section" id="obtaining-the-hysteresis-loop-data">
+<span id="id3"></span><h2>2.3.3. Obtaining the hysteresis loop data<a class="headerlink" href="doc.html#obtaining-the-hysteresis-loop-data" title="Permalink to this headline">¶</a></h2>
+<p>Once the calculation has finished, we can plot the graph of the
+magnetisation (projected along the direction of the applied field) as a
+function of the applied field.</p>
+<p>We use the <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> command to extract the data into a text file named <a class="reference download internal" href="../_downloads/plot1.dat"><tt class="xref download docutils literal"><span class="pre">plot.dat</span></tt></a>:</p>
+<div class="highlight-python"><pre>$ ncol ellipsoid H_ext_0 m_Py_0 &gt; plot.dat</pre>
+</div>
+</div>
+<div class="section" id="plotting-the-hysteresis-loop-with-gnuplot">
+<span id="id4"></span><h2>2.3.4. Plotting the hysteresis loop with Gnuplot<a class="headerlink" href="doc.html#plotting-the-hysteresis-loop-with-gnuplot" title="Permalink to this headline">¶</a></h2>
+<p>In this example, rather than using <a class="reference external" href="http://plasma-gate.weizmann.ac.il/Grace/">xmgrace</a>, we show how to plot data
+using <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>:</p>
+<div class="highlight-python"><pre>$ gnuplot make_plot.gnu</pre>
+</div>
+<p>The contents of the gnuplot script <a class="reference download internal" href="../_downloads/make_plot1.gnu"><tt class="xref download docutils literal"><span class="pre">make_plot.gnu</span></tt></a> are:</p>
+<pre class="literal-block">
+set term postscript eps enhanced color
+set out &#8216;hysteresis.eps&#8217;
+set xlabel &#8216;Applied field H_x   (A/m)&#8217;
+set ylabel &#8216;M_x / M_s&#8217;
+set xrange [-1050000:1050000]
+set yrange [-1.2:1.2]
+plot &#8216;plot.dat&#8217; u 1:2 ti &#8216;ellipsoid example&#8217; w lp 3
+</pre>
+<p>which generates the following hysteresis loop graph:</p>
+<img alt="../_images/hysteresis.png" class="align-center" src="../_images/hysteresis.png" style="width: 725px; height: 494px;" />
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_stoner_wohlfarth/doc.html" title="2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example2/doc.html" title="2.2. Example 2: Computing the time development of a system"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

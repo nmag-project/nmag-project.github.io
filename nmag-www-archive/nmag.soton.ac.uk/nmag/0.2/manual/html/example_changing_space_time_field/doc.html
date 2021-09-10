@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.14. Applying a field that changes both in time and in space &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.15. Example: two different magnetic materials" href="../example_two_materials/doc.html" />
+    <link rel="prev" title="2.13. Restart example" href="../example_restart/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_two_materials/doc.html" title="2.15. Example: two different magnetic materials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_restart/doc.html" title="2.13. Restart example"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="applying-a-field-that-changes-both-in-time-and-in-space">
+<h1>2.14. Applying a field that changes both in time and in space<a class="headerlink" href="doc.html#applying-a-field-that-changes-both-in-time-and-in-space" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="idea-pass-simulation-object-to-field-setting-function">
+<h2>2.14.1. Idea: pass simulation object to field-setting function<a class="headerlink" href="doc.html#idea-pass-simulation-object-to-field-setting-function" title="Permalink to this headline">¶</a></h2>
+<p>You can simulate an applied field which both changes in space and
+time: this may be useful to mimic the effect of a write head on the
+magnetic grains of an hard disk while the head is moving.  The way we
+do this is by changing the applied field every <tt class="docutils literal"><span class="pre">delta_t</span></tt>
+picoseconds. This means that the applied field won&#8217;t change
+continuously in time: it will be piecewise constant in time (but, in
+general, it can be non uniform in space).  You can do something like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">set_H</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+  <span class="n">width</span> <span class="o">=</span> <span class="mf">10.0</span>        <span class="c"># nm</span>
+  <span class="n">v</span> <span class="o">=</span> <span class="mf">100.0</span>           <span class="c"># nm/ns == m/s</span>
+  <span class="n">H_amplitude</span> <span class="o">=</span> <span class="mf">0.5e6</span> <span class="c"># A/m</span>
+
+  <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">time</span><span class="o">/</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))</span> <span class="c"># get the time in ns</span>
+  <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c"># center of the applied field region</span>
+  <span class="k">def</span> <span class="nf">H</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">ri</span><span class="o">/</span><span class="mf">1e-9</span> <span class="o">-</span> <span class="n">ci</span> <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">center</span><span class="p">)]</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">H_amplitude</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">width</span><span class="o">*</span><span class="n">width</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">]</span>
+
+  <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="n">set_H</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">50e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))),</span>
+              <span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1000e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))])</span>
+</pre></div>
+</div>
+<p>The function <tt class="docutils literal"><span class="pre">set_H</span></tt> is called every 50 ps and does the following: it
+sets a new field from the function <tt class="docutils literal"><span class="pre">H(r)</span></tt>.  This function sets a field
+which directed along the direction [1, 1, 1] and almost vanishes
+outside a sphere with radius ~ 30.0 nm.  The center of this sphere
+moves along the direction [1, 0, 0] with velocity 100 nm/ns, thus
+simulating the motion of a write head in a hard disk.  Obviously the
+piece of code is not complete, it shows only the technique in order to
+have a field changing in time and space.  For a complete example see
+the next section.</p>
+</div>
+<div class="section" id="complete-example-simple-moving-write-head-example">
+<h2>2.14.2. Complete example: simple moving write-head example<a class="headerlink" href="doc.html#complete-example-simple-moving-write-head-example" title="Permalink to this headline">¶</a></h2>
+<p>Here is a simulation of five cubes made of cobalt and a write-head
+which moves on the top of the cubes and applies a time-varying field
+in order to change their magnetisation. At the beginning the
+magnetisation of all the cubes is pointing in the [0, 0, 1]
+direction. After the write-head has passed over the cubes, the
+magnetisation of cube 1, 3 and 5 are switched in the opposite
+direction, while cube 2 and 4 have unchanged magnetisation.  This is
+possible because the write-head field, which is space-dependent (being
+intense only inside a sphere of radius 15-20 nm), changes also in
+time. It indeed translates in space, but also change in intensity,
+being directed in the [0, 0, -1] direction when the sphere is at the
+center of cube 1, 3 and 5 and in the [0, 0, 1] direction when the
+center of the sphere is in cube 2 and 4.</p>
+<p>Here is the geo file used to generate the mesh (Netgen):</p>
+<div class="highlight-python"><pre>&lt;pre&gt;
+algebraic3d
+
+# cubes
+solid cube1 = orthobrick (    0, 0, 0;  20.0, 20.0, 20.0) -maxh = 2;
+solid cube2 = orthobrick ( 30.0, 0, 0;  50.0, 20.0, 20.0) -maxh = 2;
+solid cube3 = orthobrick ( 60.0, 0, 0;  80.0, 20.0, 20.0) -maxh = 2;
+solid cube4 = orthobrick ( 90.0, 0, 0; 110.0, 20.0, 20.0) -maxh = 2;
+solid cube5 = orthobrick (120.0, 0, 0; 140.0, 20.0, 20.0) -maxh = 2;
+
+tlo cube1;
+tlo cube2;
+tlo cube3;
+tlo cube4;
+tlo cube5;</pre>
+</div>
+<p>And here is the full listing of the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nmag.common</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c"># Define magnetic material (data from OOMMF materials file)</span>
+<span class="n">mat_Co</span> <span class="o">=</span> <span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Co&quot;</span><span class="p">,</span>
+                     <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1400e3</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                     <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">30e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                     <span class="n">anisotropy</span><span class="o">=</span><span class="n">uniaxial_anisotropy</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                    <span class="n">K1</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">520e3</span><span class="p">,</span> <span class="s">&quot;J/m^3&quot;</span><span class="p">)))</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;cubes.nmesh.h5&quot;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&#39;cube1&#39;</span><span class="p">,</span> <span class="n">mat_Co</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;cube2&#39;</span><span class="p">,</span> <span class="n">mat_Co</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;cube3&#39;</span><span class="p">,</span> <span class="n">mat_Co</span><span class="p">),</span>
+               <span class="p">(</span><span class="s">&#39;cube4&#39;</span><span class="p">,</span> <span class="n">mat_Co</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;cube5&#39;</span><span class="p">,</span> <span class="n">mat_Co</span><span class="p">)],</span>
+              <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))])</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="p">[</span><span class="n">sim</span><span class="o">.</span><span class="n">time</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">set_H</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">sim</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="n">t0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">))</span>  <span class="c"># get time in ns</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">10.0</span>                                 <span class="c"># nm</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="mf">25.0</span>                                     <span class="c"># nm/ns = m/s</span>
+    <span class="n">H_amplitude</span> <span class="o">=</span> <span class="mf">4.0e6</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>      <span class="c"># A/m</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;CENTER IN&quot;</span><span class="p">,</span> <span class="n">center</span>
+    <span class="k">def</span> <span class="nf">H</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">ri</span><span class="o">/</span><span class="mf">1e-9</span> <span class="o">-</span> <span class="n">ci</span> <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">center</span><span class="p">)]</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">H_amplitude</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">width</span><span class="o">*</span><span class="n">width</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">factor</span><span class="p">]</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+
+<span class="n">set_H</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">stopping_dm_dt</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="n">degrees_per_ns</span><span class="p">)</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">200e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">),</span> <span class="n">first</span><span class="o">=</span><span class="n">t0</span><span class="p">[</span><span class="mi">0</span><span class="p">]))],</span>
+          <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="n">set_H</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">50e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">),</span> <span class="n">first</span><span class="o">=</span><span class="n">t0</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+              <span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="n">SI</span><span class="p">(</span><span class="mf">6000e-12</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)))])</span>
+</pre></div>
+</div>
+<p>Here is the magnetisation at the beginning of the simulation, after
+the first relax command (whose purpose is just to find the zero field
+magnetisation configuration):</p>
+<img alt="../_images/before.png" class="align-center" src="../_images/before.png" style="width: 600px; height: 542px;" />
+<p>and here is the magnetisation after the write-head has passed over the
+cubes:</p>
+<img alt="../_images/after.png" class="align-center" src="../_images/after.png" style="width: 600px; height: 542px;" />
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_two_materials/doc.html" title="2.15. Example: two different magnetic materials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_restart/doc.html" title="2.13. Restart example"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

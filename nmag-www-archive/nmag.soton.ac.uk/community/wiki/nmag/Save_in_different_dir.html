@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Nmag - Save in different dir - Nmag - computational micromagnetics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link href="../../themes/nmag/stylesheets/application.css" media="all" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/prototype.js" type="text/javascript"></script>
+<script src="../../javascripts/effects.js" type="text/javascript"></script>
+<script src="../../javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="../../javascripts/controls.js" type="text/javascript"></script>
+<script src="../../javascripts/application.js" type="text/javascript"></script>
+<link href="../../stylesheets/jstoolbar.css" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/community/stylesheets/csshover.htc);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+
+  <link href="../../stylesheets/scm.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="../../login.html" class="login">Sign in</a></li>
+<li><a href="../../account/register.html" class="register">Register</a></li></ul>    </div>
+    
+    <ul><li><a href="../../index.html" class="home">Home</a></li>
+<li><a href="../../projects.html" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="../../search/index/nmag.html" method="get">
+        <a href="../../search/index/nmag.html" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        
+    </div>
+    
+    <h1>Nmag</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="../../projects/show/nmag.html" class="overview">Overview</a></li>
+<li><a href="../../projects/activity/nmag.html" class="activity">Activity</a></li>
+<li><a href="../nmag.html" class="wiki selected">Wiki</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+    <div id="sidebar">        
+        
+  <h3>Wiki</h3>
+
+<a href="../nmag.html">Start page</a><br />
+<a href="Page_index/special.html">Index by title</a><br />
+<a href="Date_index/special.html">Index by date</a><br />
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+
+
+
+
+
+
+
+
+<a href="Save_in_different_dir/history.html" class="icon icon-history">History</a>
+</div>
+
+
+
+
+
+<div class="wiki">
+  <h1 id="Save-data-in-arbitrary-directory">Save data in arbitrary directory<a href="Save_in_different_dir.html#Save-data-in-arbitrary-directory" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Do-you-really-need-to-do-so">Do you really need to do so?<a href="Save_in_different_dir.html#Do-you-really-need-to-do-so" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>First, consider whether you really need to save data in a different directory. Remember that you can run many simulation with one single script just using a different simulation name, like:</p>
+
+
+<pre>
+...
+s1 = Simulation('one')
+...
+s2 = Simulation('two')
+...
+</pre>
+
+	<p>When you save the data for simulation one you get files like <code>one_dat.h5</code> and <code>one_dat.ndt</code>, while when dealing with simulation two you get <code>two_dat.h5</code> and <code>two_dat.nd5</code>. There is no interference between the two simulation, which may be the main reason why you may be reading this part of the Nsim documentation.</p>
+
+
+	<h2 id="Here-is-how-you-do-it">Here is how you do it<a href="Save_in_different_dir.html#Here-is-how-you-do-it" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>When you run a simulation script which saves data from a simulation, you get that the files are saved in the current working directory.<br />
+In order to change this and save data into a directory called <code>./mydir/</code> you should start your script in the following way:</p>
+
+
+<pre>
+import nmag
+import nsim.features
+fts = nsim.features.Features()
+fts.set('etc', 'savedir', './mydir/')
+...
+...
+</pre>
+
+	<p>Alternatively, you can change the current working directory at the beginning of the file with ordinary Python code:</p>
+
+
+<pre>
+import os
+initial_dir = os.path.abspath(os.path.curdir)
+os.chdir('./mydir')
+...
+...
+os.chdir(initial_dir)
+</pre>
+
+	<p>If the directory you want to write to does not exist then (in both the two example) you may have to create it first, with something like:</p>
+
+
+<pre>
+the_dir = './mydir'
+import os
+if not os.path.exists(the_dir):
+  os.mkdir(the_dir)
+</pre>
+</div>
+
+
+
+
+
+
+<p class="other-formats">
+Also available in:
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Save_in_different_dir?export=html&amp;version=1" class="html">HTML</a></span>
+<span><a href="https://nmag.soton.ac.uk/community/wiki/nmag/Save_in_different_dir?export=txt&amp;version=1" class="text">TXT</a></span>
+</p>
+
+
+
+
+
+
+
+        
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2009 Jean-Philippe Lang
+</div>
+</div>
+
+</body>
+</html>

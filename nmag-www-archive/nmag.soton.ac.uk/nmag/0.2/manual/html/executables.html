@@ -1,0 +1,645 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. Executables &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="7. Files and file names" href="files_and_file_names.html" />
+    <link rel="prev" title="5. Finite element mesh generation" href="finite_element_mesh_generation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="files_and_file_names.html" title="7. Files and file names"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="finite_element_mesh_generation.html" title="5. Finite element mesh generation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="executables">
+<span id="id1"></span><h1>6. Executables<a class="headerlink" href="executables.html#executables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ncol">
+<span id="id2"></span><h2>6.1. ncol<a class="headerlink" href="executables.html#ncol" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">ncol</span></tt> is a utility to conveniently analyse <a class="reference internal" href="files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> files.</p>
+<p>Suppose we have data file with name X_dat.ndt. We can then use:</p>
+<div class="highlight-python"><pre>ncol X_dat.ndt</pre>
+</div>
+<p>or simply:</p>
+<div class="highlight-python"><pre>ncol X</pre>
+</div>
+<p>to display the content of the file. This is useful to quickly gain an
+overview of the data in the file.  For the <a class="reference internal" href="example2/doc.html#example-2"><em>Example 2: Computing the
+time development of a system</em></a>, the command is:</p>
+<div class="highlight-python"><pre>ncol bar</pre>
+</div>
+<p>which produces this output:</p>
+<div class="highlight-python"><pre>0 :         #time           #&lt;s&gt;              0
+1 :            id             &lt;&gt;              0
+2 :          step             &lt;&gt;              0
+3 :  last_step_dt            &lt;s&gt;              0
+4 :    stage_time            &lt;s&gt;              0
+5 :    stage_step             &lt;&gt;              0
+6 :         stage             &lt;&gt;              0
+7 :    E_total_Py      &lt;kg/ms^2&gt;  -260346.5776034
+8 :           phi            &lt;A&gt;  2.50626665111e-07
+9 :      E_ext_Py      &lt;kg/ms^2&gt;              0
+10:     H_demag_0          &lt;A/m&gt;  -263661.6673782
+11:     H_demag_1          &lt;A/m&gt;  -8.212128727093
+12:     H_demag_2          &lt;A/m&gt;  -77027.64089399
+13:     dmdt_Py_0         &lt;A/ms&gt;  -8.250903922407e+15
+14:     dmdt_Py_1         &lt;A/ms&gt;  2.333345040949e+16
+15:     dmdt_Py_2         &lt;A/ms&gt;  8.250903922407e+15
+16:           pin             &lt;&gt;              1
+17:   H_anis_Py_0          &lt;A/m&gt;              0
+18:   H_anis_Py_1          &lt;A/m&gt;              0
+19:   H_anis_Py_2          &lt;A/m&gt;              0
+20:        m_Py_0             &lt;&gt;  0.7071067811865
+21:        m_Py_1             &lt;&gt;              0
+22:        m_Py_2             &lt;&gt;  0.7071067811865
+23:        M_Py_0          &lt;A/m&gt;  608111.8318204
+24:        M_Py_1          &lt;A/m&gt;              0
+25:        M_Py_2          &lt;A/m&gt;  608111.8318204
+26:     E_anis_Py      &lt;kg/ms^2&gt;              0
+27:     E_exch_Py      &lt;kg/ms^2&gt;  3.114630036477e-11
+28:           rho        &lt;A/m^2&gt;  3.469702141876e+13
+29:       H_ext_0          &lt;A/m&gt;              0
+30:       H_ext_1          &lt;A/m&gt;              0
+31:       H_ext_2          &lt;A/m&gt;              0
+32:  H_total_Py_0          &lt;A/m&gt;  -263661.6673782
+33:  H_total_Py_1          &lt;A/m&gt;  -8.212128727085
+34:  H_total_Py_2          &lt;A/m&gt;  -77027.64089399
+35:    E_demag_Py      &lt;kg/ms^2&gt;  -260346.5776034
+36:   H_exch_Py_0          &lt;A/m&gt;  2.037901097873e-11
+37:   H_exch_Py_1          &lt;A/m&gt;              0
+38:   H_exch_Py_2          &lt;A/m&gt;  2.037901097873e-11
+39: maxangle_m_Py          &lt;deg&gt;              0
+40:     localtime             &lt;&gt;  2007/10/04-20:46:28
+41:      unixtime            &lt;s&gt;  1191527188.269</pre>
+</div>
+<p>The four columns above show the following data: the first is just a
+line number count. The second is the <em>name</em> of the data. The third
+provides the <em>units</em> of this data type. The fourth displays the first
+data value in the file (typically corresponding to the configuration
+of the simulation when <a class="reference internal" href="command_reference.html#save-data"><em>save_data</em></a> was called the first time).</p>
+<p>The meaning of the keywords <tt class="docutils literal"><span class="pre">time</span></tt>, <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">step</span></tt>, <tt class="docutils literal"><span class="pre">stage_time</span></tt>,
+<tt class="docutils literal"><span class="pre">stage_step</span></tt>, <tt class="docutils literal"><span class="pre">stage</span></tt>, <tt class="docutils literal"><span class="pre">localtime</span></tt> and <tt class="docutils literal"><span class="pre">unixtime</span></tt> is explained
+in section <a class="reference internal" href="background.html#stage-step-iteration-time-etc"><em>Stage, Step, iteration, time, etc.</em></a>.</p>
+<p id="unique-identifier-id">The role of the <strong>id</strong> counter is to provide a reference to the
+configuration that was saved, and it is a <strong>unique identifier</strong> of a
+physical configuration. It is used to identify configurations in the
+<tt class="docutils literal"><span class="pre">_dat.h5</span></tt> file (which stores spatially resolved fields) and to
+identify the corresponding (spatially averaged) data in the
+<tt class="docutils literal"><span class="pre">_dat.ndt</span></tt> file. This <tt class="docutils literal"><span class="pre">id</span></tt> is used to uniquely identify physical
+configurations in nmag.  (See also: <a class="reference internal" href="faq.html#why-can-you-not-use-the-step-as-a-unique-identifier"><em>Why can you not use the step as a unique identifier?</em></a>)</p>
+<p><tt class="docutils literal"><span class="pre">last_step_dt</span></tt> is the length of the last time step carried out by
+the timestepper. This is a useful indicator to learn about the
+stiffness of the system: the time step is adjusted automatically to
+achieve a certain accuracy, and thus the size of the time step
+reflects how hard it is to integrate the equations of motion.</p>
+<p>The fields starting with <tt class="docutils literal"><span class="pre">E_total_Py</span></tt> down to <tt class="docutils literal"><span class="pre">H_exch_Py_2</span></tt> are
+all nsim subfields (see <a class="reference internal" href="background.html#field"><em>fields</em></a>), and the data stored for these are
+spatially averaged numbers. For example, the subfield <tt class="docutils literal"><span class="pre">M_Py_0</span></tt> is
+the x-component of the Magnetisation of the material <tt class="docutils literal"><span class="pre">Py</span></tt> averaged
+over all the space where this material is defined.</p>
+<p>The <tt class="docutils literal"><span class="pre">maxangle_m_Py</span></tt> is the maximum angle (in degree) of the change
+of the magnetisation from one node in the mesh to the next. It is
+important that this number is small: the equations on which the
+micromagnetic theory is based assume that the magnetisation changes
+slowly as a function of space. In the discretised solvers (this
+applies to nmag as it applies to OOMMF, Magpar and other codes),
+this means that the maximum angle between neighbouring sites should be
+kept small. How small is good enough? This is hard to say in
+general. We provide some (subjective) guidance: Values of 180 degrees
+(or -180 degrees) quite clearly indicate that the results of the
+calculations must not be trusted (i.e. they are wrong). Values around
+90 degrees make the results highly questionable. Values of below 30
+degrees indicate that the results are probably reliable. The smaller
+the value, the more accurate the results will be. If this is new to you, you may want to read the <a class="reference internal" href="tutorial/doc.html#mini-tutorial-micromagnetic-modelling"><em>Mini tutorial micromagnetic modelling</em></a> and in particular the section <a class="reference internal" href="tutorial/doc.html#what-size-of-the-cells-fd-and-tetrahedra-fe-should-i-choose"><em>What size of the cells (FD) and tetrahedra (FE) should I choose?</em></a>.</p>
+<p>The general syntax for calling <tt class="docutils literal"><span class="pre">ncol</span></tt> is:</p>
+<div class="highlight-python"><pre>ncol [OPTIONS] datafile [COLS]</pre>
+</div>
+<p>A list of options can be obtained with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ncol</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Available options include:</p>
+<div class="highlight-python"><pre>-h, --help            show this help message and exit
+--scale="{col1:factor1,col2:factor2,col3:factor3}"
+                      scale col1 by factor1, col2 by factor 2 etc
+--last-of="column"    Select only the rows where 'column' changes.
+-l                    Select only the last row for each stage (i.e.
+                      typically the relaxed state)
+--mod="field"         Compute the magnitude of given field, i.e.
+                      '--mod H_demag' computes
+                      sqrt(H_demag_0^2+H_demag_1^2+H_demag_2^2). More than
+                      one field can be provided (comma separated) but there
+                      must be no spaces between the fields. (I.e. '--mod
+                      m_Py,H_ext'). These modulus entries will be printed
+                      last (after any other COLS that have been provided),
+                      and in the order given in the '--mod' switch.
+--odt                 Expect to process odt file (as produced by OOMMF, see
+                      http://math.nist.gov/oommf/ and http://math.nist.gov/o
+                      ommf/doc/userguide12a3/userguide/Data_Table_File_Forma
+                      t_ODT.html).</pre>
+</div>
+</div>
+<div class="section" id="nmagpp">
+<span id="id3"></span><h2>6.2. nmagpp<a class="headerlink" href="executables.html#nmagpp" title="Permalink to this headline">¶</a></h2>
+<p>The stage <tt class="docutils literal"><span class="pre">nmagpp</span></tt> program is the NMAG data PostProcessor. It can be used to</p>
+<ul class="simple">
+<li>convert data stored in <tt class="docutils literal"><span class="pre">RUNID_dat.h5</span></tt> files into vtk files</li>
+<li>dump the data to the screen.</li>
+</ul>
+<p>The documentation is available with the <tt class="docutils literal"><span class="pre">--help</span></tt> switch:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nmagpp</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<div class="section" id="inspecting-the-content">
+<span id="id4"></span><h3>6.2.1. Inspecting the content<a class="headerlink" href="executables.html#inspecting-the-content" title="Permalink to this headline">¶</a></h3>
+<p>We describe some typical scenarios, using the data file <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt>
+that is generated in <a class="reference internal" href="example2/doc.html#example-2"><em>Example 2: Computing the time development of a
+system</em></a>.</p>
+<p>The <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt> file contains spatially resolved data for all
+fields in the simulation (because we have used the
+<tt class="docutils literal"><span class="pre">save_data(fields='all')</span></tt> command). Some of the functions of
+<tt class="docutils literal"><span class="pre">nmagpp</span></tt> apply to one or more fields (such as <tt class="docutils literal"><span class="pre">--dump</span></tt> and
+<tt class="docutils literal"><span class="pre">--vtk</span></tt>) and these can be specified through a <tt class="docutils literal"><span class="pre">--fields</span></tt> command
+line parameter. Similarly, the <tt class="docutils literal"><span class="pre">--range</span></tt> command will limit the number of saved configurations which will be processed.</p>
+<p>Try <tt class="docutils literal"><span class="pre">nmagpp</span> <span class="pre">--help</span></tt> for further documentation. Some examples:</p>
+<ul>
+<li><p class="first">Checking what at what configurations have been saved:</p>
+<div class="highlight-python"><pre>nmagpp --idlist bar</pre>
+</div>
+<p>produces:</p>
+<div class="highlight-python"><pre>id   stage   step     time fields
+ 0-&gt;    1      0         0 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+10-&gt;    1    312     5e-11 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+20-&gt;    1    495     1e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+30-&gt;    1    603   1.5e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+40-&gt;    1    678     2e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+50-&gt;    1    726   2.5e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho
+60-&gt;    1    762     3e-10 E_anis E_demag E_exch E_ext E_total H_anis H_demag  ... phi pin rho</pre>
+</div>
+</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">id</span></tt> is the same <a class="reference internal" href="executables.html#unique-identifier-id"><em>unique identifier id</em></a> used in the <a class="reference internal" href="files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> files that can be
+read with the <a class="reference internal" href="executables.html#ncol"><em>ncol</em></a> command. In particular, its purpose is to identify
+time steps saved in the ndt file with the corresponding data saved in
+the h5 data file.</p>
+<p>Columns <tt class="docutils literal"><span class="pre">time</span></tt> (measured in seconds), <tt class="docutils literal"><span class="pre">step</span></tt> and <tt class="docutils literal"><span class="pre">stage</span></tt> are
+just providing some further information (see <a class="reference internal" href="background.html#stage-step-iteration-time-etc"><em>Stage, Step, iteration, time, etc.</em></a>) Finally, the available (i.e. saved) fields for every
+configuration are listed. The list of fields is not displayed
+completely if it is long (unless the <tt class="docutils literal"><span class="pre">--printall</span></tt> switch is used).</p>
+</div>
+<div class="section" id="dumping-data">
+<span id="id5"></span><h3>6.2.2. Dumping data<a class="headerlink" href="executables.html#dumping-data" title="Permalink to this headline">¶</a></h3>
+<p>Suppose we are interested in the magnetisation data stored at id
+0. We restrict the data to the <tt class="docutils literal"><span class="pre">m</span></tt> field using the <tt class="docutils literal"><span class="pre">--fields</span> <span class="pre">m</span></tt> switch, and restrict the number <tt class="docutils literal"><span class="pre">ids</span></tt> to dump using <tt class="docutils literal"><span class="pre">--range</span> <span class="pre">0</span></tt>:</p>
+<div class="highlight-python"><pre>nmagpp --fields m --range 0 --dump bar</pre>
+</div>
+<p>produces output that starts like this:</p>
+<div class="highlight-python"><pre>field    : m
+subfield : m_Py
+time     : 0 * &lt;SI: 1  s &gt;
+id       : 0
+step     : 0
+stage    : 0
+field unit: &lt;SI: 1  &gt;
+position unit: &lt;SI: 1e-09  m &gt;
+row: 0
+#Start (index in h5 table, dofsite, pos, data)
+   0:   0 : (  0,  0,  0) : (    0.707107,            0,     0.707107)
+   1:   1 : (  3,  0,  0) : (    0.707107,            0,     0.707107)
+   2:   2 : (  6,  0,  0) : (    0.707107,            0,     0.707107)
+   3:   3 : (  9,  0,  0) : (    0.707107,            0,     0.707107)</pre>
+</div>
+<p>The first few rows provide some metadata such as which field and
+subfield the data is about, at what simulation time it was saved (here
+0 seconds), what the id, step and stage is. It further shows the
+<tt class="docutils literal"><span class="pre">field</span> <span class="pre">unit</span></tt> and the <tt class="docutils literal"><span class="pre">position</span> <span class="pre">unit</span></tt>. These give the physical
+dimensions with which the numerical quantities from the table have to
+be multiplied to get dimensionful physical quantities. For example,
+the positions in the table are provided as <tt class="docutils literal"><span class="pre">(0,0,0)</span></tt>, <tt class="docutils literal"><span class="pre">(3,0,0)</span></tt>,
+<tt class="docutils literal"><span class="pre">(6,0,0)</span></tt> etc. These numbers have to be multiplied by
+<tt class="docutils literal"><span class="pre">&lt;SI:</span> <span class="pre">1e-09</span> <span class="pre">m</span> <span class="pre">&gt;</span></tt> = 1e-9 meters to obtain the actual positions
+in SI units. In other words, the position coordinate data is expressed in
+nanometers. In this particular example, the field data &#8211; the normalised
+magnetisation &#8211; is dimensionless.</p>
+<p>Followed by the keyword <tt class="docutils literal"><span class="pre">#Start</span></tt> the actual data starts (in the next
+line).  The format of the subsequent data lines is as follows:</p>
+<ul class="simple">
+<li>Column 1: index of the site in the h5 file. This mostly relevant for
+developers.</li>
+<li>Column 2: the index of the site. As long as we are dealing with
+first order basis functions (as is nearly always the case in
+micromagnetics), this is equivalent to the node id in the mesh.</li>
+<li>Columns 3, 4, 5: enclosed in parentheses, the position of the site
+is expressed in units of the <tt class="docutils literal"><span class="pre">position</span> <span class="pre">unit</span></tt>.</li>
+<li>Columns 6, 7, 8: enclosed in parentheses, the actual field data
+expressed in units of the <tt class="docutils literal"><span class="pre">field</span> <span class="pre">unit</span></tt>.</li>
+</ul>
+<p>In short, the first line of the actual data:</p>
+<div class="highlight-python"><pre>0:   0 : (  0,  0,  0) : (    0.707107,            0,     0.707107)</pre>
+</div>
+<p>tells us that the normalised magnetisation at node id <tt class="docutils literal"><span class="pre">0</span></tt>, and
+position <tt class="docutils literal"><span class="pre">(0,0,0)</span> <span class="pre">nm</span></tt> is pointing in the direction
+<tt class="docutils literal"><span class="pre">(0.707107,0,0.707107)</span></tt>.</p>
+<p>Another example: Suppose we are interested in the magnetisation field
+<tt class="docutils literal"><span class="pre">M</span></tt> (this is the non-normalised magnetisation measured in Ampere per
+meter) at time 1e-10 seconds (i.e. id=20). We use this
+command:</p>
+<div class="highlight-python"><pre>nmagpp --fields M --dump --range 20 bar</pre>
+</div>
+<p>to obtain output beginning like this:</p>
+<div class="highlight-python"><pre>field    : m
+subfield : m_Py
+time     : 1e-10 * &lt;SI: 1  s &gt;
+id       : 20
+step     : 495
+stage    : 1
+field unit: &lt;SI: 1  &gt;
+position unit: &lt;SI: 1e-09  m &gt;
+row: 2
+#Start (index in h5 table, dofsite, pos, data)
+   0          0 (           0            0            0 ) (    0.182556     0.525948     0.830694 )
+   1          1 (           3            0            0 ) (    0.165008     0.534525     0.828888 )
+   2          2 (           6            0            0 ) (    0.104837     0.544846     0.831957 )
+   3          3 (           9            0            0 ) (    0.029925     0.552054     0.833272 )
+   4</pre>
+</div>
+<p>In principle, this output data can be parsed by other tools to extract
+the positions and the data. However, it is hoped that other options of
+the nmagpp tool (such as the <tt class="docutils literal"><span class="pre">--vtk</span></tt> switch ) already cover most of
+the situations where the need to convert data may arise. (If you would
+like to export the raw data into another file format or application,
+please contact the <a class="reference internal" href="contact.html#contact"><em>nmag team</em></a> to request this feature, as it may be
+of interest to other people as well.)</p>
+<p>It is further possible to access the data in the <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> files
+directly from tailor written post-processing scripts. See <a class="reference internal" href="example2/doc2.html#example-post-processing-of-saved-field-data"><em>example:
+post processing of saved field data</em></a>.</p>
+</div>
+<div class="section" id="range-of-data-to-be-processed">
+<span id="id6"></span><h3>6.2.3. Range of data to be processed<a class="headerlink" href="executables.html#range-of-data-to-be-processed" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">--range</span></tt> switch allows a variety of ways to express which of
+the <tt class="docutils literal"><span class="pre">ids</span></tt> in the data file should be selected (for dumping to the
+screen, or conversion to a vtk file). Here are some examples:</p>
+<div class="highlight-python"><pre>--range 17                        #will select 17
+--range "range(5,10)"             #will select [5,6,7,8,9]
+--range "[2,5,10,42]"             #will select [2,5,10,42]
+--range "range(10)+[20,25,31,42]" #will select [0,1,2,3,...,9,10,20,25,31,42]
+--range "max(ids)"                #will select the last saved id</pre>
+</div>
+</div>
+<div class="section" id="conversion-to-vtk-file">
+<span id="id7"></span><h3>6.2.4. Conversion to vtk file<a class="headerlink" href="executables.html#conversion-to-vtk-file" title="Permalink to this headline">¶</a></h3>
+<p>The command</p>
+<blockquote>
+<div>nmagpp &#8211;range 0 &#8211;vtk test.vtk bar</div></blockquote>
+<p>will take the dataset with <tt class="docutils literal"><span class="pre">id</span></tt>=0 in the <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt> file and convert it
+to a (binary) vtk file with name <tt class="docutils literal"><span class="pre">test.vtk</span></tt>. For vtk files, the
+default is to convert all fields. However, if a field (or a list of fields) is specified
+using the <tt class="docutils literal"><span class="pre">--field</span></tt> option, then only this field is converted. This
+may be useful if disk space or conversion time is an issue.</p>
+<p>We can convert multiple time steps into a set of vtk files with one
+command. For example, to convert for all saved configurations all
+fields into vtk files, use:</p>
+<div class="highlight-python"><pre>nmagpp --vtk alltest.vtk bar</pre>
+</div>
+<p>This will create files <tt class="docutils literal"><span class="pre">alltest-000000.vtk</span></tt>, <tt class="docutils literal"><span class="pre">alltest-000010.vtk</span></tt>,
+<tt class="docutils literal"><span class="pre">alltest-000020.vtk</span></tt>, <tt class="docutils literal"><span class="pre">alltest-000030.vtk</span></tt>, <tt class="docutils literal"><span class="pre">alltest-000040.vtk</span></tt>,
+<tt class="docutils literal"><span class="pre">alltest-000050.vtk</span></tt>, and <tt class="docutils literal"><span class="pre">alltest-000060.vtk</span></tt>.</p>
+<p>The conversion to vtk can be combined with the <tt class="docutils literal"><span class="pre">--range</span></tt> command.
+(See  <a class="reference internal" href="executables.html#range-of-data-to-be-processed"><em>Range of data to be processed</em></a>). For example, to convert every
+second saved configuration (i.e. ids 0, 20, 40) into vtk files, we could use:</p>
+<div class="highlight-python"><pre>nmagpp --range "range(0,60,20)" --vtk x.vtk bar</pre>
+</div>
+<p>The string &#8220;range(0,60,20)&#8221; is a Python expression and will evaluate
+to [0,20,40] (because it is the list of integers starting from 0,
+going up to [but not including] 60, in steps of 20). This will create
+files <tt class="docutils literal"><span class="pre">x-000000.vtk</span></tt>, <tt class="docutils literal"><span class="pre">x-000020.vtk</span></tt> and <tt class="docutils literal"><span class="pre">x-000040.vtk</span></tt>.</p>
+</div>
+<div class="section" id="other-features">
+<span id="id8"></span><h3>6.2.5. Other features<a class="headerlink" href="executables.html#other-features" title="Permalink to this headline">¶</a></h3>
+<p>Use:</p>
+<blockquote>
+<div>nmagpp &#8211;help</div></blockquote>
+<p>to get an overview of other features of nmag, and further details.</p>
+</div>
+</div>
+<div class="section" id="nmeshpp">
+<span id="id9"></span><h2>6.3. nmeshpp<a class="headerlink" href="executables.html#nmeshpp" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">nmeshpp</span></tt> program is the NMESHPreProcesser and NMESHPostProcessor.
+It provides quick access to some statistical information
+about nmesh meshes. The basic usage is</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">nmeshpp</span> <span class="pre">[OPTIONS]</span> <span class="pre">INPUTFILE</span> <span class="pre">[OUTPUTFILE]</span></tt></div></blockquote>
+<p>where <tt class="docutils literal"><span class="pre">INPUT</span></tt> is the name of a nmesh file (either in ascii or hdf5
+format), <tt class="docutils literal"><span class="pre">OUTPUTFILE</span></tt> is the name of the file to be written to (if
+required; this depends on the <tt class="docutils literal"><span class="pre">OPTIONS</span></tt>) and OPTIONS can be one or
+several of the options listed in the following subsections. We use the
+mesh file <a class="reference download internal" href="_downloads/bar30_30_100.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">bar30_30_100.nmesh.h5</span></tt></a> from <a class="reference internal" href="example2/doc.html#example-2"><em>Example 2</em></a> to
+illustrate the usage of <a class="reference internal" href="executables.html#nmeshpp"><em>nmeshpp</em></a>.</p>
+<div class="section" id="general-information-info">
+<span id="id10"></span><h3>6.3.1. General information (<tt class="docutils literal"><span class="pre">--info</span></tt>)<a class="headerlink" href="executables.html#general-information-info" title="Permalink to this headline">¶</a></h3>
+<p>The command:</p>
+<div class="highlight-python"><pre>nmeshpp --info bar30_30_100.nmesh.h5</pre>
+</div>
+<p>produces the following output:</p>
+<div class="highlight-python"><pre>====== Info output: ========================================================
+3-dimensional mesh
+18671 volume elements (3d)
+ 3438 surface elements (2d)
+ 4086 points
+    1 simplex regions ([1])
+    2 point regions ([-1, 1])
+    2 region volumes ([0.0, 89999.999999999782])
+ 1721 boundary points (-&gt; BEM size&lt;=  22MB)
+    0 periodic points (mirage=0, total=0)
+a0: average=3.543451, std=0.581220, min=1.953689, max=5.708395</pre>
+</div>
+<p>Starting from the top of the output, we are given the information that
+this is a three-dimensional mesh, with its number of <em>volume elements</em>
+(i.e. tetrahedra in 3d), <em>surface elements</em> (i.e. surface triangles) and
+<em>points</em>.</p>
+<p>We are also given a list of <em>simplex regions</em> (which is just [1]
+here). If we had more than one region defined (say two disconnected
+spheres that are to be associated with different material), then we
+would have two entries here. The numbers given in this list are the
+identifiers of the regions: in this example there is only one region
+and it has the identifier 1.</p>
+<p>The <em>point regions</em> is a list of all regions in which points are
+located. This includes of course region 1. Region -1 represents the
+vacuum around the meshed region. The points that are located on the
+surface of the bar are located both in the bar (region 1) and in the
+vacuum (region -1). Other negative region numbers (-2, -3) can be used
+to discern different pieces of a boundary. (While this feature is at
+present not used by Nmag, the underlying nsim framework provides
+capabilities to e.g. associate Dirichlet boundary conditions to a
+1/-1 boundary and von Neumann boundary conditions to a 1/-2 boundary.)</p>
+<p>The <em>region volumes</em> provide the geometrical volume of the regions. By
+convention, the vacuum has volume 0. In this example, the bar volume
+is meant to be 30x30x100=90000. The deviation from this due to limited
+numerical precision (and of the order of 1e-10).</p>
+<p>The <em>boundary points</em> are the number of nodes located at the surface
+of the bar. This number is important if using the hybrid finite
+element/boundary element method to compute the demagnetisation field,
+as the boundary element matrix size will be proportional to the square
+of the number of boundary points. The size of the boundary element
+matrix is given as well (see <a class="reference internal" href="executables.html#memory-requirements-of-boundary-element-matrix"><em>Memory requirements of boundary element matrix</em></a>).</p>
+<p>The <em>periodic points</em> are the number of points that have <em>mirage
+images</em> in the mesh. There will always be zero periodic points (and
+thus zero mirage images) unless we are dealing with a periodic mesh
+(see <a class="reference internal" href="executables.html#nmeshmirror"><em>nmeshmirror</em></a> and <a class="reference internal" href="example_periodic_spinwaves/doc.html#spin-waves-example"><em>Example: Spin-waves in periodic system</em></a>).</p>
+<p>Finally, we are given some information about the statistics of the
+edge lengths <em>a0</em> in the mesh: the average value, the standard
+deviation, the maximum and minimum value. This is important as in
+micromagnetics the angle of the magnetisation must not vary strongly
+from one node to the next. In practice, the edge length a0 should
+therefore be (significantly) smaller than the exchange length (see
+<a class="reference internal" href="tutorial/doc.html#what-size-of-the-cells-fd-and-tetrahedra-fe-should-i-choose"><em>What size of the cells (FD) and tetrahedra (FE) should I choose?</em></a>)</p>
+</div>
+<div class="section" id="memory-requirements-of-boundary-element-matrix">
+<span id="id11"></span><h3>6.3.2. Memory requirements of boundary element matrix<a class="headerlink" href="executables.html#memory-requirements-of-boundary-element-matrix" title="Permalink to this headline">¶</a></h3>
+<p>The boundary element matrix is densely populated matrix with s rows
+and s columns, where s is the number of surface nodes in the
+mesh. (Strictly, it is only the number of surface nodes that enclose a
+ferromagnetic material.) Assuming we use 8 bytes to store one floating
+point number, we can thus estimate the memory required to store this
+matrix. In the example above, we have 1721 boundary points, and thus
+1721*1721=2961841 matrix entries. Each entry requires 8 byte, so the
+total memory requirement is 23694728 bytes, or approximately 23139
+kilobytes or 23 megabytes.</p>
+<p>The <tt class="docutils literal"><span class="pre">nmeshpp</span> <span class="pre">-i</span></tt> command can be used to quickly check how big the
+BEM matrix is. A computation is only feasible if the RAM of the
+computer can hold the boundary element matrix. (When carrying out a
+distributed calculation, it is sufficient if the total RAM of all
+machines can hold the matrix.)</p>
+</div>
+<div class="section" id="inspecting-the-quality-of-a-mesh">
+<span id="id12"></span><h3>6.3.3. Inspecting the quality of a mesh<a class="headerlink" href="executables.html#inspecting-the-quality-of-a-mesh" title="Permalink to this headline">¶</a></h3>
+<p>The quality of a mesh can be defined in various ways. In
+micromagnetics, we usually want tetrahedra that have edges of nearly
+identical length (i.e. we do not want the tetrahedra to be flat).</p>
+<p><tt class="docutils literal"><span class="pre">nmeshpp</span></tt> uses the ratio of the radius of the in-sphere (the sphere
+that can just fit into a tetrahedron so that it touches the sides) to
+radius of the circumsphere (the sphere passing through the four corners),
+multiplied by the number of dimensions. This number is 1.0 for a
+perfect tetrahedron with identical edge lengths, and 0 for a
+completely flat (effectively 2-dimensional) tetrahedron.</p>
+<p>The command:</p>
+<div class="highlight-python"><pre>nmeshpp -q bar30_30_100.nmesh.h5</pre>
+</div>
+<p>computes a histogram of the distribution of this quality parameter for
+the bar mesh, and produces this output:</p>
+<div class="highlight-python"><pre>====== Quality output: ======================================================
+[qual interval] counts = probability
+[ 0.000- 0.100]      0 = 0.00%
+[ 0.100- 0.200]      0 = 0.00%
+[ 0.200- 0.300]      0 = 0.00%
+[ 0.300- 0.400]      0 = 0.00%
+[ 0.400- 0.500]      1 = 0.01% *
+[ 0.500- 0.600]     42 = 0.22% *
+[ 0.600- 0.700]    364 = 1.95% **
+[ 0.700- 0.800]   2420 =12.96% ************
+[ 0.800- 0.900]   8252 =44.20% ****************************************
+[ 0.900- 1.000]   7592 =40.66% *************************************</pre>
+</div>
+</div>
+<div class="section" id="histogram-of-edge-lengths">
+<span id="id13"></span><h3>6.3.4. Histogram of edge lengths<a class="headerlink" href="executables.html#histogram-of-edge-lengths" title="Permalink to this headline">¶</a></h3>
+<p>The command:</p>
+<div class="highlight-python"><pre>nmeshpp -a bar30_30_100.nmesh.h5</pre>
+</div>
+<p>computes a histogram of the edge length distribution of the mesh:</p>
+<div class="highlight-python"><pre>====== a0 output: ===========================================================
+[a0   interval] counts = probability
+[ 1.954- 2.329]    234 = 0.63% **
+[ 2.329- 2.705]   1424 = 3.81% *******
+[ 2.705- 3.080]   7921 =21.17% *************************************
+[ 3.080- 3.456]   8790 =23.50% ****************************************
+[ 3.456- 3.831]   7573 =20.24% ***********************************
+[ 3.831- 4.207]   5884 =15.73% ***************************
+[ 4.207- 4.582]   3769 =10.08% ******************
+[ 4.582- 4.957]   1385 = 3.70% *******
+[ 4.957- 5.333]    365 = 0.98% **
+[ 5.333- 5.708]     63 = 0.17% *
+
+average   a0: &lt;a0&gt;   = 3.543451
+stand dev a0: &lt;a0^2&gt; = 0.581220^2
+min and max :        =(1.953689,5.708395)</pre>
+</div>
+</div>
+</div>
+<div class="section" id="convert-nmesh-h5-to-nmesh-file-and-back">
+<span id="id14"></span><h2>6.4. Convert nmesh.h5 to nmesh file (and back)<a class="headerlink" href="executables.html#convert-nmesh-h5-to-nmesh-file-and-back" title="Permalink to this headline">¶</a></h2>
+<p>The command:</p>
+<div class="highlight-python"><pre>nmeshpp -c mesh.nmesh.h5 mesh.nmesh</pre>
+</div>
+<p>converts a the mesh <tt class="docutils literal"><span class="pre">mesh.nmesh.h5</span></tt> (in h5 format) to the <tt class="docutils literal"><span class="pre">mesh.nmesh</span></tt> (in ascii format). Works also in the reverse way. <tt class="docutils literal"><span class="pre">nmeshpp</span></tt> will save as <tt class="docutils literal"><span class="pre">h5</span></tt> file if the last extension of the file to write is <tt class="docutils literal"><span class="pre">.h5</span></tt>.</p>
+<div class="section" id="nmeshmirror">
+<span id="id15"></span><h3>6.4.1. nmeshmirror<a class="headerlink" href="executables.html#nmeshmirror" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">nmeshmirror</span></tt> tool can create periodic meshes out of a non-periodic mesh. The geometry described by the non-periodic mesh has to
+be a cuboid. This can be mirrored along one (or more) of the planes
+defined by the sides of the cuboid.</p>
+<p>The general usage is</p>
+<div class="highlight-python"><pre>nmeshmirror meshfile error1 error2 directions newfile remove</pre>
+</div>
+<p>where:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">meshfile</span></tt> is the original (non-periodic) ASCII nmesh file</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">error1</span></tt> is the maximum distance between two points in
+order to consider them coincident (case of points on mirroring planes)</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">error2</span></tt> is the maximum distance between a point and the surface
+opposite to the one used as mirroring plane in order to consider the
+point periodic</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">directions</span></tt> is a list of values 0,1 or -1, corresponding to the
+direction(s) over which the mesh is mirrored: 1 corresponds to
+mirroring along the positive given axis, -1 along the negative given
+axis and 0 corresponds to no mirroring along the given axis.</p>
+<p>For a three dimensional mesh, there are three options to mirror the
+mesh (along the x, y and z direction). In that case, the
+<tt class="docutils literal"><span class="pre">directions</span></tt> would be a list of three integers, for example
+<tt class="docutils literal"><span class="pre">0,1,0</span></tt> to mirror the input mesh on the xz plane that limits the
+mesh in the y direction.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">newfile</span></tt> is the name of the ASCII file with the new periodic mesh</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">remove</span></tt> is an optional argument which takes the values 0 and 1
+and removes the periodic points from the final mesh when is set to 1.
+The default value is 0.</p>
+</li>
+</ul>
+<p>Calling <tt class="docutils literal"><span class="pre">orig.nmesh</span></tt> the ASCII file of a 3D non-periodic mesh, an example
+of the use of nmeshmirror is the following, where the mesh is mirrored
+along the positive x-axis and the negative z-axis:</p>
+<div class="highlight-python"><pre>nmeshmirror orig.nmesh 1e-6 1e-6 1,0,-1 periodic.nmesh</pre>
+</div>
+<p>resulting in a periodic mesh along the same axes.</p>
+</div>
+<div class="section" id="nmeshsort">
+<span id="id16"></span><h3>6.4.2. nmeshsort<a class="headerlink" href="executables.html#nmeshsort" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">nmeshsort</span></tt> script sorts the nodes of a mesh along a given axis
+(not recommended when using parmetis with multiple-object meshes). We
+expect this to be most relevant to developers.</p>
+<p>The general usage is</p>
+<div class="highlight-python"><pre>nmeshsort meshfile axis newfile</pre>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">meshfile</span></tt> is the original ASCII nmesh file</li>
+<li><tt class="docutils literal"><span class="pre">axis</span></tt> is the axis over which the sorting takes place</li>
+<li><tt class="docutils literal"><span class="pre">newfile</span></tt> is the name of the ASCII file with the new periodic mesh</li>
+</ul>
+<p>Calling <tt class="docutils literal"><span class="pre">orig.nmesh</span></tt> the ASCII file of a 3D mesh, an example
+of the use of nmeshsort is the following, where the mesh is sorted
+along the z-axis:</p>
+<div class="highlight-python"><pre>nmeshsort orig.nmesh 2 sorted.nmesh</pre>
+</div>
+</div>
+</div>
+<div class="section" id="nmeshimport">
+<span id="id17"></span><h2>6.5. nmeshimport<a class="headerlink" href="executables.html#nmeshimport" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="executables.html#nmeshimport"><em>nmeshimport</em></a> command can be used to read other mesh formats and write them into the nmesh format that can be read by nmag.</p>
+<p>The <tt class="docutils literal"><span class="pre">nmeshimport</span></tt> tool can convert <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>, Gambit and <a class="reference external" href="http://www.geuz.org/gmsh/">Gmsh</a> files
+into nmesh files.</p>
+<p>The general usage is:</p>
+<div class="highlight-python"><pre>nmeshimport OPTIONS INPUTFILE NMESHFILE</pre>
+</div>
+<p>The OPTION to import from <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> is <tt class="docutils literal"><span class="pre">--netgen</span></tt>. The (contributed)
+code for importing from a Gambit mesh file is <tt class="docutils literal"><span class="pre">--gambit</span></tt>.
+The OPTION to import from <a class="reference external" href="http://www.geuz.org/gmsh/">Gmsh</a> is <tt class="docutils literal"><span class="pre">--gmsh</span></tt>.</p>
+<p>Usage example: assuming we have a file <tt class="docutils literal"><span class="pre">mymesh.neutral</span></tt> created with
+<a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> and would like to convert it to <tt class="docutils literal"><span class="pre">mymesh.nmesh.h5</span></tt>, we could
+use this command:</p>
+<div class="highlight-python"><pre>nmeshimport --netgen mymesh.neutral mymesh.nmesh.h5</pre>
+</div>
+<p>Use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nmeshimport</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>to see all available features.</p>
+</div>
+<div class="section" id="nsim">
+<span id="id18"></span><h2>6.6. nsim<a class="headerlink" href="executables.html#nsim" title="Permalink to this headline">¶</a></h2>
+<p>This is the main executable. It superficially appears to be a Python
+interpreter, but has extended functionality. In particular, it has
+support for parallel execution (using MPI), and contains extensions
+accessible in the additional built-in <tt class="docutils literal"><span class="pre">ocaml</span></tt> module which provides
+the additional functionality of the nsim multiphysics
+system. (Nmag is a Python library on top of nsim, which itself is
+implemented in Objective Caml.)</p>
+</div>
+<div class="section" id="nsimversion">
+<span id="id19"></span><h2>6.7. nsimversion<a class="headerlink" href="executables.html#nsimversion" title="Permalink to this headline">¶</a></h2>
+<p>A script that provides some information about the version of the
+software.</p>
+<p>If you need to report a bug/problem, please include the
+output of this program.</p>
+<p>From release 0.2 onwards, please use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nsim</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>instead.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="files_and_file_names.html" title="7. Files and file names"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="finite_element_mesh_generation.html" title="5. Finite element mesh generation"
+             >previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

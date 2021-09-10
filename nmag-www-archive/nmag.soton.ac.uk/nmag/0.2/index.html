@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>nmag - computational micromagnetics</title>
+    <link rel="stylesheet" href="../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">nmag 0.2
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="manual/manual.pdf">Manual (pdf)</a></li>
+<li><a href="manual/singlehtml/manual.html">Manual (one html file)</a></li>
+<li><a href="manual/html/manual.html">Manual (split html files)</a></li>
+<li><a href="install/index.html">installation</a></li>
+<li><a href="../download.html">Download</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../index.html">Nmag home</a></li>
+<li>|</li>
+<li>nmag 0.2</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document">
+<p> This documentation refers to the 0.2
+ (0.2.1
+) release.</p>
+<!-- comment:
+.. contents:: Table of contents -->
+<div class="section" id="download-and-install">
+<h1>Download and install</h1>
+<p>The code can be <a class="reference external" href="../download.html">downloaded from here</a>; see also the <a class="reference external" href="install/index.html">installation page</a>.</p>
+</div>
+<div class="section" id="manual">
+<h1>Manual</h1>
+<p>Read the manual as</p>
+<ul class="simple">
+<li><a class="reference external" href="manual/html/manual.html">html</a> with subsections or</li>
+<li><a class="reference external" href="manual/singlehtml/manual.html">single html</a> one large html file or</li>
+<li><a class="reference external" href="http://nmag.soton.ac.uk/nmag/0.2/manual/latexpdf/manual.pdf">pdf</a> file.</li>
+</ul>
+</div>
+<div class="section" id="changelog">
+<h1>Changelog</h1>
+<div class="section" id="release-0-2-1-13-january-2012">
+<h2>release 0.2.1 (13 January 2012)</h2>
+<p>Bugfixes/Improvements</p>
+<ul class="simple">
+<li>Patch from U.Nitzsche (ifw-dresden.de), allowing from-source
+installation in /opt</li>
+<li>Fix for mpi regression test</li>
+<li>Minor improvements for documentation (dispersion relation
+computation and anisotropy examples in manual)</li>
+<li>Correction for instructions to run tests in nmag-core install.</li>
+<li>Adding python-pyvtk to list of required packages in installation
+instructions.</li>
+</ul>
+</div>
+<div class="section" id="release-0-2-0-december-2011">
+<h2>Release 0.2.0 December 2011</h2>
+<p>New Features</p>
+<ul class="simple">
+<li>Improved handling of command line arguments.
+The parsing of command line arguments now happens at the beginning, before
+the nmag module is imported. Options can be passed to PETSc using the
+--petsc-opts flag (try <tt class="docutils literal">nsim <span class="pre">-h</span> <span class="pre">--petsc-opts</span> <span class="pre">-h</span></tt> to get a list). It is then
+possible to use the logging facilities offered by the library. The
+interactive command <tt class="docutils literal">nsim_i</tt> has been removed. Nsim detects when it is
+being used interactively and uses IPython when possible.</li>
+<li>Added a new command Nmagprobe for postprocessing the data. Can probe the
+magnetisation in a cubic lattice in space and time. Can convert the data
+into one or more OOMMF OVF files (both versions 1.0 and 2.0 are supported)
+and these files can be reloaded with OOMMF, for example. Can Fourier
+transform the data (in space, time or both) to obtain dispersion curves or
+the modes of the system.</li>
+<li>Partial PBC support for HLib. HLib can now be used together with PBC.
+Downside: the size of the HLib matrix increases with the number of copies.
+For a sufficiently large number of copies (typically 1000 or more), using
+PBC+HLib may not give any benefits with respect to PBC alone.</li>
+<li>Major restructuring of the installation procedure. In addition to
+the installation from a large tarball as in the previous release,
+it is now possible to install Nmag using the system's Python and other
+libraries (assuming the versions are compatible). This has been
+tested for Ubuntu 11.10 and 11.04.</li>
+</ul>
+<p>Bugfixes/Improvements</p>
+<ul class="simple">
+<li>Adjusted flags in compilation Makefile.
+PETSc compiled --with-debugging=no (~10 % speed improvement).
+The compilation also stops when HLib compilation fails.</li>
+<li>Optimisation of mesh module: topology information generated only on demand,
+mesh datastructures re-engineered to occupy less memory. As a consequence
+a medium-large simulation requires less memory (reduction of 10-20 % of the
+non-BEM part) and is faster in the initialisation phase (about the same
+amount).</li>
+<li>Added a bug report script to collect compilation logs into a single file.
+That should considerably simplify the submission of bug reports.</li>
+<li>Updated packages in the compile from source.
+We are now using: Mpich2 1.2.1p1, Petsc 3.1-p5, Ocaml 3.12.0, Findlib 1.2.1,
+Gsl 1.14, Parmetis 3.1.1, NumPy 1.5</li>
+<li>Added support for Numpy array to pass data to the core simulation engine
+(makes it faster to set and retrieve fields)</li>
+<li>Fixed bug when reloading data from an MPI simulation with different number
+of nodes with respect to the one which saved the data (data is now reordered
+when loading it, if necessary)</li>
+<li>Reworked build system. All Nmag OCaml sources are now in one single directory
+which makes it easy to configure and build the nsim executable.</li>
+<li>Rewrote the test system and fixed bugs.</li>
+<li>Ported the documentation to Sphinx.</li>
+<li>Added examples to guided tour, and extended FAQ.</li>
+</ul>
+<p>The documentation and changelog for Nmag 0.1 is available <a class="reference external" href="../0.1/index.html">here</a>.</p>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Tue Jan 24 13:44:52 2012</strong>.</small> 
+|  Created with <a href="http://nmag.soton.ac.uk/nmag/rest2web.html">rest2web</a>, and <a href="http://nmag.soton.ac.uk/nmag/computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>

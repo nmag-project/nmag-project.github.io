@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1   NMAG User Manual (0.2.1) &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="1. Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="1. Introduction"
+             accesskey="N">next</a> |</li>
+        <li><a href="manual.html#">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <hr class="docutils" />
+<div class="section" id="nmag-user-manual-nmagverstr">
+<span id="id1"></span><h1>1&nbsp;&nbsp;&nbsp;NMAG User Manual (0.2.1)<a class="headerlink" href="manual.html#nmag-user-manual-nmagverstr" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Authors:</th><td class="field-body">Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert</td>
+</tr>
+<tr class="field"><th class="field-name">Licence:</th><td class="field-body"><a class="reference external" href="http://www.gnu.org/licenses/gpl2.txt">GNU General Public License (GPL) version 2</a></td>
+</tr>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.2.1</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">Manual generated on 2012-01-14 at 23:58.</td>
+</tr>
+<tr class="field"><th class="field-name">Home page:</th><td class="field-body"><a class="reference external" href="../../../../index.html">http://nmag.soton.ac.uk</a></td>
+</tr>
+</tbody>
+</table>
+<img alt="_images/nmaglogo500.png" class="align-center" src="_images/nmaglogo500.png" style="width: 500px; height: 189px;" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#nmag-philosophy">1.1. Nmag Philosophy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-read-this-document">1.2. How to read this document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#development-status">1.3. Development status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#mailing-list">1.4. Mailing list</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#nmag-announce">1.4.1. nmag-announce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#nmag-users">1.4.2. nmag-users</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#support">1.5. Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#license-and-disclaimer">1.6. License and Disclaimer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guided_tour.html">2. Guided Tour</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example1/doc.html">2.1. Example: Demag field in uniformly magnetised sphere</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#importing-nmag">2.1.1. Importing nmag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#creating-the-simulation-object">2.1.2. Creating the simulation object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#defining-magnetic-materials">2.1.3. Defining (magnetic) materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#loading-the-mesh">2.1.4. Loading the mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#setting-the-initial-magnetisation">2.1.5. Setting the initial magnetisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#setting-the-external-field">2.1.6. Setting the external field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example1/doc.html#extracting-and-saving-data">2.1.7. Extracting and saving data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example2/doc.html">2.2. Example 2: Computing the time development of a system</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#mesh-generation">2.2.1. Mesh generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#the-simulation">2.2.2. The simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#analysing-the-data">2.2.3. Analysing the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#higher-level-functions">2.2.4. Higher level functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#relaxing-the-system">2.2.5. &#8220;Relaxing&#8221; the system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#relaxing-the-system-faster">2.2.6. &#8220;Relaxing&#8221; the system faster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example2/doc.html#decreasing-execution-time">2.2.7. Decreasing execution time</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_hysteresis_ellipsoid/doc.html">2.3. Example: Simple hysteresis loop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_hysteresis_ellipsoid/doc.html#hysteresis-simulation-script">2.3.1. Hysteresis simulation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_hysteresis_ellipsoid/doc.html#hysteresis-loop-computation">2.3.2. Hysteresis loop computation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_hysteresis_ellipsoid/doc.html#obtaining-the-hysteresis-loop-data">2.3.3. Obtaining the hysteresis loop data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_hysteresis_ellipsoid/doc.html#plotting-the-hysteresis-loop-with-gnuplot">2.3.4. Plotting the hysteresis loop with Gnuplot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_stoner_wohlfarth/doc.html">2.4. Example: Hysteresis loop for Stoner-Wohlfarth particle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_stoner_wohlfarth/doc.html#plotting-the-hysteresis-loop">2.4.1. Plotting the hysteresis loop</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_hysteresis_disk/doc.html">2.5. Example: Hysteresis loop for thin disk</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_hysteresis_disk/doc.html#thin-disk-hysteresis-loop">2.5.1. Thin disk hysteresis loop</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_vortex/doc.html">2.6. Example: Vortex formation and propagation in disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_manipulate/doc.html">2.7. Example: Manipulating magnetisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_manipulate/doc.html#modifying-the-magnetisation">2.7.1. Modifying the magnetisation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_ipython/doc.html">2.8. Example: IPython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_pinning/doc.html">2.9. Example: Pinning Magnetisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_pinning/doc.html#pinning-simulation-script">2.9.1. Pinning simulation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_pinning/doc.html#pinning-magnetisation">2.9.2. Pinning magnetisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_pinning/doc.html#visualisation">2.9.3. Visualisation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_uniaxial_anis/doc.html">2.10. Example: Uniaxial anisotropy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_uniaxial_anis/doc.html#uniaxial-anisotropy-simulation-script">2.10.1. Uniaxial anisotropy simulation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_uniaxial_anis/doc.html#visualization">2.10.2. Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_uniaxial_anis/doc.html#comparison">2.10.3. Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_cubic_anis/doc.html">2.11. Example: Cubic Anisotropy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_cubic_anis/doc.html#cubic-anisotropy-simulation-script">2.11.1. Cubic anisotropy simulation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_cubic_anis/doc.html#analyzing-the-result">2.11.2. Analyzing the result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_user_anis/doc.html">2.12. Example: Arbitrary Anisotropy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_user_anis/doc.html#arbitrary-anisotropy-simulation-script">2.12.1. Arbitrary anisotropy simulation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_user_anis/doc.html#the-result">2.12.2. The result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_restart/doc.html">2.13. Restart example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_restart/doc.html#saving-the-state-of-the-simulation">2.13.1. Saving the state of the simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_restart/doc.html#starting-and-restarting-the-simulation">2.13.2. Starting and restarting the simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_changing_space_time_field/doc.html">2.14. Applying a field that changes both in time and in space</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_changing_space_time_field/doc.html#idea-pass-simulation-object-to-field-setting-function">2.14.1. Idea: pass simulation object to field-setting function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_changing_space_time_field/doc.html#complete-example-simple-moving-write-head-example">2.14.2. Complete example: simple moving write-head example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_two_materials/doc.html">2.15. Example: two different magnetic materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_larmor/doc.html">2.16. Example: Larmor precession</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_1Dperiodicity/doc.html">2.17. Example: 1D periodicity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_1Dperiodicity/doc.html#introduction-periodic-boundary-conditions-macro-geometry">2.17.1. Introduction periodic boundary conditions (&#8220;macro geometry&#8221;)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_1Dperiodicity/doc.html#d-example">2.17.2. 1d example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_2Dperiodicity/doc.html">2.18. Example: 2D periodicity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_periodic_spinwaves/doc.html">2.19. Example: Spin-waves in periodic system</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_periodic_spinwaves/doc.html#relaxation-script">2.19.1. Relaxation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_periodic_spinwaves/doc.html#visualising-the-magnetisation-evolution">2.19.2. Visualising the magnetisation evolution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example2/doc2.html">2.20. Example: post processing of saved field data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_zhangli1/doc.html">2.21. Example: Spin transfer torque (Zhang-Li model)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli1/doc.html#current-driven-motion-of-a-vortex-in-a-thin-film">2.21.1. Current-driven motion of a vortex in a thin film</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli1/doc.html#part-i-relaxation">2.21.2. Part I: Relaxation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli1/doc.html#part-ii-current-driven-dynamics">2.21.3. Part II: Current driven dynamics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli1/doc.html#standard-problem">2.21.4. Standard problem</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_zhangli2/doc.html">2.22. Example: Current-driven magnetisation precession in nanopillars</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli2/doc.html#two-simulations-in-one-single-script">2.22.1. Two simulations in one single script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_zhangli2/doc.html#results-precession-of-the-magnetisation">2.22.2. Results: precession of the magnetisation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mesh_distortion/doc.html">2.23. Mesh distortion for edge roughness simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mesh_distortion/doc.html#example">2.23.1. Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_distortion/doc.html#details-and-command-line-options">2.23.2. Details and command line options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_phi_BEM_hlib/doc.html">2.24. Compression of the Boundary Element Matrix using HLib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#hierarchical-matrices-in-micromagnetism">2.24.1. Hierarchical Matrices in Micromagnetism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#installation-of-hlib">2.24.2. Installation of HLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#testing-the-hlib-bem-matrix-compression">2.24.3. Testing the HLib BEM Matrix compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#using-hlib-example-1-demagnetisation-field-of-a-sphere">2.24.4. Using HLib example 1: Demagnetisation Field of a Sphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#using-hlib-example-2-thin-films">2.24.5. Using HLib Example 2: Thin Films</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_phi_BEM_hlib/doc.html#hlib-and-mpi">2.24.6. HLib and MPI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_nmagprobe/doc.html">2.25. Example: Calculation of dispersion curves</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_nmagprobe/doc.html#the-system-thesystem-py">2.25.1. The system: <tt class="docutils literal"><span class="pre">thesystem.py</span></tt></a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_nmagprobe/doc.html#part-i-relaxation-py">2.25.2. Part I: <tt class="docutils literal"><span class="pre">relaxation.py</span></tt></a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_nmagprobe/doc.html#part-ii-dynamics-py">2.25.3. Part II: <tt class="docutils literal"><span class="pre">dynamics.py</span></tt></a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_nmagprobe/doc.html#postprocessing-the-data">2.25.4. Postprocessing the data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_tolerances/doc.html">2.26. Example: Timestepper tolerances</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_tolerances/doc.html#hysteris-loop-calculation-not-converging-a-word-of-warning">2.26.1. Hysteris loop calculation not converging? A word of warning ...</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_mpi1/doc.html">2.27. Example: Parallel execution (MPI)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="example_mpi1/doc.html#using-mpich2">2.27.1. Using mpich2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_mpi1/doc.html#using-mpich1">2.27.2. Using mpich1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_mpi1/doc.html#visualising-the-partition-of-the-mesh">2.27.3. Visualising the partition of the mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="example_mpi1/doc.html#performance">2.27.4. Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_mpi1/doc.html#restarting-mpi-runs">2.28. Restarting MPI runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_excoupling/doc.html">2.29. More than one magnetic material, exchange coupled</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">3. Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#architecture-overview">3.1. Architecture overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#the-nsim-library">3.2. The nsim library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#fields-and-subfields">3.3. Fields and subfields</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="background.html#field">3.3.1. Field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#subfield">3.3.2. Subfield</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#fields-and-subfields-in-nmag">3.4. Fields and Subfields in Nmag</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="background.html#example-one-magnetic-material">3.4.1. Example: one magnetic material</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#example-two-magnetic-materials">3.4.2. Example: two magnetic materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#obtaining-and-setting-subfield-data">3.4.3. Obtaining and setting subfield data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#primary-and-secondary-fields">3.4.4. Primary and secondary fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#mesh">3.5. Mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="background.html#node">3.5.1. Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#node-id">3.5.2. node id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#node-position">3.5.3. node position</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#site">3.6. Site</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#si-object">3.7. SI object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="background.html#library-of-useful-si-constants">3.7.1. Library of useful si constants</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#terms">3.8. Terms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="background.html#stage-step-iteration-time-etc">3.8.1. Stage, Step, iteration, time, etc.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="background.html#some-geek-talk-deciphered">3.8.2. Some geek-talk deciphered</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#solvers-and-tolerance-settings">3.9. Solvers and tolerance settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#the-equation-of-motion-the-landau-lifshitz-gilbert-equation">3.10. The equation of motion: the Landau-Lifshitz-Gilbert equation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command_reference.html">4. Command reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#magmaterial">4.1. MagMaterial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#uniaxial-anisotropy">4.1.1. uniaxial_anisotropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#cubic-anisotropy">4.1.2. cubic_anisotropy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#simulation">4.2. Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#advance-time">4.2.1. advance_time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#get-subfield">4.2.2. get_subfield</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#get-subfield-positions">4.2.3. get_subfield_positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#get-subfield-sites">4.2.4. get_subfield_sites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#get-subfield-average">4.2.5. get_subfield_average</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#get-subfield-average-siv">4.2.6. get_subfield_average_siv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#probe-subfield">4.2.7. probe_subfield</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#probe-subfield-siv">4.2.8. probe_subfield_siv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#probe-h-demag-siv">4.2.9. probe_H_demag_siv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#hysteresis">4.2.10. hysteresis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#load-mesh">4.2.11. load_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#load-m-from-h5file">4.2.12. load_m_from_h5file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#save-restart-file">4.2.13. save_restart_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#relax">4.2.14. relax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#save-data">4.2.15. save_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#set-m">4.2.16. set_m</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#set-h-ext">4.2.17. set_H_ext</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#set-pinning">4.2.18. set_pinning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#set-params">4.2.19. set_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#get-subfield-from-h5file">4.3. get_subfield_from_h5file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#get-subfield-positions-from-h5file">4.4. get_subfield_positions_from_h5file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#get-subfield-sites-from-h5file">4.5. get_subfield_sites_from_h5file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#hmatrixsetup">4.6. HMatrixSetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#si">4.7. SI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#value">4.7.1. value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#units">4.7.2. units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#in-units-of">4.7.3. in_units_of</a></li>
+<li class="toctree-l3"><a class="reference internal" href="command_reference.html#is-compatible-with">4.7.4. is_compatible_with</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#ipython">4.8. ipython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_reference.html#command-line-options">4.9. Command line options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="finite_element_mesh_generation.html">5. Finite element mesh generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="finite_element_mesh_generation.html#nmesh-file-format">5.1. Nmesh file format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="finite_element_mesh_generation.html#ascii-nmesh">5.1.1. Ascii nmesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="finite_element_mesh_generation.html#hdf5-nmesh">5.1.2. Hdf5 nmesh</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="finite_element_mesh_generation.html#mesh-file-size">5.2. mesh file size</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="executables.html">6. Executables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#ncol">6.1. ncol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#nmagpp">6.2. nmagpp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#inspecting-the-content">6.2.1. Inspecting the content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#dumping-data">6.2.2. Dumping data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#range-of-data-to-be-processed">6.2.3. Range of data to be processed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#conversion-to-vtk-file">6.2.4. Conversion to vtk file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#other-features">6.2.5. Other features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#nmeshpp">6.3. nmeshpp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#general-information-info">6.3.1. General information (<tt class="docutils literal"><span class="pre">--info</span></tt>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#memory-requirements-of-boundary-element-matrix">6.3.2. Memory requirements of boundary element matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#inspecting-the-quality-of-a-mesh">6.3.3. Inspecting the quality of a mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#histogram-of-edge-lengths">6.3.4. Histogram of edge lengths</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#convert-nmesh-h5-to-nmesh-file-and-back">6.4. Convert nmesh.h5 to nmesh file (and back)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#nmeshmirror">6.4.1. nmeshmirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executables.html#nmeshsort">6.4.2. nmeshsort</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#nmeshimport">6.5. nmeshimport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#nsim">6.6. nsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="executables.html#nsimversion">6.7. nsimversion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="files_and_file_names.html">7. Files and file names</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#mesh-files-nmesh-nmesh-h5">7.1. mesh files (<tt class="docutils literal"><span class="pre">.nmesh</span></tt>, <tt class="docutils literal"><span class="pre">.nmesh.h5</span></tt>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#simulation-scripts-py">7.2. Simulation scripts (<tt class="docutils literal"><span class="pre">.py</span></tt>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#data-files-ndt">7.3. Data files (<tt class="docutils literal"><span class="pre">.ndt</span></tt>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#data-files-h5">7.4. Data files (<tt class="docutils literal"><span class="pre">.h5</span></tt>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#file-names-for-data-files">7.5. File names for data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_and_file_names.html#file-names-for-log-files">7.6. File names for log files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">8. Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#what-is-the-difference-between-the-oommf-and-nmag-approach">8.1. What is the difference between the OOMMF and nmag approach?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#so-this-means-the-major-difference-is-cubes-vs-tetrahedra">8.2. ... So, this means the major difference is &#8220;cubes&#8221; vs. &#8220;tetrahedra&#8221;?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#why-do-you-have-your-own-python-interpreter-nsim">8.3. Why do you have your own Python interpreter (=<tt class="docutils literal"><span class="pre">nsim</span></tt>)?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#what-is-nsim-i-thought-the-package-is-called-nmag">8.4. What is nsim - I thought the package is called nmag?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-fast-is-nmag-in-comparison-to-magpar">8.5. How fast is nmag in comparison to magpar?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-do-i-start-a-time-consuming-nmag-run-in-the-background">8.6. How do I start a time-consuming nmag run in the background?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#nmag-claims-to-support-mpi-so-can-i-run-simulation-jobs-on-multiple-processors">8.7. nmag claims to support MPI. So, can I run simulation jobs on multiple processors?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-should-i-cite-nmag">8.8. How should I cite nmag?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#why-can-you-not-use-the-step-as-a-unique-identifier">8.9. Why can you not use the step as a unique identifier?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-to-generate-a-mesh-with-more-than-one-region-using-gmsh">8.10. How to generate a mesh with more than one region using GMSH?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#can-i-run-more-than-one-simulation-in-one-directory">8.11. Can I run more than one simulation in one directory?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#can-i-save-data-to-an-arbitrary-directory">8.12. Can I save data to an arbitrary directory?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#do-you-really-need-to-do-so">8.12.1. Do you really need to do so?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#how-to-save-data-to-a-different-directory">8.12.2. How to save data to a different directory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-to-check-the-convergence-of-a-simulation">8.13. How to check the convergence of a simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#what-to-do-in-case-of-convergence-problems">8.14. What to do in case of convergence problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-to-visualise-the-difference-between-two-fields-defined-over-the-same-mesh">8.15. How to visualise the difference between two fields defined over the same mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-to-re-sample-data-from-a-saved-h5-file">8.16. How to re-sample data from a saved h5 file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#notes-on-using-gmsh-to-create-a-family-of-related-meshes">8.17. Notes on using GMSH to create a family of related meshes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="useful_tools.html">9. Useful tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="useful_tools.html#vtk">9.1. vtk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="useful_tools.html#mayavi">9.2. MayaVi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="useful_tools.html#numpy">9.3. NumPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">10. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/doc.html">11. Mini tutorial micromagnetic modelling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/doc.html#introduction-micromagnetic-modelling">11.1. Introduction micromagnetic modelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/doc.html#what-is-better-finite-differences-or-finite-elements">11.2. What is better: finite differences or finite elements?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/doc.html#what-size-of-the-cells-fd-and-tetrahedra-fe-should-i-choose">11.3. What size of the cells (FD) and tetrahedra (FE) should I choose?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/doc.html#exchange-length">11.3.1. Exchange length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/doc.html#further-reading">11.3.2. Further reading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/doc.html#micromagnetic-packages">11.4. Micromagnetic packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/doc.html#summary">11.5. Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">12. Acknowledgements</a></li>
+</ul>
+</div>
+<span class="target" id="indices-and-tables"></span></div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="1. Introduction"
+             >next</a> |</li>
+        <li><a href="manual.html#">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

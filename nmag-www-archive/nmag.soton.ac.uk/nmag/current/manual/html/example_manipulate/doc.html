@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.7. Example: Manipulating magnetisation &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.8. Example: IPython" href="../example_ipython/doc.html" />
+    <link rel="prev" title="2.6. Example: Vortex formation and propagation in disk" href="../example_vortex/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_ipython/doc.html" title="2.8. Example: IPython"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_vortex/doc.html" title="2.6. Example: Vortex formation and propagation in disk"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-manipulating-magnetisation">
+<h1>2.7. Example: Manipulating magnetisation<a class="headerlink" href="doc.html#example-manipulating-magnetisation" title="Permalink to this headline">¶</a></h1>
+<p>There are two basic techniques to modify the magnetisation: on the one
+hand, we can use the <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> method to replace the current
+magnetisation configuration with a new one. We can use <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> to specify
+both homogeneous (see <a class="reference internal" href="../example1/doc.html#setting-the-initial-magnetisation"><em>Setting the initial magnetisation</em></a>)
+and non-homogeneous magnetisations (see the <a class="reference internal" href="../example_periodic_spinwaves/doc.html#spin-waves-example"><em>Spin-waves example</em></a>).
+Alternatively, we can selectively change magnetic moments at individual mesh sites.
+This example demonstrates how to use the latter technique.</p>
+<p>The basics of this system are as in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: Demag field in uniformly
+magnetised sphere</em></a>: we study a ferromagnetic sphere with initially
+homogeneous magnetisation. The corresponding script file is
+<a class="reference download internal" href="../_downloads/sphere_manipulate.py"><tt class="xref download docutils literal"><span class="pre">sphere_manipulate.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="c"># Create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># Define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">))</span>
+
+<span class="c"># Load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;sphere1.nmesh.h5&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;sphere&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">))</span>
+
+<span class="c"># Set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># Set external field</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">SI</span><span class="p">(</span><span class="s">&quot;A/m&quot;</span><span class="p">))</span>
+
+<span class="c"># Save and display data in a variety of ways</span>
+<span class="c"># Step 1: save all fields spatially resolved</span>
+
+<span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="c"># Step 2: sample demag field through sphere</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>                      <span class="c"># position in metres</span>
+    <span class="n">H_demag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_demag = &quot;</span><span class="p">,</span> <span class="n">H_demag</span>
+
+<span class="c"># Step 3: sample exchange field through sphere</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>                      <span class="c"># position in metres</span>
+    <span class="n">H_exch_Py</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_exch_Py&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_exch_Py = &quot;</span><span class="p">,</span> <span class="n">H_exch_Py</span>
+
+
+<span class="c"># Now modify the magnetisation at position (0,0,0) (this happens to be</span>
+<span class="c"># node 0 in the mesh) in steps 4 to 6:</span>
+
+<span class="c"># Step 4: request a vector with the magnetisation of all sites in the mesh</span>
+<span class="n">myM</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_subfield</span><span class="p">(</span><span class="s">&#39;m_Py&#39;</span><span class="p">)</span>
+
+<span class="c"># Step 5:  We modify the first entry:</span>
+<span class="n">myM</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c"># Step 6: Set the magnetisation to the new (modified) values</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">myM</span><span class="p">)</span>
+
+<span class="c"># Step 7: saving the fields again (so that we can later plot the demag</span>
+<span class="c"># and exchange field)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span> 
+
+<span class="c"># Step 8: sample demag field through sphere (as step 2)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>                      <span class="c"># position in metres</span>
+    <span class="n">H_demag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_demag = &quot;</span><span class="p">,</span> <span class="n">H_demag</span>
+
+<span class="c"># Step 9: sample exchange field through sphere (as step 3)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>                      <span class="c"># position in metres</span>
+    <span class="n">H_exch_Py</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_exch_Py&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_exch_Py = &quot;</span><span class="p">,</span> <span class="n">H_exch_Py</span>
+</pre></div>
+</div>
+<p>To execute this script, we have to give its name to the <a class="reference internal" href="../executables.html#nsim"><em>nsim</em></a>
+executable, for example (on linux):</p>
+<div class="highlight-python"><pre>$ nsim sphere_manipulate.py</pre>
+</div>
+<p>After having created the simulation object, defined the material,
+loaded the mesh, set the initial magnetisation and the external field,
+we save the data the first time (Step 1).</p>
+<p>We could visualise the magnetisation and all other fields as described
+in <a class="reference internal" href="../example1/doc.html#example-1"><em>Example: Demag field in uniformly magnetised sphere</em></a>, and would
+obtain the same figures as shown in section
+<a class="reference internal" href="../example1/doc.html#saving-spatially-resolved-data"><em>Saving spatially resolved data</em></a>.</p>
+<p>In step 2, we probe the demag field at positions along a line going
+from [-10,0,0]nm to [10,0,0]nm, and then print the values. This
+produces the following output:</p>
+<div class="highlight-python"><pre>x = -1e-08 : H_demag =  None
+x = -9e-09 : H_demag =  [-329656.18892701436, 131.69946810517845, 197.13873034397167]
+x = -8e-09 : H_demag =  [-329783.31649797881, 68.617197264295427, 140.00328871543459]
+x = -7e-09 : H_demag =  [-329842.17628131888, 183.37401011699876, 163.01612229436262]
+x = -6e-09 : H_demag =  [-329904.84956877632, 133.62473797637142, 74.090532749764847]
+x = -5e-09 : H_demag =  [-329974.43178624194, 85.517390832982983, -13.956465964930704]
+x = -4e-09 : H_demag =  [-330002.69224229571, 64.187663119270084, -30.832135394870004]
+x = -3e-09 : H_demag =  [-330006.79488959321, 25.479055440690821, -61.958073893954818]
+x = -2e-09 : H_demag =  [-330020.18327401817, 11.70722487517595, -58.143562276077219]
+x = -1e-09 : H_demag =  [-330025.52325345919, -5.7120648683347452, -52.237341988696294]
+x = 0.0    : H_demag =  [-330028.67095553532, -25.707310077918752, -46.346108473560378]
+x = 1e-09  : H_demag =  [-330058.98559210222, -37.699378078580203, -41.167364094137213]
+x = 2e-09  : H_demag =  [-330089.30022866925, -49.691446079241658, -35.988619714714041]
+x = 3e-09  : H_demag =  [-330145.36618529289, -63.819285767062581, -22.213920341440794]
+x = 4e-09  : H_demag =  [-330220.13307247689, -76.54950394725968, -5.0509172407556262]
+x = 5e-09  : H_demag =  [-330298.69089200837, -90.534514175273259, 13.57279800234617]
+x = 6e-09  : H_demag =  [-330375.34327985492, -117.01128011426778, 35.262477275758371]
+x = 7e-09  : H_demag =  [-330415.38940687838, -123.68558207391983, 60.580352625726341]
+x = 8e-09  : H_demag =  [-330474.37719032855, -112.22952205433305, 106.13032196062491]
+x = 9e-09  : H_demag =  [-330499.64039893239, -69.97070465326442, 160.41688110297264]
+x = 1e-08  : H_demag =  [-330518.649930441, -26.536490670368085, 212.32392103651733]</pre>
+</div>
+<p>The data is approximately 1/3 Ms = 333333 (A/m) in the direction of the
+magnetisation, and approximately zero in the other directions, as we
+would expect in a homogeneously magnetised sphere. The deviations we
+see are due to (i) the shape of the sphere not being perfectly
+resolved (<em>ie</em> we actually look at the demag field of a polyhedron)
+and (ii) numerical errors.</p>
+<p>In step 3, we probe the exchange field along the same line. The
+exchange field is effectively zero because the magnetisation is
+pointing everywhere in the same direction:</p>
+<div class="highlight-python"><pre>x = -1e-08 : H_exch_Py =  None
+x = -9e-09 : H_exch_Py =  [-1.264324643856989e-09, 0.0, 0.0]
+x = -8e-09 : H_exch_Py =  [-2.0419540595507732e-10, 0.0, 0.0]
+x = -7e-09 : H_exch_Py =  [-1.4334754136843496e-09, 0.0, 0.0]
+x = -6e-09 : H_exch_Py =  [-2.7214181426130964e-10, 0.0, 0.0]
+x = -5e-09 : H_exch_Py =  [1.6323042074911775e-09, 0.0, 0.0]
+x = -4e-09 : H_exch_Py =  [-1.6243345875473033e-09, 0.0, 0.0]
+x = -3e-09 : H_exch_Py =  [-5.6526341264934703e-09, 0.0, 0.0]
+x = -2e-09 : H_exch_Py =  [-6.1145979552370084e-09, 0.0, 0.0]
+x = -1e-09 : H_exch_Py =  [-3.0929969691649876e-09, 0.0, 0.0]
+x = 0.0    : H_exch_Py =  [9.2633407053741312e-10, 0.0, 0.0]
+x = 1e-09  : H_exch_Py =  [1.9476821552904271e-09, 0.0, 0.0]
+x = 2e-09  : H_exch_Py =  [2.9690302400434413e-09, 0.0, 0.0]
+x = 3e-09  : H_exch_Py =  [2.6077357277001043e-09, 0.0, 0.0]
+x = 4e-09  : H_exch_Py =  [1.5836815585162886e-09, 0.0, 0.0]
+x = 5e-09  : H_exch_Py =  [1.6602158583197139e-09, 0.0, 0.0]
+x = 6e-09  : H_exch_Py =  [1.8844573960991853e-09, 0.0, 0.0]
+x = 7e-09  : H_exch_Py =  [-6.2460015649740799e-09, 0.0, 0.0]
+x = 8e-09  : H_exch_Py =  [-1.1231714572170603e-08, 0.0, 0.0]
+x = 9e-09  : H_exch_Py =  [-7.3643182171284044e-09, 0.0, 0.0]
+x = 1e-08  : H_exch_Py =  [-3.4351784609779937e-09, 0.0, 0.0]</pre>
+</div>
+<p>Note that the subfield name we are probing for the exchange field is
+<tt class="docutils literal"><span class="pre">H_exch_Py</span></tt> whereas the subfield name we used to probe the demag
+field is <tt class="docutils literal"><span class="pre">H_demag</span></tt> (without the extension <tt class="docutils literal"><span class="pre">_Py</span></tt>. The reason for
+this is that the exchange field is a something that is associated with
+a particular material (here Py) whereas there is only one demag field
+that is experienced by all materials (see also <a class="reference internal" href="../background.html#fields-and-subfields"><em>Fields and subfields</em></a>).</p>
+<div class="section" id="modifying-the-magnetisation">
+<span id="id1"></span><h2>2.7.1. Modifying the magnetisation<a class="headerlink" href="doc.html#modifying-the-magnetisation" title="Permalink to this headline">¶</a></h2>
+<p>In step 4, we use the <a class="reference internal" href="../command_reference.html#get-subfield"><em>get_subfield</em></a> command. This will return a
+(<a class="reference internal" href="../useful_tools.html#numpy"><em>NumPy</em></a>) array that contains one 3d vector for every <a class="reference internal" href="../background.html#site"><em>Site</em></a> of the
+finite element mesh.</p>
+<p>In step 5, we modify the first entry in this array (which has index
+0), and set its value to <tt class="docutils literal"><span class="pre">[0,1,0]</span></tt>. Whereas the magnetisation is
+pointing everywhere in [1,0,0] (because we have used the <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a>
+command in the very beginning of the program, it is now pointing in
+the [0,1,0] at site 0.</p>
+<p>The information, which site corresponds to which entry in the data
+vector, that we have obtained using <a class="reference internal" href="../command_reference.html#get-subfield"><em>get_subfield</em></a>, can be retrieved from
+<a class="reference internal" href="../command_reference.html#get-subfield-sites"><em>get_subfield_sites</em></a>. Correspondingly, the position of the sites can be
+obtained using <a class="reference internal" href="../command_reference.html#get-subfield-positions"><em>get_subfield_positions</em></a>.</p>
+<p>We now need to set this modified magnetisation vector (Step 6) using
+the <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> command.</p>
+<p>If we save the data again to the file (Step 7), we can subsequently
+convert this to a vtk file (using, for example, <tt class="docutils literal"><span class="pre">nmagpp</span> <span class="pre">--vtk</span> <span class="pre">data</span>
+<span class="pre">sphere_manipulate</span></tt>) and visualise with <a class="reference internal" href="../useful_tools.html#mayavi"><em>MayaVi</em></a>:</p>
+<img alt="../_images/step7.png" class="align-center" src="../_images/step7.png" style="width: 800px; height: 732px;" />
+<p>We can see one blue cone in the centre of the sphere - this is the
+one site that he have modified to point in the y-direction (whereas all
+other cones point in the x-direction).</p>
+<p>As before, we can probe the fields along a line through the center of
+the sphere (Step 8). For the demag field we obtain:</p>
+<div class="highlight-python"><pre>x = -1e-08 : H_demag =  None
+x = -9e-09 : H_demag =  [-333816.99138074159, -1884.643376396662, 16.665519199152595]
+x = -8e-09 : H_demag =  [-334670.87148225965, -2293.608410913705, -102.38526828192296]
+x = -7e-09 : H_demag =  [-335258.77403632947, -3061.1708540342884, -532.73877752122235]
+x = -6e-09 : H_demag =  [-339506.72150998382, -5316.1506383768137, -969.36630578549921]
+x = -5e-09 : H_demag =  [-344177.83909963415, -8732.9787600552572, -1610.433091871927]
+x = -4e-09 : H_demag =  [-344725.75257842313, -16708.164927667149, -5224.2484897904633]
+x = -3e-09 : H_demag =  [-337963.49070659198, -24567.078937669514, -3321.016613832679]
+x = -2e-09 : H_demag =  [-321612.85117992124, -30613.873989917105, -1385.6383061516099]
+x = -1e-09 : H_demag =  [-298312.3363571504, -41265.117003123923, 636.60703829516081]
+x = 0.0    : H_demag =  [-273449.78240732534, -52534.176864875568, 2793.5027588779139]
+x = 1e-09  : H_demag =  [-293644.21931918303, -39844.049389551074, 4310.6449471266505]
+x = 2e-09  : H_demag =  [-313838.65623104072, -27153.921914226579, 5827.7871353753881]
+x = 3e-09  : H_demag =  [-330296.09687372146, -21814.293451835449, 5525.7290665358933]
+x = 4e-09  : H_demag =  [-343611.94111195666, -18185.932406317523, 4931.5464761658959]
+x = 5e-09  : H_demag =  [-348062.40814087034, -11029.603829202088, 3781.8263522408147]
+x = 6e-09  : H_demag =  [-342272.36888512014, -6604.210117819096, 50.151907623841332]
+x = 7e-09  : H_demag =  [-338716.66400897497, -3860.7761876767272, 485.90273674867018]
+x = 8e-09  : H_demag =  [-335656.89887674141, -2610.0345208853882, 586.74812908870092]
+x = 9e-09  : H_demag =  [-334985.59512328985, -2169.9546280837162, 542.76746044672041]
+x = 1e-08  : H_demag =  [-334441.59096545313, -1634.8337299563193, 627.17874011463311]</pre>
+</div>
+<p>The change of the magnetisation at position [0,0,0] from [1,0,0] to
+[0,1,0] has reduced the x-component of the demag field somewhat around
+x=0, and has introduced a significant demag field in the -y direction
+around x=0.</p>
+<p>Looking at the exchange field (Step 9):</p>
+<div class="highlight-python"><pre>x = -1e-08 : H_exch_Py =  None
+x = -9e-09 : H_exch_Py =  [-1.264324643856989e-09, 0.0, 0.0]
+x = -8e-09 : H_exch_Py =  [-2.0419540595507732e-10, 0.0, 0.0]
+x = -7e-09 : H_exch_Py =  [-1.4334754136843496e-09, 0.0, 0.0]
+x = -6e-09 : H_exch_Py =  [-2.7214181426130964e-10, 0.0, 0.0]
+x = -5e-09 : H_exch_Py =  [1.6323042074911775e-09, 0.0, 0.0]
+x = -4e-09 : H_exch_Py =  [-153858.81305452777, 153858.81305452611, 0.0]
+x = -3e-09 : H_exch_Py =  [-972420.67935341748, 972420.67935341166, 0.0]
+x = -2e-09 : H_exch_Py =  [-2445371.8369108676, 2445371.8369108611, 0.0]
+x = -1e-09 : H_exch_Py =  [5283169.701234119, -5283169.7012341227, 0.0]
+x = 0.0    : H_exch_Py =  [15888993.991894867, -15888993.991894867, 0.0]
+x = 1e-09 :  H_exch_Py =  [8434471.7912872285, -8434471.7912872266, 0.0]
+x = 2e-09 :  H_exch_Py =  [979949.59067958547, -979949.59067958279, 0.0]
+x = 3e-09 :  H_exch_Py =  [-1112837.3087986181, 1112837.3087986207, 0.0]
+x = 4e-09 :  H_exch_Py =  [-193877.66176242317, 193877.6617624248, 0.0]
+x = 5e-09 :  H_exch_Py =  [1.6602158583197139e-09, 0.0, 0.0]
+x = 6e-09 :  H_exch_Py =  [1.8844573960991853e-09, 0.0, 0.0]
+x = 7e-09 :  H_exch_Py =  [-6.2460015649740799e-09, 0.0, 0.0]
+x = 8e-09 :  H_exch_Py =  [-1.1231714572170603e-08, 0.0, 0.0]
+x = 9e-09 :  H_exch_Py =  [-7.3643182171284044e-09, 0.0, 0.0]
+x = 1e-08 :  H_exch_Py =  [-3.4351784609779937e-09, 0.0, 0.0]</pre>
+</div>
+<p>We can see that the exchange field is indeed very large around x=0.</p>
+<p>Note that one of the fundamental problem of micromagnetic simulations
+is that the magnetisation must not vary significantly from one site to
+another. In this example, we have manually violated this requirement
+<em>only to demonstrate</em> how the magnetisation can be modified, and to see that
+this is reflected in the dependant fields (such as demag and exchange)
+immediately.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_ipython/doc.html" title="2.8. Example: IPython"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_vortex/doc.html" title="2.6. Example: Vortex formation and propagation in disk"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

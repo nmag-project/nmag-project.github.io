@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>Installation Nmag from source (small tarball, "core")</title>
+    <link rel="stylesheet" href="../../css/navigation_02_2008.css" type="text/css" />
+
+<link rel="stylesheet" href="../../css/body_02_2008.css" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="wrap"> 
+<img src="../../images/nmaglogo2.png" alt="University of Southampton, nmag, Computational Micromagnetism,  logo"  hspace="0" vspace="1" valign="top">
+
+</div>
+
+<div id="wrap"> 
+
+
+<table>
+  <tr>
+    <td valign="top" align="left" width="25%">
+      <!--<img src="../../images/IronPalladium.png" width="137" height="134" alt="logo" vspace="1" hspace="2" >-->
+
+    <div id="left-column">
+    <div id="sidie">
+      <ul>
+	<li class="left-navheader-first">
+	<a href="index.html" class="left-navheader">Install (0.2)
+</a>
+	</li> 
+        <li class="left-navheader">Pages</li>
+
+<li><a href="install_b.html">tarball (core)</a></li>
+<li><a href="vmware.html">Virtual Machine</a></li>
+<li><a href="install_a.html">tarball (all)</a></li>
+
+
+
+	</ul>
+      </div>
+      </div>
+    </td>
+    <!-- main content cell first, with rowspan=2 -->
+    <td valign="top" rowspan="2">
+
+
+<div id="header-section">
+  <div id="header">
+  <ul>
+    <li><a href="../../index.html">Nmag home</a></li>
+<li>|</li>
+<li><a href="../index.html">nmag 0.2</a></li>
+<li>|</li>
+<li><a href="index.html">installation</a></li>
+<li>|</li>
+<li>tarball (core)</li>
+
+  </ul>
+</div>
+</div>
+
+    <div id="middle-column">
+      <a name="startcontent" id="startcontent"></a>
+    <div id="gallery">
+      <div class="document" id="guide-for-installing-nsim-nmag-core-from-sources-small-tarball">
+<h1 class="title">GUIDE FOR INSTALLING <tt class="docutils literal">nsim</tt>/<tt class="docutils literal">nmag</tt> core FROM SOURCES (small tarball)</h1>
+<div class="contents topic" id="table-of-contents-installing-nmag-from-small-tarball">
+<p class="topic-title first">Table of Contents Installing Nmag from small tarball</p>
+<ul class="simple">
+<li><a class="reference internal" href="install_b.html#installation-requirements" id="id1">Installation requirements</a></li>
+<li><a class="reference internal" href="install_b.html#download" id="id2">Download</a></li>
+<li><a class="reference internal" href="install_b.html#configure" id="id3">Configure</a></li>
+<li><a class="reference internal" href="install_b.html#build" id="id4">Build</a></li>
+<li><a class="reference internal" href="install_b.html#testing" id="id5">Testing</a></li>
+<li><a class="reference internal" href="install_b.html#special-instructions" id="id6">Special instructions</a><ul>
+<li><a class="reference internal" href="install_b.html#ubuntu-11-10" id="id7">Ubuntu 11.10</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>This is installation is more complicated than the procedure involving the big tarball which is <a class="reference external" href="install_a.html">described here</a>.</p>
+<div class="section" id="installation-requirements">
+<h1><a class="toc-backref" href="install_b.html#id1">Installation requirements</a></h1>
+<p>Building <tt class="docutils literal">nmag</tt> core using the small tarball requires a number of
+libraries from the system, including:</p>
+<ul class="simple">
+<li>atlas3.6.0</li>
+<li>findlib-1.2.1</li>
+<li>gsl-1.14</li>
+<li>hdf5-1.8.7</li>
+<li>ipython-0.10</li>
+<li>mpich2-1.2.1p1</li>
+<li>numarray-1.5.2</li>
+<li>numpy-1.5.0</li>
+<li>ocaml-3.12.0</li>
+<li>ocamlgsl-0.6.0</li>
+<li>ParMetis-3.1.1</li>
+<li>petsc-lite-3.1-p5</li>
+<li>ply-3.3</li>
+<li>py-0.9.1</li>
+<li>Python-2.7.2</li>
+<li>PyVTK-0.latest</li>
+<li>qhull-2003.1</li>
+<li>sundials-2.3.0</li>
+<li>tables-2.1.2</li>
+</ul>
+<p>The version numbers listed above are those of the libraries that are
+included in the big tarball and for which nmag 0.2 core is known to
+compile. You may be able to deviate from these but if the library has
+changed its interface, the compilation may fail (as the changed
+interface would require updates to the nmag/nsim source code). In this
+case, the most practical advise would be to install from the big
+tarball (that brings all the libraries with it).</p>
+<p>You also need a <a class="reference external" href="install_a.html">sane build environment</a>.</p>
+<p>If you are running Ubuntu 11.10, have a look at the section <a class="reference internal" href="install_b.html#ubuntu-11-10">Ubuntu 11.10</a> below which details how to install these requirements.</p>
+<p>Depending on hardware characteristics, compilation will take a few
+minutes.</p>
+</div>
+<div class="section" id="download">
+<h1><a class="toc-backref" href="install_b.html#id2">Download</a></h1>
+<p>Download the tarball from <a class="reference external" href="../download/core.html">this directory</a>.</p>
+</div>
+<div class="section" id="configure">
+<h1><a class="toc-backref" href="install_b.html#id3">Configure</a></h1>
+<p>Untar the archive in its final location:</p>
+<pre class="literal-block">
+$ tar xvzf nmag-core-0.2.0.tar.gz
+</pre>
+<p>(Once the package has been compiled, you won't be able to move the
+nmag-0.2.0 directory to another location.  Doing so would make the
+package unusable, since absolute paths are hard-coded inside the
+executables).</p>
+<p>Then:</p>
+<pre class="literal-block">
+$ cd nmag-core-0.2.0
+</pre>
+<p>and run the <tt class="docutils literal">configure.py</tt> script using the Python interpreter which you want to use for Nmag:</p>
+<pre class="literal-block">
+$ python configure.py
+</pre>
+</div>
+<div class="section" id="build">
+<h1><a class="toc-backref" href="install_b.html#id4">Build</a></h1>
+<p>Run:</p>
+<pre class="literal-block">
+$ make
+</pre>
+<p>to build the software</p>
+<p>and:</p>
+<pre class="literal-block">
+$ make install
+</pre>
+<p>to create the executables. By default the &quot;installation&quot; takes place in the local directory, not /usr/local or such. (In theory this might be possible using configuration flags but is untested.)</p>
+<p>To add all nmag executables to the system path add the subdirectory
+<tt class="docutils literal">bin</tt> to your system path, for example:</p>
+<pre class="literal-block">
+$ export PATH=$PATH:`pwd`/bin
+</pre>
+<p>(This is not required for the testing below, just convenience for
+later use of Nmag.)</p>
+</div>
+<div class="section" id="testing">
+<h1><a class="toc-backref" href="install_b.html#id5">Testing</a></h1>
+<p>To run the tests, the following steps need to be executed (from the
+installation directory in which <tt class="docutils literal">make</tt> and <tt class="docutils literal">make install</tt> where
+executed):</p>
+<p>The we let the testing subsystem find the executable and store the path in
+the testing directories:</p>
+<pre class="literal-block">
+$ cd tests/config/
+$ ../../bin/nsim setup.py
+$ cd ../..
+</pre>
+<p>In the second line above, it is important to run the file <tt class="docutils literal">setup.py</tt> which
+the <tt class="docutils literal">nsim</tt> executable that we just installed -- this way its path is
+identified, and stored in the testing subdirectories.</p>
+<p>Finally, we can run the tests in the subdirectory <tt class="docutils literal">tests</tt>:</p>
+<pre class="literal-block">
+$ cd tests
+$ make check
+$ make checkslow
+</pre>
+</div>
+<div class="section" id="special-instructions">
+<h1><a class="toc-backref" href="install_b.html#id6">Special instructions</a></h1>
+<div class="section" id="ubuntu-11-10">
+<h2><a class="toc-backref" href="install_b.html#id7">Ubuntu 11.10</a></h2>
+<p>The required libraries (with the exception of Sundials) can be installed using:</p>
+<pre class="literal-block">
+$ sudo aptitude install libpetsc3.1-dev libpetsc3.1  \
+libfindlib-ocaml-dev libqhull-dev python-tables python-ply \
+libparmetis-dev python-dev python-py libreadline-dev python-pyvtk
+</pre>
+<p>To install Sundials (into /usr/local), you can use the following commands:</p>
+<pre class="literal-block">
+mkdir -p build-sundials
+cd build-sundials
+wget http://dl.dropbox.com/u/357850/libs/sundials-2.3.0.tar.gz
+tar xfvz sundials-2.3.0.tar.gz
+cd sundials-2.3.0
+./configure --prefix=/usr/local --enable-shared
+make
+sudo make install
+cd ../..
+</pre>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div id="end">
+      <!--<p><a href="#startcontent"><small>Return to Top</small></a><br />
+      </p>-->
+    </div>
+
+
+    
+    </div></td>
+  </tr>
+  </table>
+
+
+<div id="footer">
+
+  <!--
+  Copyright &copy; Voidspace<br />Design by <a href="http://www.fuchsiashockz.co.uk">Fuchsiashockz</a> | <a href="http://validator.w3.org/check?uri=referer" title="Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a> | <a href="http://jigsaw.w3.org/css-validator/check?uri=referer" title="Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS 2.0</a>
+  -->
+      <small>Page last modified <strong>Tue Jan 24 13:44:52 2012</strong>.</small> 
+|  Created with <a href="http://nmag.soton.ac.uk/nmag/rest2web.html">rest2web</a>, and <a href="http://nmag.soton.ac.uk/nmag/computing/rstwebpage.html">reStructuredText</a> docutils.
+
+</div>
+
+</div>
+</body>
+</html>

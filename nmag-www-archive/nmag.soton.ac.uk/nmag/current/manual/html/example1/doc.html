@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.1. Example: Demag field in uniformly magnetised sphere &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.2. Example 2: Computing the time development of a system" href="../example2/doc.html" />
+    <link rel="prev" title="2. Guided Tour" href="../guided_tour.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example2/doc.html" title="2.2. Example 2: Computing the time development of a system"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../guided_tour.html" title="2. Guided Tour"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-demag-field-in-uniformly-magnetised-sphere">
+<span id="example-1"></span><h1>2.1. Example: Demag field in uniformly magnetised sphere<a class="headerlink" href="doc.html#example-demag-field-in-uniformly-magnetised-sphere" title="Permalink to this headline">¶</a></h1>
+<p>This is the most basic example that computes the demagnetisation field
+in an uniformly magnetised sphere. For this simple system, the exact
+result is known analytically: the demag field vector has to be equal
+to minus one-third of the magnetisation vector, everywhere.</p>
+<p>When using finite element calculations, a crucial (and non-trivial)
+part of the work is the <a class="reference internal" href="../finite_element_mesh_generation.html#finite-element-mesh-generation"><em>finite element mesh generation</em></a>. We provide
+a very small mesh for this example (<a class="reference download internal" href="../_downloads/sphere1.nmesh.h5"><tt class="xref download docutils literal"><span class="pre">sphere1.nmesh.h5</span></tt></a>) which was generated with <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a>
+(from this <a class="reference download internal" href="../_downloads/sphere1.geo"><tt class="xref download docutils literal"><span class="pre">geometry</span> <span class="pre">file</span></tt></a>). This gives us
+a sphere of radius 10nm.</p>
+<img alt="../_images/spheremesh.png" class="align-center" src="../_images/spheremesh.png" style="width: 325px; height: 327px;" />
+<p>We can then use the following nmag script <a class="reference download internal" href="../_downloads/sphere1.py"><tt class="xref download docutils literal"><span class="pre">sphere1.py</span></tt></a>:</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Py&#39;</span><span class="p">,</span>
+                      <span class="n">Ms</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&#39;J/m&#39;</span><span class="p">))</span>
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&#39;sphere1.nmesh.h5&#39;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&#39;sphere&#39;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># set external field</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+
+<span class="c"># Save and display data in a variety of ways</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span> <span class="c"># save all fields spatially resolved</span>
+                            <span class="c"># together with average data</span>
+
+<span class="c"># sample demag field through sphere</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mf">1e-9</span>                      <span class="c">#position in metres</span>
+    <span class="n">H_demag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span><span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span> <span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;: H_demag = &quot;</span><span class="p">,</span> <span class="n">H_demag</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>To execute this script, we have to give its name to the <a class="reference internal" href="../executables.html#nsim"><em>nsim</em></a>
+executable, for example (on linux):</p>
+<div class="highlight-python"><pre>$ nsim sphere1.py</pre>
+</div>
+<p>Some simulations produce output files which nsim will refuse to
+overwrite when run for a second time. The rationale is that big
+simulations may have to run for a long time and so, there should be a
+safeguard against accidental destruction of data.</p>
+<p>In order to re-run a simulation, removing all old output data files,
+the extra option <tt class="docutils literal"><span class="pre">--clean</span></tt> should be given, as in:</p>
+<div class="highlight-python"><pre>$ nsim sphere1.py --clean</pre>
+</div>
+<p>Let us discuss the <tt class="docutils literal"><span class="pre">sphere1.py</span></tt> script step by step.</p>
+<div class="section" id="importing-nmag">
+<span id="id1"></span><h2>2.1.1. Importing nmag<a class="headerlink" href="doc.html#importing-nmag" title="Permalink to this headline">¶</a></h2>
+<p>First we need to import the nmag module, and any subpackages of nmag
+that we want to use. (In this basic example, this is just the SI
+module for dimensionful physical quantities).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-the-simulation-object">
+<h2>2.1.2. Creating the simulation object<a class="headerlink" href="doc.html#creating-the-simulation-object" title="Permalink to this headline">¶</a></h2>
+<p>Next, we need to create a simulation object. This will contain and
+provide information about our physical system.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-magnetic-materials">
+<span id="id2"></span><h2>2.1.3. Defining (magnetic) materials<a class="headerlink" href="doc.html#defining-magnetic-materials" title="Permalink to this headline">¶</a></h2>
+<p>After importing the nmag module into Python&#8217;s workspace and creating
+the simulation object <tt class="docutils literal"><span class="pre">sim</span></tt>, we need to define a material using
+<tt class="docutils literal"><span class="pre">nmag.MagMaterial</span></tt>. We give it a name (as a Python string) which in
+this case we choose to be <tt class="docutils literal"><span class="pre">&quot;Py&quot;</span></tt> (a common abbreviation for
+PermAlloy) and we assign a saturation magnetisation and an exchange
+coupling strength.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Py&#39;</span><span class="p">,</span>
+                      <span class="n">Ms</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="s">&#39;A/m&#39;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&#39;J/m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The name of the material is important, as we may want to simulate
+systems made up of multiple different materials, and the material name
+will be used as a postfix to the name of some <a class="reference internal" href="../background.html#fields-and-subfields"><em>Fields and subfields</em></a>.
+The output files will also use that name to label output data. Names
+must be alphanumeric (i.e. formed exclusively out of the characters in
+the set <tt class="docutils literal"><span class="pre">0-9\_a-zA-Z</span></tt>) here.</p>
+<p>Rather than representing dimensionful physical quantities as numbers,
+nmag uses a special object class, the &#8220;SI object&#8221;. The underlying
+rationale is that this allows automated detection of mismatches of
+physical dimensions. If some physical parameter is given to nmag in a
+dimension different from the expected one, nmag will detect this and
+report an error. Also, any nmag output [e.g. a three-dimensional VTK
+visualisation file] will provide a sufficient amount of contextual
+information to clarify the physical meaning (i.e. dimensions) of
+numerical data.</p>
+<p>We thus express the saturation magnetisation in Ampere per meter (<tt class="docutils literal"><span class="pre">Ms</span>
+<span class="pre">=</span> <span class="pre">SI(1e6,&quot;A/m&quot;)</span></tt>) and the exchange coupling constant (often called A
+in micromagnetism) in Joules per meter (<tt class="docutils literal"><span class="pre">exchange_coupling</span> <span class="pre">=</span>
+<span class="pre">SI(13.0e-12,</span> <span class="pre">&quot;J/m&quot;)</span></tt>). (Note that these are not the true physical
+parameters of PermAlloy, but have been chosen ad hoc for the sake
+of providing a simple example!)</p>
+</div>
+<div class="section" id="loading-the-mesh">
+<span id="id3"></span><h2>2.1.4. Loading the mesh<a class="headerlink" href="doc.html#loading-the-mesh" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to load the mesh.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&#39;sphere1.nmesh.h5&#39;</span><span class="p">,</span>
+              <span class="p">[(</span><span class="s">&#39;sphere&#39;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span>
+              <span class="n">unit_length</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The first argument is the file name (<tt class="docutils literal"><span class="pre">&quot;sphere1.nmesh.h5&quot;</span></tt>). The
+second argument is a list of tuples which describe the domains (also
+called regions) within the mesh. In this example we have a one-element
+list containing the 2-tuple <tt class="docutils literal"><span class="pre">(&quot;sphere&quot;,</span> <span class="pre">Py)</span></tt>. The left element of
+this pair, <tt class="docutils literal"><span class="pre">&quot;sphere&quot;</span></tt>, is a string (of the user&#8217;s choice) and this
+is the name given to mesh region 1 (i.e. the space occupied by all
+simplices that have the region id 1 in the mesh file).</p>
+<p>[This information is currently only used for debugging purposes (such
+as when printing the simulation object).]</p>
+<p>The second part of the tuple is the <tt class="docutils literal"><span class="pre">MagMaterial</span></tt> object that has
+been created in <a class="reference internal" href="doc.html#defining-magnetic-materials"><em>Defining (magnetic) materials</em></a> and bound to the
+variable <tt class="docutils literal"><span class="pre">Py</span></tt>. This object determines the material properties of the
+material in this domain; in this example, we have specified the
+properties of PermAlloy.</p>
+<p>The third argument to <a class="reference internal" href="../command_reference.html#load-mesh"><em>load_mesh</em></a> is an <a class="reference internal" href="../background.html#si-object"><em>SI object</em></a> which defines what
+physical distance should be associated with the length 1.0 as given in
+the mesh file. In this example, the mesh has been created in
+nanometers, i.e. the distance 1.0 in the mesh file should correspond
+to 1 nanometer in the real world. We thus use a SI object representing
+1 nm.</p>
+</div>
+<div class="section" id="setting-the-initial-magnetisation">
+<span id="id4"></span><h2>2.1.5. Setting the initial magnetisation<a class="headerlink" href="doc.html#setting-the-initial-magnetisation" title="Permalink to this headline">¶</a></h2>
+<p>To set the initial magnetisation, we use the <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a> method.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The field <tt class="docutils literal"><span class="pre">m</span></tt> describes the direction of magnetisation (as a
+field of normalised vectors) whereas the
+field <tt class="docutils literal"><span class="pre">M</span></tt> contains the magnetisation with its proper magnitude.
+So, <tt class="docutils literal"><span class="pre">|M|</span></tt> is the saturation magnetisation (in Amperes per meter),
+whereas <tt class="docutils literal"><span class="pre">m</span></tt> is dimensionless with <tt class="docutils literal"><span class="pre">|m|=1.0</span></tt>. There are different
+ways to set a particular magnetisation, in the simplest case of a
+homogeneously magnetised body, it is sufficient to provide the
+magnetisation vector. So, in this example, we provide a unit vector
+pointing in positive x-direction. (We could provide a vector with
+non-normalised magnitude, which would be normalised
+automatically. This is convenient for, say, setting an initial
+magnetisation in the x-y-plane with a 45 degree angle towards
+the x axis by specifying <tt class="docutils literal"><span class="pre">[1,1,0]</span></tt>).</p>
+</div>
+<div class="section" id="setting-the-external-field">
+<span id="id5"></span><h2>2.1.6. Setting the external field<a class="headerlink" href="doc.html#setting-the-external-field" title="Permalink to this headline">¶</a></h2>
+<p>We can set the external field using the <a class="reference internal" href="../command_reference.html#set-h-ext"><em>set_H_ext</em></a> command</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">set_H_ext</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">SI</span><span class="p">(</span><span class="s">&#39;A/m&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In contrast to <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a>, this method takes two arguments. The first
+defines numerical values for the direction and magnitude of the
+external field. The second determines the meaning of these numerical
+values using an SI object. Suppose we would like an external field of
+1e6 A/m acting in the y-direction, then the command would read:
+<tt class="docutils literal"><span class="pre">sim.set_H_ext([0,1e6,0],SI(1,&quot;A/m&quot;))</span></tt>. However, we could also use
+<tt class="docutils literal"><span class="pre">sim.set_H_ext([0,1,0],SI(1e6,&quot;A/m&quot;))</span></tt>.</p>
+<p>The default value for the external field is [0,0,0] A/m, so for this
+example, we could have omitted the <a class="reference internal" href="../command_reference.html#set-h-ext"><em>set_H_ext</em></a> command altogether.</p>
+</div>
+<div class="section" id="extracting-and-saving-data">
+<span id="id6"></span><h2>2.1.7. Extracting and saving data<a class="headerlink" href="doc.html#extracting-and-saving-data" title="Permalink to this headline">¶</a></h2>
+<p>We have three different ways of extracting data from the simulation:</p>
+<ol class="arabic simple">
+<li>saving averaged values of fields (which can be analysed later)</li>
+<li>saving spatially resolved fields (which can be analysed later)</li>
+<li>extracting field values at arbitrary positions from within the
+running program</li>
+</ol>
+<p>In this basic example, we demonstrate the use of all three methods:</p>
+<div class="section" id="saving-averaged-data">
+<span id="id7"></span><h3>2.1.7.1. Saving averaged data<a class="headerlink" href="doc.html#saving-averaged-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../command_reference.html#save-data"><em>save_data</em></a> method writes (spatial) averages of all fields (see
+<a class="reference internal" href="../background.html#fields-and-subfields"><em>Fields and subfields</em></a>) into a text file (which will be named
+<tt class="docutils literal"><span class="pre">sphere1_dat.ndt</span></tt>, see below). This file is best analysed using the
+<a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> tool but can also just be read with a text editor. The format
+follows OOMMF&#8217;s <tt class="docutils literal"><span class="pre">odt</span></tt> file format: every row corresponds to one
+snapshot of the system (see <a class="reference internal" href="../command_reference.html#save-data"><em>save_data</em></a>).</p>
+<p>The function can also be called with parameters to save spatially
+resolved field data (see <a class="reference internal" href="doc.html#saving-spatially-resolved-data"><em>Saving spatially resolved data</em></a>).</p>
+<p>The first and second line in the data file are headers that explain
+(by column) the physical quantities (and their dimensions).</p>
+<p>The <a class="reference internal" href="../executables.html#ncol"><em>ncol</em></a> tool allows to extract particular columns easily so that
+these can be plotted later (useful for hysteresis loop studies). In
+this example we have only one &#8220;timestep&#8221;: there only is one row of
+data in this file. We will therefore discuss this in more detail in a
+subsequent example.</p>
+</div>
+<div class="section" id="extracting-arbitrary-data-from-the-running-program">
+<span id="id8"></span><h3>2.1.7.2. Extracting arbitrary data from the running program<a class="headerlink" href="doc.html#extracting-arbitrary-data-from-the-running-program" title="Permalink to this headline">¶</a></h3>
+<p>The line</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">H_demag</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">probe_subfield_siv</span><span class="p">(</span> <span class="s">&#39;H_demag&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>obtains the demagnetisation field (see <a class="reference internal" href="../background.html#fields-and-subfields-in-nmag"><em>Fields and Subfields in Nmag</em></a>) at position (x,0,0). The suffix &#8220;_siv&#8221; to this function means
+that both positions and return values will be given as SI values.</p>
+<p>The for-loop in the program (which iterates <tt class="docutils literal"><span class="pre">x</span></tt> in the range from
+-10*1e-9 to 10*1e-9 in steps of 1e-9) produces the following output</p>
+<div class="highlight-python"><pre>x = -1e-08 : H_demag =  None
+x = -9e-09 : H_demag =  [-329655.76203912671, 130.62999726469423, 194.84338557811344]
+x = -8e-09 : H_demag =  [-329781.46587966662, 66.963624669268853, 137.47161381890737]
+x = -7e-09 : H_demag =  [-329838.57852402801, 181.46249265908259, 160.61298054099865]
+x = -6e-09 : H_demag =  [-329899.63327447395, 131.06488858715838, 71.383139326493094]
+x = -5e-09 : H_demag =  [-329967.79622912291, 82.209856975234786, -16.893046828024836]
+x = -4e-09 : H_demag =  [-329994.67306536058, 61.622521557150371, -34.433041910642359]
+x = -3e-09 : H_demag =  [-329997.62759666931, 23.222244635691535, -65.991127111463769]
+x = -2e-09 : H_demag =  [-330013.90370482224, 10.11035370824321, -61.358763616681067]
+x = -1e-09 : H_demag =  [-330023.50844056415, -6.9714476825652287, -54.900260456937708]
+x = 0.0   : H_demag =  [-330030.98847923806, -26.808832466764223, -48.465748009067141]
+x = 1e-09 : H_demag =  [-330062.38479507214, -38.660812022013424, -42.83439139610747]
+x = 2e-09 : H_demag =  [-330093.78111090627, -50.512791577262625, -37.2030347831478]
+x = 3e-09 : H_demag =  [-330150.72580001026, -64.552170478617398, -23.120555702674721]
+x = 4e-09 : H_demag =  [-330226.19050178828, -77.236085707456397, -5.5373829923226916]
+x = 5e-09 : H_demag =  [-330304.59300913941, -90.584413821813229, 14.090609104026118]
+x = 6e-09 : H_demag =  [-330380.1392610991, -115.83746059068679, 37.072085708324757]
+x = 7e-09 : H_demag =  [-330418.85831447819, -122.47512022500726, 62.379121138009992]
+x = 8e-09 : H_demag =  [-330476.40747455234, -110.84257225592108, 108.06217226524763]
+x = 9e-09 : H_demag =  [-330500.20126762061, -68.175725285038382, 162.46166752217249]
+x = 1e-08 : H_demag =  [-330517.86675206106, -24.351273685146875, 214.40344001233677]</pre>
+</div>
+<p>At position -1e-8, there is no field defined (this point lies just
+outside our sphere-mesh) and therefore the value <tt class="xref docutils literal"><span class="pre">None</span></tt> is returned.</p>
+<p>We can see how the demagnetisation field varies slightly throughout
+the sphere. The x-component is approximately a third of the
+magnetisation, and the y- and z-components are close to zero (as would
+be expected for a perfectly round sphere).</p>
+<p>We mention for completeness that most fields (such as magnetisation,
+exchange field, anisotropy field etc) are only defined within the
+region(s) occupied by magnetic material. However, there is a special
+function <a class="reference internal" href="../command_reference.html#probe-h-demag-siv"><em>probe_H_demag_siv</em></a> to probe the demagnetisation field
+anywhere in space.</p>
+</div>
+<div class="section" id="saving-spatially-resolved-data">
+<span id="id9"></span><h3>2.1.7.3. Saving spatially resolved data<a class="headerlink" href="doc.html#saving-spatially-resolved-data" title="Permalink to this headline">¶</a></h3>
+<p>The command</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sim</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will save full spatially resolved data on all fields (see <a class="reference internal" href="../background.html#fields-and-subfields"><em>Fields and subfields</em></a>) for the current configuration into a file with name
+<tt class="docutils literal"><span class="pre">sphere1_dat.h5</span></tt>. (It will also save the spatially averaged values
+as described in <a class="reference internal" href="doc.html#saving-averaged-data"><em>Saving averaged data</em></a>.) Whenever the <a class="reference internal" href="../command_reference.html#save-data"><em>save_data</em></a>
+function is called, it will write the averaged field values into the
+<a class="reference internal" href="../files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> file. This name is, by default, based on the name of the
+simulation script, but can be overridden with an optional argument to
+the <a class="reference internal" href="../command_reference.html#simulation"><em>Simulation</em></a> constructor. The data in this file are kept in some
+compressed binary format (built on the <a class="reference external" href="http://www.hdfgroup.org/">hdf5</a> standard) and can be
+extracted and converted later using the <a class="reference internal" href="../executables.html#nmagpp"><em>nmagpp</em></a> tool.</p>
+<p>For example, we can extract the magnetisation field from this file
+with the command:</p>
+<div class="highlight-python"><pre>$ nmagpp --dump sphere1</pre>
+</div>
+<p>However, here we are interested in creating a <a class="reference internal" href="../useful_tools.html#vtk"><em>vtk</em></a> from the saved data
+file for visualisation. We use:</p>
+<div class="highlight-python"><pre>$ nmagpp --vtk sphere1.vtk sphere1</pre>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">sphere1.vtk</span></tt> is the base name of the vtk file that is to be
+generated.</p>
+<p>In this manual, we use <a class="reference internal" href="../useful_tools.html#mayavi"><em>MayaVi</em></a> as the visualisation tool for vtk files
+but there are others available (see <a class="reference internal" href="../useful_tools.html#vtk"><em>vtk</em></a>).</p>
+<p>Starting MayaVi with the command <tt class="docutils literal"><span class="pre">mayavi</span> <span class="pre">-d</span> <span class="pre">sphere1-000000.vtk</span></tt> will load
+our simulation data. Using the pull-down menu <tt class="docutils literal"><span class="pre">Visualize</span> <span class="pre">-&gt;</span> <span class="pre">Modules</span> <span class="pre">-&gt;</span>
+<span class="pre">VelocityVector</span></tt> will then tell MayaVi to display the magnetisation
+vector field. (Likewise, we can use <tt class="docutils literal"><span class="pre">Visualize</span> <span class="pre">-&gt;</span> <span class="pre">Modules</span> <span class="pre">-&gt;</span> <span class="pre">Axes</span></tt> to
+add a 3d coordinate system to the visualization):</p>
+<img alt="../_images/sphere1_h5_m.png" class="align-center" src="../_images/sphere1_h5_m.png" style="width: 1033px; height: 910px;" />
+<p>The magnetisation is pointing in positive x-direction because we
+initialised the magnetisation in this orientation by issuing the
+command <tt class="docutils literal"><span class="pre">sim.set_m([1,0,0])</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">Configure</span> <span class="pre">Data</span></tt> button in the DataVizManager section of
+MayaVi&#8217;s user interface allows to select:</p>
+<ul class="simple">
+<li>a vector field and</li>
+<li>a scalar field</li>
+</ul>
+<p>which provide the data that is used for subsequent visualisation
+modules. Above, we have used the <tt class="docutils literal"><span class="pre">m_Py</span></tt> vector field.</p>
+<p>The demagnetisation field should point in the opposite direction of
+the magnetisation. However, let&#8217;s first create a colour-coded plot of
+the scalar magnetic potential, phi, from which the demag field is
+computed (by taking its negative gradient):</p>
+<img alt="../_images/sphere1_h5_phi.png" class="align-center" src="../_images/sphere1_h5_phi.png" style="width: 1033px; height: 910px;" />
+<p>We first need to select <tt class="docutils literal"><span class="pre">phi</span></tt> as the data source for &#8216;scalar&#8217;
+visualisation modules: Through clicking on the <tt class="docutils literal"><span class="pre">Configure</span> <span class="pre">Data</span></tt>
+button in the DataVizManager section of MayaVi&#8217;s user interface, we
+can select <tt class="docutils literal"><span class="pre">phi&lt;A&gt;</span></tt> as the data source for scalar
+visualisations. (The <tt class="docutils literal"><span class="pre">&lt;A&gt;</span></tt> simply indicates that the units of the
+potential are Ampere).</p>
+<p>To show the scalar potential, we use the
+<tt class="docutils literal"><span class="pre">Visualize-&gt;Module-&gt;SurfaceMap</span></tt> module.</p>
+<p>We can see that the potential varies along the x-direction. The legend
+at the bottom of the figure shows the colour code used. We can also
+see from the legend title that the physical dimension of the potential
+phi is Ampere (this is the <tt class="docutils literal"><span class="pre">&lt;A&gt;</span></tt>).</p>
+<p>Unless the user specifies a particular request for physical dimensions,
+the following rules apply for vtk files:</p>
+<ul class="simple">
+<li>position are given in the same coordinates as the mesh coordinates
+(that is why in this example, the x, y and z axis have values going
+from -10 to 10).</li>
+<li>all field data are given in SI units.</li>
+</ul>
+<p>The next plot shows the demag field (the vectors) together with
+isosurfaces of the magnetic potential:</p>
+<img alt="../_images/sphere1_h5_demag.png" class="align-center" src="../_images/sphere1_h5_demag.png" style="width: 1033px; height: 910px;" />
+<p>It can be seen that the isosurfaces are completely flat planes
+(i.e. the potential is changing only along x) and the demagnetisation
+field is perpendicular to the isosurfaces. The color bar on the left
+refers to the magnitude of the demagnetisation field which is
+expressed in Ampere per meter, as can be seen from the label
+<tt class="docutils literal"><span class="pre">&lt;A/m&gt;</span></tt>. (Note that all the <tt class="docutils literal"><span class="pre">H_demag</span></tt> arrows are colored red
+as they have identical length.)</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example2/doc.html" title="2.2. Example 2: Computing the time development of a system"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../guided_tour.html" title="2. Guided Tour"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

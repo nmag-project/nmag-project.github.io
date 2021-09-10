@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.19. Example: Spin-waves in periodic system &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.20. Example: post processing of saved field data" href="../example2/doc2.html" />
+    <link rel="prev" title="2.18. Example: 2D periodicity" href="../example_2Dperiodicity/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example2/doc2.html" title="2.20. Example: post processing of saved field data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_2Dperiodicity/doc.html" title="2.18. Example: 2D periodicity"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-spin-waves-in-periodic-system">
+<span id="spin-waves-example"></span><h1>2.19. Example: Spin-waves in periodic system<a class="headerlink" href="doc.html#example-spin-waves-in-periodic-system" title="Permalink to this headline">¶</a></h1>
+<p>Starting from a magnetisation out of equilibrium, we study the time
+development of the magnetisation, and track -visually- the spin waves.</p>
+<p>The geometry is a thin film with dimensions 30 nm x 9 nm x 0.2 nm along
+the x,y and z axes, respectively. The mesh is centered at (0,0,0)
+and periodic along the x direction, so that the nodes with coordinates
+(15.0,y,z) will be considered as equivalent to the nodes with coordinates (-15.0,y,z).</p>
+<img alt="../_images/periodic_mesh.png" class="align-center" src="../_images/periodic_mesh.png" style="width: 629px; height: 376px;" />
+<p>The mesh is contained in <a class="reference download internal" href="../_downloads/periodic.nmesh"><tt class="xref download docutils literal"><span class="pre">periodic.nmesh</span></tt></a> and
+has been produced using <a class="reference external" href="http://www.hpfem.jku.at/netgen/">Netgen</a> (from  <a class="reference download internal" href="../_downloads/periodic.geo"><tt class="xref download docutils literal"><span class="pre">periodic.geo</span></tt></a>) and the <a class="reference internal" href="../executables.html#nmeshmirror"><em>nmeshmirror</em></a> command to create required periodic structure</p>
+<div class="highlight-python"><pre>$ nmeshmirror netgen.nmesh 1e-6 1e-6 -1,0,0 periodic.nmesh</pre>
+</div>
+<div class="section" id="relaxation-script">
+<span id="id1"></span><h2>2.19.1. Relaxation script<a class="headerlink" href="doc.html#relaxation-script" title="Permalink to this headline">¶</a></h2>
+<p>To see how the system relaxes, we use the following
+script (<a class="reference download internal" href="../_downloads/spinwaves.py"><tt class="xref download docutils literal"><span class="pre">spinwaves.py</span></tt></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+<span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">SI</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c"># define magnetic material</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">MagMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Py&quot;</span><span class="p">,</span>
+                      <span class="n">Ms</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span><span class="s">&quot;A/m&quot;</span><span class="p">),</span>
+                      <span class="n">exchange_coupling</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">13.0e-12</span><span class="p">,</span> <span class="s">&quot;J/m&quot;</span><span class="p">),</span>
+                      <span class="n">llg_damping</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+                      <span class="p">)</span>
+
+<span class="c"># lattice spacings along the main axes; </span>
+<span class="c"># the value must be zero for no periodic copies,</span>
+<span class="c"># equal to the mesh dimension along the </span>
+<span class="c"># given axis otherwise</span>
+<span class="n">x_lattice</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">y_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">z_lattice</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+
+<span class="c"># list to store the lattice points where the periodic</span>
+<span class="c"># copies will be placed </span>
+<span class="n">lattice_points</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">lattice_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xi</span><span class="o">*</span><span class="n">x_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">y_lattice</span><span class="p">,</span><span class="mf">0.0</span><span class="o">*</span><span class="n">z_lattice</span><span class="p">])</span>
+
+<span class="c"># copies of the system along the x-axis</span>
+<span class="n">pbc</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">SetLatticePoints</span><span class="p">(</span><span class="n">vectorlist</span><span class="o">=</span><span class="n">lattice_points</span><span class="p">,</span> <span class="n">scalefactor</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&#39;m&#39;</span><span class="p">))</span>
+
+<span class="c">#create simulation object</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">nmag</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">periodic_bc</span><span class="o">=</span><span class="n">pbc</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+
+<span class="c"># load mesh</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">load_mesh</span><span class="p">(</span><span class="s">&quot;periodic.nmesh&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;periodic-film&quot;</span><span class="p">,</span> <span class="n">Py</span><span class="p">)],</span> <span class="n">unit_length</span><span class="o">=</span><span class="n">SI</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="k">print</span> <span class="n">ocaml</span><span class="o">.</span><span class="n">mesh_plotinfo_periodic_points_indices</span><span class="p">(</span> <span class="n">sim</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">raw_mesh</span> <span class="p">)</span>
+
+<span class="c"># function to set the magnetisation </span>
+<span class="k">def</span> <span class="nf">perturbed_magnetisation</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">pos</span>
+    <span class="n">newx</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="mf">1e9</span>
+    <span class="n">newy</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="mf">1e9</span>
+    <span class="k">if</span> <span class="mi">8</span><span class="o">&lt;</span><span class="n">newx</span><span class="o">&lt;</span><span class="mi">14</span> <span class="ow">and</span> <span class="o">-</span><span class="mi">3</span><span class="o">&lt;</span><span class="n">newy</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="c"># the magnetisation is twisted a bit </span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">((</span><span class="n">newx</span><span class="o">-</span><span class="mi">11</span><span class="p">)</span><span class="o">/</span><span class="mf">6.</span><span class="p">)))</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span>\
+                        <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">newy</span><span class="o">/</span><span class="mf">6.</span><span class="p">)))</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+
+<span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">perturbed_magnetisation</span><span class="p">)</span>
+
+<span class="c"># let the system relax generating spin waves</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="s">&quot;s&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nsim.when</span> <span class="kn">import</span> <span class="n">every</span><span class="p">,</span> <span class="n">at</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;averages&#39;</span><span class="p">,</span><span class="s">&#39;fields&#39;</span><span class="p">,</span> <span class="n">every</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">0.05e-12</span><span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;convergence&#39;</span><span class="p">))],</span>
+          <span class="n">do</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;exit&#39;</span><span class="p">,</span> <span class="n">at</span><span class="p">(</span><span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="mf">10e-12</span><span class="o">*</span><span class="n">s</span><span class="p">))])</span>
+</pre></div>
+</div>
+<p>To execute this script, we call the <a class="reference internal" href="../executables.html#nsim"><em>nsim</em></a> executable, for example (on linux):</p>
+<div class="highlight-python"><pre>$ nsim spinwaves.py</pre>
+</div>
+<p>As in the previous examples, we first need to import the modules
+necessary for the simulation, define the material of the magnetic
+object, load the mesh and set the initial configuration of the
+magnetisation. Here, we start from a spatially non-homogeneous
+configuration in order to excite spin waves. Nmag allows us to provide a
+function to be sampled on the mesh that defines a particular
+magnetisation configuration.</p>
+<img alt="../_images/initial_magn.png" class="align-center" src="../_images/initial_magn.png" style="width: 552px; height: 389px;" />
+<p>In our case, we use the function</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">perturbed_magnetisation</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">pos</span>
+    <span class="n">newx</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="mf">1e9</span>
+    <span class="n">newy</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="mf">1e9</span>
+    <span class="k">if</span> <span class="mi">8</span><span class="o">&lt;</span><span class="n">newx</span><span class="o">&lt;</span><span class="mi">14</span> <span class="ow">and</span> <span class="o">-</span><span class="mi">3</span><span class="o">&lt;</span><span class="n">newy</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="c"># the magnetisation is twisted a bit</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">((</span><span class="n">newx</span><span class="o">-</span><span class="mi">11</span><span class="p">)</span><span class="o">/</span><span class="mf">6.</span><span class="p">)))</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span>\
+                        <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">newy</span><span class="o">/</span><span class="mf">6.</span><span class="p">)))</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>which is then passed on to <a class="reference internal" href="../command_reference.html#set-m"><em>set_m</em></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># set initial magnetisation</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_m</span><span class="p">(</span><span class="n">perturbed_magnetisation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualising-the-magnetisation-evolution">
+<span id="id2"></span><h2>2.19.2. Visualising the magnetisation evolution<a class="headerlink" href="doc.html#visualising-the-magnetisation-evolution" title="Permalink to this headline">¶</a></h2>
+<p>Once the calculation has finished, we can see how the system relaxed
+by means of snapshots of the magnetisation evolution.</p>
+<p>The <a class="reference internal" href="../executables.html#nmagpp"><em>nmagpp</em></a> command allows us to create vtk files
+from the data saved with the <tt class="docutils literal"><span class="pre">save</span></tt> option in the <tt class="docutils literal"><span class="pre">relax</span></tt> method:</p>
+<div class="highlight-python"><pre>nmagpp --vtk=fields spinwaves</pre>
+</div>
+<p>The first few frames that show the evolution of the magnetic
+configuration are shown below.</p>
+<div class="figure align-center">
+<img alt="evolution-1" src="../_images/evolution-1.png" />
+<p class="caption">Initial magnetisation configuration.</p>
+</div>
+<div class="figure align-center">
+<img alt="evolution-2" src="../_images/evolution-2.png" />
+<p class="caption">Magnetisation configuration after 0.15 ps. It is clearly visible
+that the spin waves travel from the center of the disturbance to the
+right and penetrate the system immediately from the left (due to the
+periodic boundary conditions in the x-direction).</p>
+</div>
+<div class="figure align-center">
+<img alt="evolution-3" src="../_images/evolution-3.png" />
+<p class="caption">Magnetisation configuration after 0.25 ps.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example2/doc2.html" title="2.20. Example: post processing of saved field data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_2Dperiodicity/doc.html" title="2.18. Example: 2D periodicity"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. Background &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="index.html" />
+    <link rel="next" title="4. Command reference" href="command_reference.html" />
+    <link rel="prev" title="2.29. More than one magnetic material, exchange coupled" href="example_excoupling/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="command_reference.html" title="4. Command reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="example_excoupling/doc.html" title="2.29. More than one magnetic material, exchange coupled"
+             accesskey="P">previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="background">
+<span id="id1"></span><h1>3. Background<a class="headerlink" href="background.html#background" title="Permalink to this headline">¶</a></h1>
+<p>In this section, we list some background information on the simulation
+package, some explanation of the philosophy behind it (which may
+explain some of the user interface choices that have been made) and
+explanation of some terms that are relevant.</p>
+<div class="section" id="architecture-overview">
+<h2>3.1. Architecture overview<a class="headerlink" href="background.html#architecture-overview" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/nmag-architecture5007.png" class="align-center" src="_images/nmag-architecture5007.png" style="width: 500px; height: 515px;" />
+<p>The Nmag environment that is described in this manual is shown as the blue box labelled <tt class="docutils literal"><span class="pre">Nmag</span> <span class="pre">Simulation</span> <span class="pre">Script</span></tt>. This is importing the <tt class="docutils literal"><span class="pre">nmag</span></tt> library &#8211; which is a Python library. This in turn, is built on the <a class="reference internal" href="background.html#nsim-library">Nsim library</a> Python module. The nsim Python module uses compiled code which is written in Objective Caml. At this level the execution can be parallel and this is also used to link together existing libraries (yellow boxes).</p>
+</div>
+<div class="section" id="the-nsim-library">
+<span id="nsim-library"></span><h2>3.2. The nsim library<a class="headerlink" href="background.html#the-nsim-library" title="Permalink to this headline">¶</a></h2>
+<p>Nmag is the high-level user interface that provides micromagnetic
+capabilities to a general purpose finite element multi-physics field
+theory library called nsim. Therefore, many of the concepts used by
+Nmag are inherited from nsim.</p>
+<p>This manual documents the high-level Nmag userinterface, it does not
+document nsim. Some of the internal details of nsim are explained
+in <a class="reference external" href="http://arxiv.org/abs/arXiv:0907.1587">http://arxiv.org/abs/arXiv:0907.1587</a>.</p>
+</div>
+<div class="section" id="fields-and-subfields">
+<span id="id2"></span><h2>3.3. Fields and subfields<a class="headerlink" href="background.html#fields-and-subfields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="field">
+<span id="id3"></span><h3>3.3.1. Field<a class="headerlink" href="background.html#field" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="background.html#field"><em>Field</em></a> is the central entity within the <a class="reference internal" href="background.html#nsim-library"><em>The nsim library</em></a>. It represents physical
+fields such as:</p>
+<ul class="simple">
+<li>magnetisation (usually a 3d vector field),</li>
+<li>the magnetic exchange field (usually a 3d vector field), or</li>
+<li>magnetic exchange energy (a scalar field).</li>
+</ul>
+<p>A field may contain degrees of freedom of different type, which belong
+to different parts of a simulated object. For example, the
+magnetisation field may contain the effective magnetisation (density)
+for more than one type of magnetic atoms, which may make up different
+parts of the object studied. In order to deal with this, we introduce
+the concept of <a class="reference internal" href="background.html#subfield"><em>Subfield</em></a>s: A Nmag/nsim field can be regarded as a
+collection of subfields. Most often, there only is one subfield in a
+field, but when it makes sense to group together multiple conceptually
+independent fields (such as the effective magnetisation of the iron
+atoms in a multilayer structure and that of some other magnetic metal
+also present in the structure), a field may contain more than one
+subfield: In particular, the magnetisation field <tt class="docutils literal"><span class="pre">M</span></tt> may contain
+subfields <tt class="docutils literal"><span class="pre">M_Fe</span></tt> and <tt class="docutils literal"><span class="pre">M_Co</span></tt>.</p>
+<p>The question what subfields to group together is partly a question of
+design. For Nmag, the relevant choices have been made by the Nmag
+developers, so the user should not have to worry about this.</p>
+</div>
+<div class="section" id="subfield">
+<span id="id4"></span><h3>3.3.2. Subfield<a class="headerlink" href="background.html#subfield" title="Permalink to this headline">¶</a></h3>
+<p>Each field contains one or more <a class="reference internal" href="background.html#subfield"><em>Subfield</em></a>s. For example, a
+simulation with two different types of magnetic material (for example
+Fe and Dy), has a field <tt class="docutils literal"><span class="pre">m</span></tt> for the normalised magnetisation and
+this would contain two subfields <tt class="docutils literal"><span class="pre">m_Fe</span></tt> and <tt class="docutils literal"><span class="pre">m_Dy</span></tt>.</p>
+<p>(It is partly a question of philosophy whether different material
+magnetisations are treated as subfields in one field, or whether they
+are treated as two fields. For now, we have chosen to collect all the
+material magnetisations as different subfields in one field.)</p>
+<p>Often, a field contains only one subfield and this may carry the same
+name as the field.</p>
+</div>
+</div>
+<div class="section" id="fields-and-subfields-in-nmag">
+<span id="id5"></span><h2>3.4. Fields and Subfields in Nmag<a class="headerlink" href="background.html#fields-and-subfields-in-nmag" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-one-magnetic-material">
+<span id="id6"></span><h3>3.4.1. Example: one magnetic material<a class="headerlink" href="background.html#example-one-magnetic-material" title="Permalink to this headline">¶</a></h3>
+<p>Assuming we have a simulation of one material with name PermAlloy (Py),
+we would have the following <a class="reference internal" href="background.html#field"><em>Field</em></a>s and <a class="reference internal" href="background.html#subfield"><em>Subfield</em></a>s:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="20%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Field</th>
+<th class="head">Subfield</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>m</td>
+<td>m_Py</td>
+<td>normalised magnetisation</td>
+</tr>
+<tr><td>M</td>
+<td>M_Py</td>
+<td>magnetisation</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py</td>
+<td>total effective field</td>
+</tr>
+<tr><td>H_ext</td>
+<td>H_ext</td>
+<td>external (applied) field (only one)</td>
+</tr>
+<tr><td>E_ext</td>
+<td>E_ext_Py</td>
+<td>energy density of Py due to external field</td>
+</tr>
+<tr><td>H_anis</td>
+<td>H_anis_Py</td>
+<td>crystal anisotropy field</td>
+</tr>
+<tr><td>E_anis</td>
+<td>E_anis_Py</td>
+<td>crystal anisotropy energy density</td>
+</tr>
+<tr><td>H_exch</td>
+<td>H_exch_Py</td>
+<td>exchange field</td>
+</tr>
+<tr><td>E_exch</td>
+<td>E_exch_Py</td>
+<td>exchange energy</td>
+</tr>
+<tr><td>H_demag</td>
+<td>H_demag</td>
+<td>demagnetisation field (only one)</td>
+</tr>
+<tr><td>E_demag</td>
+<td>E_demag_Py</td>
+<td>demagnetisation field energy density for Py</td>
+</tr>
+<tr><td>phi</td>
+<td>phi</td>
+<td>scalar potential for H_demag</td>
+</tr>
+<tr><td>rho</td>
+<td>rho</td>
+<td>magnetic charge density (div M)</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py</td>
+<td>total effective field</td>
+</tr>
+</tbody>
+</table>
+<p>It is worth noting that the names of the fields are fixed whereas the
+subfield names are (often) material dependent and given by</p>
+<ul class="simple">
+<li>the name of the field and the material name (joined through &#8216;<tt class="docutils literal"><span class="pre">_</span></tt>&#8216;)
+if there is one (material-specific) subfield for every magnetisation or</li>
+<li>the name of the field if there is only one subfield (such as the
+demagnetisation field or the applied external field)</li>
+</ul>
+<p>This may seem a little bit confusing at first, but is easy to
+understand once one accepts the general rule that the
+material-dependent quantities - and only those - contain a
+material-related suffix. All atomic species experience the
+demagnetisation field in the same way, so this has to be <tt class="docutils literal"><span class="pre">H_demag</span></tt>
+(i.e. non-material-specific). On the other hand, anisotropy depends on
+the atomic species, so this is <tt class="docutils literal"><span class="pre">H_anis_Py</span></tt>, and therefore, the total
+effective field also has to be material-specific: <tt class="docutils literal"><span class="pre">H_total_Py</span></tt>. (All
+this becomes particularly relevant in systems where two types of
+magnetic atoms are embedded in the same crystal lattice.)</p>
+</div>
+<div class="section" id="example-two-magnetic-materials">
+<span id="id7"></span><h3>3.4.2. Example: two magnetic materials<a class="headerlink" href="background.html#example-two-magnetic-materials" title="Permalink to this headline">¶</a></h3>
+<p>This table from the <a class="reference internal" href="example_two_materials/doc.html#example-two-different-magnetic-materials"><em>Example: two different magnetic materials</em></a> shows
+the fields and subfields when more than one material is involved:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="28%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Field</th>
+<th class="head">Subfield(s)</th>
+<th class="head">Comment</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>m</td>
+<td>m_Py, m_Co</td>
+<td>normalised magnetisation</td>
+</tr>
+<tr><td>M</td>
+<td>M_Py, M_Co</td>
+<td>magnetisation</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py, H_total_Co</td>
+<td>total effective field</td>
+</tr>
+<tr><td>H_ext</td>
+<td>H_ext</td>
+<td>external (applied) field (only one)</td>
+</tr>
+<tr><td>E_ext</td>
+<td>E_ext_Py, E_ext_Co</td>
+<td>energy density of Py due to external field</td>
+</tr>
+<tr><td>H_anis</td>
+<td>H_anis_Py, H_anis_Co</td>
+<td>crystal anisotropy field</td>
+</tr>
+<tr><td>E_anis</td>
+<td>E_anis_Py, E_anis_Co</td>
+<td>crystal anisotropy energy density</td>
+</tr>
+<tr><td>H_exch</td>
+<td>H_exch_Py, H_exch_Co</td>
+<td>exchange field</td>
+</tr>
+<tr><td>E_exch</td>
+<td>E_exch_Py, E_exch_Co</td>
+<td>exchange energy</td>
+</tr>
+<tr><td>H_demag</td>
+<td>H_demag</td>
+<td>demagnetisation field (only one)</td>
+</tr>
+<tr><td>E_demag</td>
+<td>E_demag_Py, E_demag_Co</td>
+<td>demagnetisation field energy density</td>
+</tr>
+<tr><td>phi</td>
+<td>phi</td>
+<td>scalar potential for H_demag</td>
+</tr>
+<tr><td>rho</td>
+<td>rho</td>
+<td>magnetic charge density (div M)</td>
+</tr>
+<tr><td>H_total</td>
+<td>H_total_Py, H_total_Co</td>
+<td>total effective field</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="obtaining-and-setting-subfield-data">
+<span id="id8"></span><h3>3.4.3. Obtaining and setting subfield data<a class="headerlink" href="background.html#obtaining-and-setting-subfield-data" title="Permalink to this headline">¶</a></h3>
+<p>Data contained in subfields can be written to files (using
+<a class="reference internal" href="command_reference.html#save-data"><em>save_data</em></a>), can be probed at particular points in space
+(<a class="reference internal" href="command_reference.html#probe-subfield"><em>probe_subfield</em></a>, <a class="reference internal" href="command_reference.html#probe-subfield-siv"><em>probe_subfield_siv</em></a>), or can be obtained from all
+sites simultaneously (<a class="reference internal" href="command_reference.html#get-subfield"><em>get_subfield</em></a>). Some data can also be set (in
+particular the applied field <tt class="docutils literal"><span class="pre">H_ext</span></tt> using <a class="reference internal" href="command_reference.html#set-h-ext"><em>set_H_ext</em></a> and all the
+subfields belonging to the field <tt class="docutils literal"><span class="pre">m</span></tt> using <a class="reference internal" href="command_reference.html#set-m"><em>set_m</em></a>).</p>
+</div>
+<div class="section" id="primary-and-secondary-fields">
+<span id="id9"></span><h3>3.4.4. Primary and secondary fields<a class="headerlink" href="background.html#primary-and-secondary-fields" title="Permalink to this headline">¶</a></h3>
+<p>There are two different types of fields in nmag: <em>primary</em> and
+<em>secondary</em> fields.</p>
+<p><em>Primary fields</em> are those that the user can set
+arbitrarily. Currently, these are the (normalised) magnetisation <tt class="docutils literal"><span class="pre">m</span></tt>
+and the external field <tt class="docutils literal"><span class="pre">H_ext</span></tt> (which can be modified with <a class="reference internal" href="command_reference.html#set-m"><em>set_m</em></a>
+and <a class="reference internal" href="command_reference.html#set-h-ext"><em>set_H_ext</em></a>).</p>
+<p><em>Secondary</em> fields (which could also be called <em>dependent fields</em>) can
+not be set directly from the user but are computed from the primary
+fields.</p>
+</div>
+</div>
+<div class="section" id="mesh">
+<span id="id10"></span><h2>3.5. Mesh<a class="headerlink" href="background.html#mesh" title="Permalink to this headline">¶</a></h2>
+<p>In finite element calculations, we need a mesh to define the geometry
+of the system. For development and debugging purposes, nsim includes
+some (at present undocumented) capabilities to generate toy meshes
+directly from geometry specifications, but for virtually all nsim
+applications, the user will have to use an external tool to generate a
+(tetrahedral) mesh file describing the geometry.</p>
+<div class="section" id="node">
+<span id="id11"></span><h3>3.5.1. Node<a class="headerlink" href="background.html#node" title="Permalink to this headline">¶</a></h3>
+<p>Roughly speaking, a mesh is a tessellation of space where the support
+points are called <em>mesh nodes</em>. nmag uses an unstructured mesh
+(i.e. the cells filling up three-dimensional space are tetrahedra).</p>
+</div>
+<div class="section" id="node-id">
+<span id="id12"></span><h3>3.5.2. node id<a class="headerlink" href="background.html#node-id" title="Permalink to this headline">¶</a></h3>
+<p>Each node in the finite element mesh has an associated node id. This
+is an integer (starting from 0 for the first node).</p>
+<p>This information is used when defining which node is connected to
+which (see <a class="reference internal" href="finite_element_mesh_generation.html#finite-element-mesh-generation"><em>Finite element mesh generation</em></a> for more details), and
+when defining the <a class="reference internal" href="background.html#site"><em>sites</em></a> at which the field degrees of freedom are
+calculated.</p>
+</div>
+<div class="section" id="node-position">
+<span id="id13"></span><h3>3.5.3. node position<a class="headerlink" href="background.html#node-position" title="Permalink to this headline">¶</a></h3>
+<p>The position (as a 3d vector) in space of a node.</p>
+</div>
+</div>
+<div class="section" id="site">
+<span id="id14"></span><h2>3.6. Site<a class="headerlink" href="background.html#site" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="background.html#mesh"><em>Mesh</em></a> has nodes, and each node is identified by its <a class="reference internal" href="background.html#node-id"><em>node id</em></a>.</p>
+<p>If we use <em>first order basis functions</em> in the finite element
+calculation, then a <em>site</em> is exactly the same as a <em>node</em>. In
+micromagnetism, we almost always use first order basis functions
+(because the requirement to resolve the exchange length forces us to
+have a very fine mesh, and usually the motivation of using higher
+order basis functions is to make the mesh coarser).</p>
+<p>If we were to use <em>second</em> or <em>higher order base functions</em>, then we
+have more sites than nodes. In a second order basis function
+calculation, we identify sites by a tuple of <a class="reference internal" href="background.html#node-id"><em>node id</em></a>.</p>
+</div>
+<div class="section" id="si-object">
+<span id="id15"></span><h2>3.7. SI object<a class="headerlink" href="background.html#si-object" title="Permalink to this headline">¶</a></h2>
+<p>We are using a special <tt class="docutils literal"><span class="pre">SI</span></tt> object to express physical entities (see
+also <a class="reference internal" href="command_reference.html#si"><em>SI</em></a>). Let us first clarify some terminology:</p>
+<dl class="docutils">
+<dt>physical entity</dt>
+<dd>A pair (a,b) where a is a number (for example 10) and b is a product
+of powers of dimensions (for example m^1s^-1) which we need to
+express a physical quantity (in this example 10 m/s).</dd>
+<dt>dimension</dt>
+<dd>SI dimensions: meters (m), seconds (s), Ampere (A), kilogram (kg), Kelvin
+(K), Mol (mol), candela (cd). These can be obtained using the <a class="reference internal" href="command_reference.html#units"><em>units</em></a> attribute of the <a class="reference internal" href="command_reference.html#si"><em>SI</em></a> object.</dd>
+<dt>SI-value</dt>
+<dd>for a given physical entity (a,b) where a is the numerical value and
+b are the SI dimensions, this is just the numerical value a (and can be
+obtained with the <a class="reference internal" href="command_reference.html#value"><em>value</em></a> attribute of the <a class="reference internal" href="command_reference.html#si"><em>SI</em></a> object).</dd>
+<dt>Simulation Units</dt>
+<dd>The dimensionless number that expressed an entity within the
+simulation core. This is irrelevant to the user, except in highly
+exotic situations.</dd>
+</dl>
+<p>There are several reasons for using SI objects:</p>
+<ul class="simple">
+<li>In the context of the micromagnetic simulations, the use of SI
+objects avoids ambiguity as the user has to specify the right
+dimensions and - where possible - the code will complain if these
+are unexpected units (such as in the definition of material
+parameters).</li>
+<li>The specification of units is more important when the
+micromagnetism is extended with other physical phenomena (moving
+towards multi-physics calculations) for which, in principle, the
+software cannot predict what units these will have.</li>
+<li>Some convenience in having a choice of how to specify, for example,
+magnetic fields (i.e. <tt class="docutils literal"><span class="pre">A/m</span></tt>, <tt class="docutils literal"><span class="pre">T/mu0</span></tt>, <tt class="docutils literal"><span class="pre">Oe</span></tt>). See also comments
+in <a class="reference internal" href="command_reference.html#set-h-ext"><em>set_H_ext</em></a>.</li>
+</ul>
+<div class="section" id="library-of-useful-si-constants">
+<span id="id16"></span><h3>3.7.1. Library of useful si constants<a class="headerlink" href="background.html#library-of-useful-si-constants" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">si</span></tt> name space in nmag provides the following constants:</p>
+<pre class="literal-block">
+&#8220;&#8221;&#8220;Some useful SI constants&#8221;&#8220;&#8221;
+import math
+from lib import SI
+kilogram = SI(1.0,[&#8220;kg&#8221;,1])  #: The kilogram
+meter = SI(1.0,[&#8220;m&#8221;,1])      #: The meter
+metre = meter                #  alternative spelling
+Ampere = SI(1.0,[&#8220;A&#8221;,1])     #: The Ampere
+Kelvin = SI(1.0,[&#8220;K&#8221;,1])     #: The Kelvin
+second = SI(1.0,[&#8220;s&#8221;,1])     #: The second
+candela = SI(1.0,[&#8220;cd&#8221;,1])   #: The candela
+mol = SI(1.0,[&#8220;mol&#8221;,1])      #: The mol
+
+#specific units for magnetism
+Newton = kilogram*meter/second**2          #: Newton
+mu0 = SI(4.0e-7*math.pi, &#8220;N/A^2&#8221;)          #: vacuum permeability mu0
+Tesla = kilogram/Ampere/second**2          #: Tesla
+Gauss = 1e-4*kilogram/Ampere/second**2     #: Gauss
+Oersted=Gauss/mu0                          #: Oersted
+Oe=Oersted                                 #: Oersted
+gamma0 = SI(-2.2137286285040001e5, &#8220;m/A s&#8221;)#: gyromagnetic ratio gamma0
+
+# units: degrees/nanosecond: Useful to specify the stopping_dm_dt
+degrees_per_ns = SI(math.pi/180.0)/SI(1e-9, &#8220;s&#8221;)
+
+# other units and constants
+Joule = SI(&#8220;J&#8221;)
+bohr_magneton = 9.2740094980e-24*Joule/Tesla # Bohr magneton
+positron_charge = SI(1.6021765314e-19, &#8220;C&#8221;)
+electron_charge =  -positron_charge
+boltzmann_constant = SI(1.3806504e-23, &#8220;J/K&#8221;)
+plank_constant = 6.6260689633e-34*Joule*second
+reduced_plank_constant = plank_constant/(2*math.pi)
+
+
+</pre>
+<p>To express the magnetisation in A/m equivalent to the polaration of 1
+Tesla, we could thus use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nmag</span> <span class="kn">import</span> <span class="n">si</span>
+
+<span class="n">myM</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">si</span><span class="o">.</span><span class="n">Tesla</span><span class="o">/</span><span class="n">si</span><span class="o">.</span><span class="n">mu0</span>
+</pre></div>
+</div>
+<p>The command reference for <a class="reference internal" href="command_reference.html#si"><em>SI</em></a> provides some more details on the behaviour of SI objects.</p>
+</div>
+</div>
+<div class="section" id="terms">
+<span id="id17"></span><h2>3.8. Terms<a class="headerlink" href="background.html#terms" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="stage-step-iteration-time-etc">
+<span id="id18"></span><h3>3.8.1. Stage, Step, iteration, time, etc.<a class="headerlink" href="background.html#stage-step-iteration-time-etc" title="Permalink to this headline">¶</a></h3>
+<p>We use the same terminology for hysteresis loops as <a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a> (stage, step, iteration, time) and extend this slightly:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">step:</th><td class="field-body"><p class="first">A step is the smallest possible change of the fields. This
+corresponds (usually) to carrying out a time integration of the
+system over a small amount of time <cite>dt</cite>. Step is an integer starting
+from 0.</p>
+<p>If we minimise energy (rather than computing the time development
+exactly), then a step may not necessarily refer to progressing the
+simulation through real time.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">iteration:</th><td class="field-body"><p class="first">Another term for Step (deprecated)</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">stage:</th><td class="field-body"><p class="first">An integer to identify all the calculations carried out at one
+(constant) applied magnetic field (as in <a class="reference external" href="http://math.nist.gov/oommf/">OOMMF</a>).</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">time:</th><td class="field-body"><p class="first">The time that has been simulated (typically of the order of
+pico- or nanoseconds).</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">id:</th><td class="field-body"><p class="first">This is an integer (starting from 0) that uniquely identifies
+saved data. <em>I. e.</em> whenever data is saved, this number will increase by
+1. It is available in the <a class="reference internal" href="files_and_file_names.html#h5-data-files"><em>h5 data file</em></a> and the <a class="reference internal" href="files_and_file_names.html#ndt"><em>Data files (.ndt)</em></a> data files,
+and thus allows
+to match data in the ndt files with the corresponding (spatially resolved)
+field data in the h5 file.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">stage_step:</th><td class="field-body"><p class="first">The number of steps since we have started the current stage.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">stage_time:</th><td class="field-body"><p class="first">The amount of time that has been simulated since we started this stage.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">real_time:</th><td class="field-body"><p class="first">The amount of real time the simulation has been running
+(this is the [wall] execution time) and therefore typically of the
+order of minutes to days.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">local_time:</th><td class="field-body"><p class="first">A string (human readable) with the local time. Useful in
+data files to see when an entry was saved.</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">unix_time:</th><td class="field-body"><p class="first last">The number of (non-leap) seconds since 1.1.1970 - this is
+the same information as local_time but represented in a more computer
+friendly way for computing differences.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="some-geek-talk-deciphered">
+<span id="id19"></span><h3>3.8.2. Some geek-talk deciphered<a class="headerlink" href="background.html#some-geek-talk-deciphered" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>nmag uses some object orientation in the high-level user interface</dt>
+<dd>presented here. There are a few special terms used in object
+orientation that may not be familiar and of which we attempt to give
+a very brief description:</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">method:</th><td class="field-body">A method is just a function that is associated to an object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="solvers-and-tolerance-settings">
+<span id="id20"></span><h2>3.9. Solvers and tolerance settings<a class="headerlink" href="background.html#solvers-and-tolerance-settings" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of linear algebra solvers and one solver for
+ordinary differential equations (ODEs) in nmag:</p>
+<ol class="arabic">
+<li><p class="first">two solvers for the calculation of the demagnetisation
+field. Default values can be modified when creating the <a class="reference internal" href="command_reference.html#simulation"><em>Simulation</em></a>
+object (this user interface is not final &#8211; if you really feel you
+would like to change the defaults, please contact the <a class="reference internal" href="contact.html#contact"><em>nmag team</em></a> so
+we can take your requirements into account in the next release).</p>
+</li>
+<li><p class="first">one solver for the system of algebraic equations that results from
+the time integrator&#8217;s implicit integration scheme.</p>
+<p>(We need to document the default settings and how to modify this.)</p>
+</li>
+<li><p class="first">the ODE integrator.</p>
+<p>Setting of the tolerances for the ODE integrator can be done with
+<a class="reference internal" href="command_reference.html#set-params"><em>set_params</em></a>. An example of this is shown in section <a class="reference internal" href="example_tolerances/doc.html#example-tolerances"><em>Example: Timestepper tolerances</em></a>.</p>
+</li>
+</ol>
+<p>We expect that for most users, the tolerances of the ODE integrator
+are most important (see <a class="reference internal" href="example_tolerances/doc.html#example-tolerances"><em>Example: Timestepper tolerances</em></a>) as this greatly affects
+the performance of the simulation.</p>
+</div>
+<div class="section" id="the-equation-of-motion-the-landau-lifshitz-gilbert-equation">
+<h2>3.10. The equation of motion: the Landau-Lifshitz-Gilbert equation<a class="headerlink" href="background.html#the-equation-of-motion-the-landau-lifshitz-gilbert-equation" title="Permalink to this headline">¶</a></h2>
+<p>The magnetisation evolution, as computed by the <a class="reference internal" href="command_reference.html#advance-time"><em>advance_time</em></a> or the
+<a class="reference internal" href="command_reference.html#hysteresis"><em>hysteresis</em></a> methods of the <tt class="docutils literal"><span class="pre">Simulation</span></tt> class, is determined by the
+following equation of motion:</p>
+<blockquote>
+<div>dM/dt = -llg_gamma_G * M x H + llg_damping * M x dM/dt,</div></blockquote>
+<p>which is the Landau-Lifshitz-Gilbert equation (we often use the abbreviation
+&#8220;LLG&#8221;), a vector equation, where <tt class="docutils literal"><span class="pre">M</span></tt>, <tt class="docutils literal"><span class="pre">H</span></tt> and <tt class="docutils literal"><span class="pre">dM/dt</span></tt> are three
+dimensional vectors and <tt class="docutils literal"><span class="pre">x</span></tt> represent the vector product.
+This equation is used to dermine the evolution of each component
+of the magnetisation.
+For example, if the system has two materials with name <tt class="docutils literal"><span class="pre">m1</span></tt> and <tt class="docutils literal"><span class="pre">m2</span></tt>,
+then the magnetisation has two components <tt class="docutils literal"><span class="pre">M_m1</span></tt> and <tt class="docutils literal"><span class="pre">M_m2</span></tt> and
+the equations:</p>
+<blockquote>
+<div><p>dM_m1/dt = -llg_gamma_G_m1 * M_m1 x H_m1 + llg_damping_m1 * M_m1 x dM_m1/dt,</p>
+<p>dM_m2/dt = -llg_gamma_G_m2 * M_m2 x H_m2 + llg_damping_m2 * M_m2 x dM_m2/dt,</p>
+</div></blockquote>
+<p>determine the dynamics of <tt class="docutils literal"><span class="pre">M_m1</span></tt> and <tt class="docutils literal"><span class="pre">M_m2</span></tt>.
+Here <tt class="docutils literal"><span class="pre">H_m1</span></tt> and <tt class="docutils literal"><span class="pre">H_m2</span></tt> are the effective fields relative to the two
+components, while with <tt class="docutils literal"><span class="pre">dM_m1/dt</span></tt> and <tt class="docutils literal"><span class="pre">dM_m2/dt</span></tt> we denote the two time
+derivatives. The constant <tt class="docutils literal"><span class="pre">llg_gamma_G_XX</span></tt> in front of the precession term
+in the LLG equation is often called &#8220;gyromagnetic ratio&#8221;, even if usually,
+in physics, the gyromagnetic ratio of a particle is the ratio between its
+magnetic dipole moment and its angular momentum (and has units <tt class="docutils literal"><span class="pre">A</span> <span class="pre">s/kg</span></tt>).
+It is then an improper nomenclature, but it occurs frequently in the
+literature. The <tt class="docutils literal"><span class="pre">llg_damping_XX</span></tt> constant is called damping constant.
+Notice that these two constants are specified on a per-material basis.
+This means that each material has its own pair of constants
+(<tt class="docutils literal"><span class="pre">llg_gamma_G_m1</span></tt>, <tt class="docutils literal"><span class="pre">llg_damping_m1</span></tt>) and
+(<tt class="docutils literal"><span class="pre">llg_gamma_G_m2</span></tt>, <tt class="docutils literal"><span class="pre">llg_damping_m2</span></tt>).
+The two constants are specified when the corresponding material is created
+using the <a class="reference internal" href="command_reference.html#magmaterial"><em>MagMaterial</em></a> class.</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="command_reference.html" title="4. Command reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="example_excoupling/doc.html" title="2.29. More than one magnetic material, exchange coupled"
+             >previous</a> |</li>
+        <li><a href="manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

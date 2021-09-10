@@ -1,0 +1,141 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.20. Example: post processing of saved field data &mdash; NMAG User Manual v0.2.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="NMAG User Manual v0.2.1 documentation" href="../index.html" />
+    <link rel="up" title="2. Guided Tour" href="../guided_tour.html" />
+    <link rel="next" title="2.21. Example: Spin transfer torque (Zhang-Li model)" href="../example_zhangli1/doc.html" />
+    <link rel="prev" title="2.19. Example: Spin-waves in periodic system" href="../example_periodic_spinwaves/doc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../example_zhangli1/doc.html" title="2.21. Example: Spin transfer torque (Zhang-Li model)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../example_periodic_spinwaves/doc.html" title="2.19. Example: Spin-waves in periodic system"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" accesskey="U">2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="example-post-processing-of-saved-field-data">
+<span id="id1"></span><h1>2.20. Example: post processing of saved field data<a class="headerlink" href="doc2.html#example-post-processing-of-saved-field-data" title="Permalink to this headline">¶</a></h1>
+<p>Suppose we have saved spatially resolved fields (as, for example, in
+<a class="reference internal" href="doc.html#example-2"><em>Example 2: Computing the time development of a system</em></a>), and we would like to read those from the data file to
+process the data further.</p>
+<p>We can use the <a class="reference internal" href="../executables.html#nmagpp"><em>nmagpp</em></a> tool if it provides the required functionality.</p>
+<p>Alternatively, we can write a Python script that:</p>
+<ol class="arabic simple">
+<li>reads the data from the <tt class="docutils literal"><span class="pre">_dat.h5</span></tt> file</li>
+<li>carries out the required post processing and/or saves the data in
+(another) format.</li>
+</ol>
+<p>The program <a class="reference download internal" href="../_downloads/read_h5.py"><tt class="xref download docutils literal"><span class="pre">read_h5.py</span></tt></a>
+demonstrates how to read the saved configuration with id=0 of the <tt class="docutils literal"><span class="pre">m_Py</span></tt>
+subfield, and to print this to the screen.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nmag</span>
+
+<span class="c">#read data, positions, and sites from h5 file</span>
+<span class="n">m</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">get_subfield_from_h5file</span><span class="p">(</span><span class="s">&#39;bar_dat.h5&#39;</span><span class="p">,</span><span class="s">&#39;m_Py&#39;</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">pos</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">get_subfield_positions_from_h5file</span><span class="p">(</span><span class="s">&#39;bar_dat.h5&#39;</span><span class="p">,</span><span class="s">&#39;m_Py&#39;</span><span class="p">)</span>
+<span class="n">site</span><span class="o">=</span><span class="n">nmag</span><span class="o">.</span><span class="n">get_subfield_sites_from_h5file</span><span class="p">(</span><span class="s">&#39;bar_dat.h5&#39;</span><span class="p">,</span><span class="s">&#39;m_Py&#39;</span><span class="p">)</span>
+
+<span class="c">#can carry out some sanity checks (but is not necessary)</span>
+<span class="k">assert</span> <span class="n">m</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">pos</span><span class="o">.</span><span class="n">shape</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+
+<span class="c">#print the data</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)):</span>
+    <span class="k">print</span> <span class="n">site</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The functions <a class="reference internal" href="../command_reference.html#get-subfield-from-h5file"><em>get_subfield_from_h5file</em></a>,
+<a class="reference internal" href="../command_reference.html#get-subfield-positions-from-h5file"><em>get_subfield_positions_from_h5file</em></a> and
+<a class="reference internal" href="../command_reference.html#get-subfield-sites-from-h5file"><em>get_subfield_sites_from_h5file</em></a> allow in principle to retrieve all the
+field data from the h5 files and stores this in the variables <tt class="docutils literal"><span class="pre">m</span></tt>,
+<tt class="docutils literal"><span class="pre">pos</span></tt>, and <tt class="docutils literal"><span class="pre">site</span></tt>, respectively.</p>
+<p>The program, when run like this:</p>
+<div class="highlight-python"><pre>$ nsim read_h5.py</pre>
+</div>
+<p>in the <a class="reference internal" href="doc.html#example-2"><em>Example 2: Computing the time development of a system</em></a> directory, produces output starting as follows (assuming the <tt class="docutils literal"><span class="pre">bar_dat.h5</span></tt> file exists):</p>
+<div class="highlight-python"><pre>[0] [ 0.  0.  0.] [ 0.70710677  0.          0.70710677]
+[1] [  3.00000000e-09   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[2] [  6.00000000e-09   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[3] [  9.00000000e-09   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[4] [  1.20000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[5] [  1.50000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[6] [  1.80000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[7] [  2.10000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[8] [  2.40000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[9] [  2.70000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[10] [  3.00000000e-08   0.00000000e+00   0.00000000e+00] [ 0.70710677  0.          0.70710677]
+[11] [  3.00000000e-08   3.00000000e-08   1.00000000e-07] [ 0.70710677  0.          0.70710677]
+[12] [  3.00000000e-08   2.70000000e-08   1.00000000e-07] [ 0.70710677  0.          0.70710677]</pre>
+</div>
+<p>We can see that the <a class="reference internal" href="../background.html#site"><em>Site</em></a> index is (here) just an integer, the position
+(in nanometre) is shown as a triplet of three scalars, and the normalised
+magnetisation is also a vector with three components.</p>
+<p>The data (in the arrays <tt class="docutils literal"><span class="pre">m</span></tt>, <tt class="docutils literal"><span class="pre">site</span></tt> and <tt class="docutils literal"><span class="pre">position</span></tt> in this
+example) can be manipulated as explained in the <a class="reference internal" href="../useful_tools.html#numpy"><em>NumPy</em></a> documentation,
+because it is of type <tt class="docutils literal"><span class="pre">numpy</span> <span class="pre">array</span></tt>. Numpy provides a powerful matrix
+processing environment.</p>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../example_zhangli1/doc.html" title="2.21. Example: Spin transfer torque (Zhang-Li model)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../example_periodic_spinwaves/doc.html" title="2.19. Example: Spin-waves in periodic system"
+             >previous</a> |</li>
+        <li><a href="../manual.html">NMAG User Manual v0.2.1 documentation</a> &raquo;</li>
+          <li><a href="../guided_tour.html" >2. Guided Tour</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Hans Fangohr, Thomas Fischbacher, Matteo Franchin, Giuliano Bordignon, Jacek Generowicz, Andreas Knittel, Michael Walter, Maximilian Albert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
